@@ -1,6 +1,6 @@
 ---
 name: Improvement
-about: What feature do you want improved?
+about: Suggest an improvement to an already existing feature.
 title: ''
 labels: enhancement
 
