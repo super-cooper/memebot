@@ -1,7 +1,6 @@
 import sys
 from typing import List
 
-from lib import constants
 from memebot import MemeBot
 
 
@@ -13,7 +12,6 @@ def main(argv: List[str]) -> int:
     """
     print(argv)
     client = MemeBot()
-    constants.client = client
 
     # !! DO NOT HARDCODE THE TOKEN !!
     with open('client_token') as token_file:
