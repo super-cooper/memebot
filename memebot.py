@@ -6,17 +6,17 @@ class MemeBot(discord.Client):
     The main class that operates MemeBot, and directly controls all listeners
     """
 
-    def __init__(self, **args):
+    def __init__(self, **args) -> None:
         super().__init__(**args)
 
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         """
         Determines what the bot does as soon as it is logged into discord
         :return: None
         """
         print(f'Logged in as {self.user}')
 
-    async def on_message(self, message: discord.message.Message):
+    async def on_message(self, message: discord.message.Message) -> None:
         """
         Maintains all basic message listening commands that start with '!'
         :param message: The most recent message sent to the server

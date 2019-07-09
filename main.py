@@ -4,7 +4,7 @@ from typing import List
 from memebot import MemeBot
 
 
-def main(argv: List[str]):
+def main(argv: List[str]) -> int:
     """
     Main function, initializes MemeBot and then loops
     :param argv: Arguments
