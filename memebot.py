@@ -30,5 +30,5 @@ class MemeBot(discord.Client):
 
         if message.author == self.user:
             return
-        else:
+        elif command.startswith('!'):
             await message.channel.send(Commands.commands()[command](args))
