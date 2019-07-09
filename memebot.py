@@ -1,5 +1,7 @@
 import discord
 
+from commands import Commands
+
 
 class MemeBot(discord.Client):
     """
@@ -18,11 +20,15 @@ class MemeBot(discord.Client):
 
     async def on_message(self, message: discord.message.Message) -> None:
         """
-        Maintains all basic message listening commands that start with '!'
+        Maintains all basic per-message functions of the bot, including extracting and executing !commands and
+        updating databases with new data
         :param message: The most recent message sent to the server
         :return: None
         """
+
+        command, *args = message.content.split()
+
         if message.author == self.user:
             return
-        if message.content.startswith('$hello'):
-            await message.channel.send('Hello!')
+        else:
+            await message.channel.send(Commands.commands()[command](args))
