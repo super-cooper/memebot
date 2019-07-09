@@ -29,7 +29,7 @@ class Commands:
         All functions must take in only a list of strings as their argument,
         and return only a single string, or a discord.Embed object.
 
-        :return: A dictionary mapping all commands to their functions
+        :return: A function that executes the requested command
         """
         return defaultdict(lambda: Commands.help, {
             '!hello': Commands.hello,
@@ -89,6 +89,13 @@ class Commands:
 
     @staticmethod
     def execute(command: str, args: List[str], client: discord.Client = None) -> Union[str, discord.Embed]:
+        """
+        Executes the command with the given args
+        :param command: The !command to execute
+        :param args: The arguments for the command
+        :param client: The Discord client being used (MemeBot)
+        :return: The result of running command with args
+        """
         if Commands.client is None:
             if client is None:
                 raise ValueError("The Commands module does not have access to a client!")
