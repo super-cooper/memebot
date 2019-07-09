@@ -68,13 +68,15 @@ class Commands:
             timestamp=datetime.datetime.utcnow()
         )
         emojis = []
-        for i in range(len(options)):
-            emoji = f':regional_indicator_{alphabet[i]}:'
-            embed.add_field(name=emoji, value=options[i])
-            emojis.append(emoji)
         if len(options) < 2 or options in (['yes', 'no'], ['no', 'yes'], ['yea', 'nay']):
-            embed.add_field(name=':thumbsup:', value=':)').add_field(name=':thumbsdown:', value=':(')
+            embed.add_field(name=':thumbsup:', value=':)' if len(options) < 1 else options[0]).add_field(
+                name=':thumbsdown:', value=':(' if len(options) < 2 else options[1])
             emojis = [':thumbsup:', ':thumbsdown:']
+        else:
+            for i in range(len(options)):
+                emoji = f':regional_indicator_{alphabet[i]}:'
+                embed.add_field(name=emoji, value=options[i])
+                emojis.append(emoji)
 
         # create side effect to react to poll after it is posted
         async def react(message: discord.Message):
