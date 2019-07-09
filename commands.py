@@ -1,11 +1,11 @@
 import datetime
 from collections import defaultdict
 from string import ascii_lowercase as alphabet
-from typing import List, DefaultDict, Callable
+from typing import List, Callable, Union
 
 import discord
 
-import constants
+from lib import constants
 
 
 # noinspection PyUnusedLocal
@@ -16,8 +16,10 @@ class Commands:
     dictionary. If this causes enough ire, it can easily be refactored.
     """
 
+    client: discord.Client = None
+
     @staticmethod
-    def commands() -> DefaultDict[str, Callable[[List[str]], str]]:
+    def get_command_by_name(command: str) -> Callable[[List[str]], str]:
         """
         Backbone of the command interface. Entries should be formatted as: ::
 
@@ -32,7 +34,7 @@ class Commands:
         return defaultdict(lambda: Commands.help, {
             '!hello': Commands.hello,
             '!poll': Commands.poll
-        })
+        })[command]
 
     @staticmethod
     def help(args: List[str]) -> str:
@@ -65,8 +67,50 @@ class Commands:
             color=constants.COLOR,
             timestamp=datetime.datetime.utcnow()
         )
+        emojis = []
         for i in range(len(options)):
-            embed.add_field(name=f':regional_indicator_{alphabet[i]}:', value=options[i])
+            emoji = f':regional_indicator_{alphabet[i]}:'
+            embed.add_field(name=emoji, value=options[i])
+            emojis.append(emoji)
         if len(options) < 2 or options in (['yes', 'no'], ['no', 'yes'], ['yea', 'nay']):
             embed.add_field(name=':thumbsup:', value=':)').add_field(name=':thumbsdown:', value=':(')
+            emojis = [':thumbsup:', ':thumbsdown:']
+
+        # create side effect to react to poll after it is posted
+        async def react(message: discord.Message):
+            for emote in emojis:
+                await message.add_reaction(constants.EMOJI_MAP[emote])
+
+        SideEffects.task = react
+
         return embed
+
+    @staticmethod
+    def execute(command: str, args: List[str], client: discord.Client = None) -> Union[str, discord.Embed]:
+        if Commands.client is None:
+            if client is None:
+                raise ValueError("The Commands module does not have access to a client!")
+            else:
+                Commands.client = client
+        return Commands.get_command_by_name(command)(args)
+
+
+class SideEffects:
+    """
+    This is a class for when a command needs extra information from the Discord client after
+    the command has already been run (to execute certain operations from "beyond the grave"
+    Since commands are asynchronous, this works by having the command leave a little job
+    in the ``task`` variable. Upon returning control to memebot and sending the output of
+    the command to Discord, memebot will send over any possibly needed data through the
+    ``borrow()`` function, which will then trigger the execution of ``task``.
+
+    I am going to guess this is a temporary measure, and there is probably a much better way
+    to do this.
+    """
+    task = None
+
+    @staticmethod
+    async def borrow(message: discord.Message):
+        if SideEffects.task is not None:
+            await SideEffects.task(message)
+        SideEffects.task = None

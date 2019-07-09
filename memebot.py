@@ -2,7 +2,7 @@ import shlex
 
 import discord
 
-from commands import Commands
+from commands import Commands, SideEffects
 
 
 class MemeBot(discord.Client):
@@ -34,7 +34,8 @@ class MemeBot(discord.Client):
         command, *args = shlex.split(message.content)
 
         if command.startswith('!'):
-            # fetch the command function from the commands dict, and execute it with args
-            output = Commands.commands()[command](args)
+            output = Commands.execute(command, args, self)
             is_embed = type(output) is discord.Embed
-            await message.channel.send(output if not is_embed else None, embed=output if is_embed else None)
+            new_message = await message.channel.send(output if not is_embed else None,
+                                                     embed=output if is_embed else None)
+            await SideEffects.borrow(new_message)
