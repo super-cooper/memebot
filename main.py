@@ -1,8 +1,24 @@
+import sys
+from typing import List
+
 from memebot import MemeBot
 
-client = MemeBot()
 
-with open('client_token') as token_file:
-    token = token_file.read()
+def main(argv: List[str]):
+    """
+    Main function, initializes MemeBot and then loops
+    :param argv: Arguments
+    :return: Exit status of discord.Client.run()
+    """
+    print(argv)
+    client = MemeBot()
 
-client.run(token)
+    # !! DO NOT HARDCODE THE TOKEN !!
+    with open('client_token') as token_file:
+        token = token_file.read()
+
+    return client.run(token)
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))
