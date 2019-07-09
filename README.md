@@ -14,3 +14,4 @@ Current commands that can be used in Discord:
     
     !help  - display help text
     !hello - print "Hello!"
+    !poll  - create a simple poll
