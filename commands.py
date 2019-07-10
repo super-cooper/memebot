@@ -1,7 +1,7 @@
 import datetime
 from collections import defaultdict
 from string import ascii_lowercase as alphabet
-from typing import List, Callable, Union
+from typing import List, Callable, Dict, Any
 
 import discord
 
@@ -19,7 +19,7 @@ class Commands:
     client: discord.Client = None
 
     @staticmethod
-    def get_command_by_name(command: str) -> Callable[[List[str]], str]:
+    def get_command_by_name(command: str) -> Callable[[List[str]], Dict[str, Any]]:
         """
         Backbone of the command interface. Entries should be formatted as: ::
 
@@ -27,7 +27,8 @@ class Commands:
 
         The function should be defined further down in this class as a static method.
         All functions must take in only a list of strings as their argument,
-        and return only a single string, or a discord.Embed object.
+        and return a dictionary which represents keyword argument pairs to be used by
+        channel.send()
 
         :return: A function that executes the requested command
         """
@@ -37,29 +38,30 @@ class Commands:
         })[command]
 
     @staticmethod
-    def help(args: List[str]) -> str:
+    def help(args: List[str]) -> Dict[str, str]:
         """
         Default command, lists all possible commands and a short description of each.
         :param args: Ignored
         :return: A formatted list of all commands
         """
-        return """Commands:
+        return {'content': """Commands:
         `!help`  - Runs this command
         `!hello` - Prints "Hello!"
         `!poll`  - Runs a simple poll
         """
+                }
 
     @staticmethod
-    def hello(args: List[str]) -> str:
+    def hello(args: List[str]) -> Dict[str, str]:
         """
         Prints "Hello!" on input "!hello"
         :param args: ignored
         :return: The string "Hello!"
         """
-        return "Hello!"
+        return {'content': "Hello!"}
 
     @staticmethod
-    def poll(args: List[str]) -> discord.Embed:
+    def poll(args: List[str]) -> Dict[str, discord.Embed]:
         question, *options = args
         embed = discord.Embed(
             title=':bar_chart: **New Poll!**',
@@ -85,16 +87,16 @@ class Commands:
 
         SideEffects.task = react
 
-        return embed
+        return {'embed': embed}
 
     @staticmethod
-    def execute(command: str, args: List[str], client: discord.Client = None) -> Union[str, discord.Embed]:
+    def execute(command: str, args: List[str], client: discord.Client = None) -> dict:
         """
         Executes the command with the given args
         :param command: The !command to execute
         :param args: The arguments for the command
         :param client: The Discord client being used (MemeBot)
-        :return: The result of running command with args
+        :return: The result of running command with args, formatted as a kwargs dictionary to be sent to Discord
         """
         if Commands.client is None:
             if client is None:
