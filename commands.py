@@ -8,6 +8,9 @@ import discord
 
 from lib import constants
 
+# TODO: replace message saving temp solution with something better
+from threading import Lock
+message_lock = Lock()
 
 # noinspection PyUnusedLocal
 class Commands:
@@ -18,6 +21,7 @@ class Commands:
     """
 
     client: discord.Client = None
+    command_message: discord.Message = None
 
     @staticmethod
     def get_command_by_name(command: str) -> Callable[[List[str]], 'CommandOutput']:
@@ -35,11 +39,12 @@ class Commands:
         """
         return defaultdict(lambda: Commands.help, {
             '!hello': Commands.hello,
-            '!poll': Commands.poll
+            '!poll': Commands.poll,
+            '!role': Commands.role
         })[command]
 
     @staticmethod
-    def help(args: List[str]) -> 'CommandOutput':
+    async def help(args: List[str]) -> 'CommandOutput':
         """
         Default command, lists all possible commands and a short description of each.
         :param args: Ignored
@@ -48,10 +53,11 @@ class Commands:
         return CommandOutput().add_text("""Commands:
         `!help`  - Runs this command
         `!hello` - Prints "Hello!"
-        `!poll`  - Runs a simple poll""")
+        `!poll`  - Runs a simple poll
+        `!role`  - Manages mentionable roles""")
 
     @staticmethod
-    def hello(args: List[str]) -> 'CommandOutput':
+    async def hello(args: List[str]) -> 'CommandOutput':
         """
         Prints "Hello!" on input "!hello"
         :param args: ignored
@@ -60,7 +66,7 @@ class Commands:
         return CommandOutput().add_text("Hello!")
 
     @staticmethod
-    def poll(args: List[str]) -> 'CommandOutput':
+    async def poll(args: List[str]) -> 'CommandOutput':
         question, *options = args
         embed = discord.Embed(
             title=':bar_chart: **New Poll!**',
@@ -88,8 +94,83 @@ class Commands:
 
         return CommandOutput().add_embed(embed)
 
+    @staticmethod 
+    async def role(args: List[str]) -> 'CommandOutput':
+        """
+        Controls creating, joining, and leaving permissonless mentionable
+        roles. These roles are intended to serve as "tags" to allow mentioning
+        multiple users at once.
+
+        !role create <role>: Creates <role> 
+        !role join <role>: Adds caller to <role> 
+        !role leave <role>: Removes caller from <role> 
+
+        Roles are automatically deleted when leaving results in 0 remaining
+        users with that role
+
+        Note that because role names are not unique, these commands will act 
+        on the first instance (hierarchically) of a role with name <role>
+
+        :param args: Arguments to command. Must be of length 2
+        :return: Message with result of creating, joining, or leaving role.
+        """
+
+        help_message = CommandOutput().add_text("""`!role`: Self-contained \
+        role management
+        `!role` create <role>: Creates <role>
+        `!role' join <role>: Adds caller to <role>
+        `!role` leave <role>: Removes caller from <role>
+        """)
+
+        if len(args) != 2: 
+            return help_message
+            
+        action, target_name = args
+        guild = Commands.command_message.guild
+        author = guild.get_member(Commands.command_message.author.id)
+        print(action)
+        print(target_name)
+        print(guild)
+        print(author)
+
+        # fetch first instance of role with name 'target'
+        target_role = None
+        print(guild.roles)
+        for role in guild.roles:
+            if role.name == target_name:
+                target_role = role
+
+        # handle create
+        if action == 'create':
+            if target_role is not None:
+                return CommandOutput.add_text(f'The role {target_name} already exists!')
+
+            new_role = await guild.create_role(name=target_name, 
+                mentionable=True,
+                reason=f'Created through memebot by {author.name}')
+
+            if new_role is None:
+                return CommandOutput().add_text('Failed to create new role {target_name}')
+                
+            return CommandOutput().add_text('Created new role {target_name}!')
+
+        
+        # handle join and leave if role exists 
+        if target_role is None: 
+            return CommandOutput().add_text(f'The role {target_name} was not found!')
+
+        if action == 'join':
+            await author.add_roles(target_role)
+            return CommandOutput().add_text(f'{author.name} successfully joined {target_name}')
+        elif action == 'leave':
+            await author.remove_roles(target_role)
+            return CommandOutput().add_text(f'{author.name} successfully left {target_name}')
+
+        return help_message
+        
+
     @staticmethod
-    def execute(command: str, args: List[str], client: discord.Client = None) -> 'CommandOutput':
+    async def execute(command: str, args: List[str], client: discord.Client = None, message: discord.Message = None) -> 'CommandOutput':
         """
         Executes the command with the given args
         :param command: The !command to execute
@@ -102,7 +183,14 @@ class Commands:
                 raise ValueError("The Commands module does not have access to a client!")
             else:
                 Commands.client = client
-        return Commands.get_command_by_name(command)(args)
+        #TODO: replace temp message saving solution with something better
+        if message is None:
+            raise ValueError("The Commands module does not have access to the command message!")
+        message_lock.acquire()
+        Commands.command_message = message
+        r = await Commands.get_command_by_name(command)(args)
+        message_lock.release()
+        return r
 
 
 class SideEffects:

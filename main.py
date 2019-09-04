@@ -16,7 +16,8 @@ def main(argv: List[str]) -> int:
     # !! DO NOT HARDCODE THE TOKEN !!
     with open('client_token') as token_file:
         token = token_file.read()
-
+    
+    #print(token)
     return client.run(token)
 
 
