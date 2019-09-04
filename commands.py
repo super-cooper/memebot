@@ -104,9 +104,8 @@ class Commands:
         !role create <role>: Creates <role> 
         !role join <role>: Adds caller to <role> 
         !role leave <role>: Removes caller from <role> 
-
-        Roles are automatically deleted when leaving results in 0 remaining
-        users with that role
+        !role delete <role>: Deletes <role> if <role> has no members
+        !role list <role>: Lists members of <role>
 
         Note that because role names are not unique, these commands will act 
         on the first instance (hierarchically) of a role with name <role>
@@ -115,27 +114,40 @@ class Commands:
         :return: Message with result of creating, joining, or leaving role.
         """
 
-        help_message = CommandOutput().add_text("""`!role`: Self-contained \
-        role management
-        `!role` create <role>: Creates <role>
-        `!role' join <role>: Adds caller to <role>
-        `!role` leave <role>: Removes caller from <role>
-        """)
+        help_message = CommandOutput().add_text('`!role`: Self-contained '
+        'role management\n\n'
+        '`!role create <role>`: Creates <role>\n'
+        '`!role join <role>`: Adds caller to <role>\n'
+        '`!role leave <role>`: Removes caller from <role>\n'
+        '`!role delete <role>`: Deletes <role> if <role> has no members\n'
+        '`!role list <role>`: Lists members of <role>'
+        )
 
+        # ensure proper usage
         if len(args) != 2: 
             return help_message
-            
+ 
         action, target_name = args
+
+        # ensure access to command message
+        if Commands.command_message is None:
+            print('!role: Could not get command message')
+            return CommandOutput().add_text(f'Failed to {action} role {target_name}')
+        
+        # get guild and author from command message
         guild = Commands.command_message.guild
         author = guild.get_member(Commands.command_message.author.id)
-        print(action)
-        print(target_name)
-        print(guild)
-        print(author)
 
+        if guild is None: 
+            print('!role: Could not get Guild')
+            return CommandOutput().add_text(f'Failed to {action} role {target_name}')
+
+        if author is None:
+            print('!role: Could not get author')
+            return CommandOutput().add_text(f'Failed to {action} role {target_name}')
+            
         # fetch first instance of role with name 'target'
         target_role = None
-        print(guild.roles)
         for role in guild.roles:
             if role.name == target_name:
                 target_role = role
@@ -143,28 +155,77 @@ class Commands:
         # handle create
         if action == 'create':
             if target_role is not None:
-                return CommandOutput.add_text(f'The role {target_name} already exists!')
+                return CommandOutput().add_text(f'The role `@{target_name}` already exists!')
+            
+            new_role = None
 
-            new_role = await guild.create_role(name=target_name, 
-                mentionable=True,
-                reason=f'Created through memebot by {author.name}')
+            try:
+                new_role = await guild.create_role(name=target_name, 
+                    mentionable=True,
+                    reason=f'Performed through MemeBot by {author.name}')
 
-            if new_role is None:
-                return CommandOutput().add_text('Failed to create new role {target_name}')
+                if new_role is None:
+                    return CommandOutput().add_text('Failed to create role {target_name}')
+            except:
+                print('!role: Failed API call create_role( {target_name} )')
+                return CommandOutput().add_text('Failed to create role {target_name}')
                 
-            return CommandOutput().add_text('Created new role {target_name}!')
+            return CommandOutput().add_text(f'Created new role {new_role.mention}!')
 
         
-        # handle join and leave if role exists 
+        # ensure role exists for remaining actions
         if target_role is None: 
-            return CommandOutput().add_text(f'The role {target_name} was not found!')
+            return CommandOutput().add_text(f'The role `@{target_name}` was not found!')
 
+        # handle remaining actions
         if action == 'join':
-            await author.add_roles(target_role)
-            return CommandOutput().add_text(f'{author.name} successfully joined {target_name}')
+            try:
+                await author.add_roles(target_role,
+                    reason=f'Performed through MemeBot by {author.name}')
+            except:
+                print(f'!role: Failed API call: {author.name} add_role( {target_name} )')
+                return CommandOutput().add_text('Failed to join role `@{target_name}`')
+
+            return CommandOutput().add_text(f'{author.name} successfully joined `@{target_name}`')
+
         elif action == 'leave':
-            await author.remove_roles(target_role)
-            return CommandOutput().add_text(f'{author.name} successfully left {target_name}')
+            try:
+                await author.remove_roles(target_role,
+                    reason=f'Performed through MemeBot by {author.name}')
+            except:
+                print(f'!role: Failed API call: {author.name} remove_role( {target_name} )')
+                return CommandOutput().add_text('Failed to join role `@{target_name}`')
+
+            return CommandOutput().add_text(f'{author.name} successfully left `@{target_name}`')
+
+        elif action == 'delete':
+            # ensure role is empty before deleting
+            if len(target_role.members) == 0:
+                try:
+                    await target_role.delete(reason=f'Performed through MemeBot by {author.name}')
+                except:
+                    print(f'!role: Failed API call: {author.name} delete {target_name}')
+                    return CommandOutput().add_text(f'Failed to delete role `@{target_name}`')
+
+                return CommandOutput().add_text(f'Deleted role `@{target_name}`!')
+            else:
+                return CommandOutput().add_text(f'Cannot delete role `@{target_name}`: roles '
+                  'must have no members to be deleted')
+
+        elif action == 'list':
+            if len(target_role.members) == 0:
+                return CommandOutput().add_text(f'Role `@{target_name}` has no members!')
+            else:
+                members_string = f'Members of `@{target_name}`:'
+
+                for member in target_role.members:
+                    if member.nick is not None:
+                        members_string += f'\n- {member.nick} ({member.name})'
+                    else:
+                        members_string += f'\n- {member.name}'
+
+                return CommandOutput().add_text(members_string)
+
 
         return help_message
         
