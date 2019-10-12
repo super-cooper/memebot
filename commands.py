@@ -151,6 +151,7 @@ class Commands:
         for role in guild.roles:
             if role.name == target_name:
                 target_role = role
+                break
 
         # handle create
         if action == 'create':
@@ -226,7 +227,7 @@ class Commands:
 
                 return CommandOutput().add_text(members_string)
 
-
+        # send help message if invalid action 
         return help_message
         
 
@@ -237,6 +238,7 @@ class Commands:
         :param command: The !command to execute
         :param args: The arguments for the command
         :param client: The Discord client being used (MemeBot)
+        :param message: The Discord message which triggered the command execution
         :return: The result of running command with args, formatted as a CommandOutput object to be sent to Discord
         """
         if Commands.client is None:
