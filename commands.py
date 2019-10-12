@@ -3,13 +3,13 @@ import io
 from collections import defaultdict
 from string import ascii_lowercase as alphabet
 from typing import List, Callable, Union, ValuesView, KeysView
+from threading import Lock
 
 import discord
 
 from lib import constants
 
 # TODO: replace message saving temp solution with something better
-from threading import Lock
 message_lock = Lock()
 
 # noinspection PyUnusedLocal
