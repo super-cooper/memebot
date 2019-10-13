@@ -2,8 +2,8 @@ import datetime
 import io
 from collections import defaultdict
 from string import ascii_lowercase as alphabet
-from typing import List, Callable, Union, ValuesView, KeysView
 from threading import Lock
+from typing import List, Callable, Union, ValuesView, KeysView
 
 import discord
 
