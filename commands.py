@@ -130,6 +130,11 @@ class Commands:
         action, target_name = args
         failure_msg = lambda msg='': CommandOutput().add_text(
                 f'Failed to {action} role {target_name}! {msg}')
+        # TODO: factor this out to be common to all commands
+        permission_msg = CommandOutput().add_text(
+                f'Memebot doesn\'t have permission to {action} role '
+                f'{target_name}. Are you sure you configured Memebot\'s '
+                'permissions correctly?')
 
         # ensure access to command message
         if Commands.command_message is None:
@@ -149,7 +154,7 @@ class Commands:
         if author is None:
             print('!role: Could not get author')
             return failure_msg()
-            
+
         # fetch first instance of role with name 'target'
         target_role = None
         for role in guild.roles:
@@ -171,13 +176,19 @@ class Commands:
 
                 if new_role is None:
                     return failure_msg()
-            except:
-                print('!role: Failed API call create_role( {target_name} )')
+            except discord.Forbidden:
+                print(f'!role: Forbidden: create_role( {target_name} )')
+                return permission_msg
+            except discord.HTTPException:
+                print(f'!role: Failed API call create_role( {target_name} )')
+                return failure_msg()
+            except discord.InvalidArgument:
+                print('!role: Invalid arguments to call '
+                        f'create_role( {target_name} )')
                 return failure_msg()
                 
             return CommandOutput().add_text(
                     f'Created new role {new_role.mention}!')
-
         
         # ensure role exists for remaining actions
         if target_role is None: 
@@ -187,9 +198,13 @@ class Commands:
         if action == 'join':
             try:
                 await author.add_roles(target_role, reason=reason_str)
-            except:
-                print('!role: Failed API call: '
-                        f'{author.name} add_role( {target_name} )')
+            except discord.Forbidden:
+                print('!role: Forbidden: '
+                        f'{author.name}.add_role( {target_name} )')
+                return permission_msg
+            except discord.HTTPException:
+                print('!role: Failed API call '
+                        f'{author.name}.add_role( {target_name} )')
                 return failure_msg()
 
             return CommandOutput().add_text(
@@ -198,9 +213,13 @@ class Commands:
         elif action == 'leave':
             try:
                 await author.remove_roles(target_role, reason=reason_str)
-            except:
-                print('!role: Failed API call: '
-                        f'{author.name} remove_role( {target_name} )')
+            except discord.Forbidden:
+                print('!role: Forbidden '
+                        f'{author.name}.remove_role( {target_name} )')
+                return permission_msg
+            except discord.HTTPException:
+                print('!role: Failed API call '
+                        f'{author.name}.remove_role( {target_name} )')
                 return failure_msg()
 
             return CommandOutput().add_text(
@@ -211,9 +230,11 @@ class Commands:
             if len(target_role.members) == 0:
                 try:
                     await target_role.delete(reason=reason_str)
-                except:
-                    print('!role: Failed API call: '
-                            f'{author.name} delete {target_name}')
+                except discord.Forbidden:
+                    print(f'!role: Forbidden: delete( {target_name} )')
+                    return permission_msg
+                except discord.HTTPException:
+                    print('!role: Failed API call delete( {target_name} )')
                     return failure_msg()
 
                 return CommandOutput().add_text(
