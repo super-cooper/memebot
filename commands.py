@@ -128,23 +128,27 @@ class Commands:
             return help_message
  
         action, target_name = args
+        failure_msg = lambda msg='': CommandOutput().add_text(
+                f'Failed to {action} role {target_name}! {msg}')
 
         # ensure access to command message
         if Commands.command_message is None:
             print('!role: Could not get command message')
-            return CommandOutput().add_text(f'Failed to {action} role {target_name}')
+            return failure_msg()
         
         # get guild and author from command message
         guild = Commands.command_message.guild
         author = guild.get_member(Commands.command_message.author.id)
+        
+        reason_str = f'Performed through MemeBot by {author.name}'
 
         if guild is None: 
             print('!role: Could not get Guild')
-            return CommandOutput().add_text(f'Failed to {action} role {target_name}')
+            return failure_msg()
 
         if author is None:
             print('!role: Could not get author')
-            return CommandOutput().add_text(f'Failed to {action} role {target_name}')
+            return failure_msg()
             
         # fetch first instance of role with name 'target'
         target_role = None
@@ -156,66 +160,71 @@ class Commands:
         # handle create
         if action == 'create':
             if target_role is not None:
-                return CommandOutput().add_text(f'The role `@{target_name}` already exists!')
+                return failure_msg(
+                        f'The role `@{target_name}` already exists!')
             
             new_role = None
 
             try:
                 new_role = await guild.create_role(name=target_name, 
-                    mentionable=True,
-                    reason=f'Performed through MemeBot by {author.name}')
+                        mentionable=True, reason=reason_str)
 
                 if new_role is None:
-                    return CommandOutput().add_text('Failed to create role {target_name}')
+                    return failure_msg()
             except:
                 print('!role: Failed API call create_role( {target_name} )')
-                return CommandOutput().add_text('Failed to create role {target_name}')
+                return failure_msg()
                 
-            return CommandOutput().add_text(f'Created new role {new_role.mention}!')
+            return CommandOutput().add_text(
+                    f'Created new role {new_role.mention}!')
 
         
         # ensure role exists for remaining actions
         if target_role is None: 
-            return CommandOutput().add_text(f'The role `@{target_name}` was not found!')
+            return failure_msg(f'The role `@{target_name}` was not found!')
 
         # handle remaining actions
         if action == 'join':
             try:
-                await author.add_roles(target_role,
-                    reason=f'Performed through MemeBot by {author.name}')
+                await author.add_roles(target_role, reason=reason_str)
             except:
-                print(f'!role: Failed API call: {author.name} add_role( {target_name} )')
-                return CommandOutput().add_text('Failed to join role `@{target_name}`')
+                print('!role: Failed API call: '
+                        f'{author.name} add_role( {target_name} )')
+                return failure_msg()
 
-            return CommandOutput().add_text(f'{author.name} successfully joined `@{target_name}`')
+            return CommandOutput().add_text(
+                    f'{author.name} successfully joined `@{target_name}`')
 
         elif action == 'leave':
             try:
-                await author.remove_roles(target_role,
-                    reason=f'Performed through MemeBot by {author.name}')
+                await author.remove_roles(target_role, reason=reason_str)
             except:
-                print(f'!role: Failed API call: {author.name} remove_role( {target_name} )')
-                return CommandOutput().add_text('Failed to join role `@{target_name}`')
+                print('!role: Failed API call: '
+                        f'{author.name} remove_role( {target_name} )')
+                return failure_msg()
 
-            return CommandOutput().add_text(f'{author.name} successfully left `@{target_name}`')
+            return CommandOutput().add_text(
+                    f'{author.name} successfully left `@{target_name}`')
 
         elif action == 'delete':
             # ensure role is empty before deleting
             if len(target_role.members) == 0:
                 try:
-                    await target_role.delete(reason=f'Performed through MemeBot by {author.name}')
+                    await target_role.delete(reason=reason_str)
                 except:
-                    print(f'!role: Failed API call: {author.name} delete {target_name}')
-                    return CommandOutput().add_text(f'Failed to delete role `@{target_name}`')
+                    print('!role: Failed API call: '
+                            f'{author.name} delete {target_name}')
+                    return failure_msg()
 
-                return CommandOutput().add_text(f'Deleted role `@{target_name}`!')
+                return CommandOutput().add_text(
+                        f'Deleted role `@{target_name}`!')
             else:
-                return CommandOutput().add_text(f'Cannot delete role `@{target_name}`: roles '
-                  'must have no members to be deleted')
+                return failure_msg('Roles must have no members to be deleted')
 
         elif action == 'list':
+            members_string = ''
             if len(target_role.members) == 0:
-                return CommandOutput().add_text(f'Role `@{target_name}` has no members!')
+                members_string = f'Role `@{target_name}` has no members!'
             else:
                 members_string = f'Members of `@{target_name}`:'
 
@@ -225,7 +234,7 @@ class Commands:
                     else:
                         members_string += f'\n- {member.name}'
 
-                return CommandOutput().add_text(members_string)
+            return CommandOutput().add_text(members_string)
 
         # send help message if invalid action 
         return help_message
