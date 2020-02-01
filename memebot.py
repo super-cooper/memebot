@@ -31,9 +31,8 @@ class MemeBot(discord.Client):
             # ignore messages sent by this bot (for now)
             return
 
-        command, *args = shlex.split(message.content)
-
-        if command.startswith('!'):
+        if message.content.startswith('!'):
+            command, *args = shlex.split(message.content)
             result = await Commands.execute(command, args, self, message)
             new_message = await message.channel.send(**result.kwargs)
             await SideEffects.borrow(new_message)
