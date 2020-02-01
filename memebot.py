@@ -31,9 +31,13 @@ class MemeBot(discord.Client):
             # ignore messages sent by this bot (for now)
             return
 
-        command, *args = shlex.split(message.content)
+        if message.content.startswith('!'):
+            try:
+                command, *args = shlex.split(message.content)
+            except ValueError as e:
+                await message.channel.send('Could not parse command: ' + str(e))
+                return
 
-        if command.startswith('!'):
             result = await Commands.execute(command, args, self, message)
             new_message = await message.channel.send(**result.kwargs)
             await SideEffects.borrow(new_message)
