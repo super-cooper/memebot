@@ -16,3 +16,8 @@ Current commands that can be used in Discord:
     !hello - print "Hello!"
     !poll  - create a simple poll
     !role  - manage mentionable roles
+
+## Docker
+Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./Dockerfile) in this 
+repository. This image can be used for both deployment and testing purposes, although regular testing with it is not 
+recommended, as the image has to be rebuilt any time a file is edited or a configuration is changed.
