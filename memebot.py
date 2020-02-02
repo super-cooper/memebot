@@ -45,4 +45,6 @@ class MemeBot(discord.Client):
 
     def is_command(self, msg: str) -> bool:
         """Returns True if msg is a command, otherwise returns False."""
+        # re.match looks for a match anywhere in msg. Regex matches if first
+        # word of msg is ! followed by letters. 
         return bool(re.match(r'^![a-zA-Z]+(\s|$)', msg))
