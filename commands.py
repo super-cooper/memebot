@@ -140,16 +140,16 @@ class Commands:
         if Commands.command_message is None:
             print('!role: Could not get command message')
             return failure_msg()
-        
+
         # get guild and author from command message
         guild = Commands.command_message.guild
-        author = guild.get_member(Commands.command_message.author.id)
-        
-        reason_str = f'Performed through MemeBot by {author.name}'
 
-        if guild is None: 
+        if guild is None:
             print('!role: Could not get Guild')
             return failure_msg()
+
+        author = guild.get_member(Commands.command_message.author.id)
+        reason_str = f'Performed through MemeBot by {author.name}'
 
         if author is None:
             print('!role: Could not get author')
