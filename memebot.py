@@ -45,4 +45,4 @@ class MemeBot(discord.Client):
 
     def is_command(self, msg: str) -> bool:
         """Returns True if msg is a command, otherwise returns False."""
-        return re.match(r'^![a-zA-Z]+(\s|$)', msg)
+        return bool(re.match(r'^![a-zA-Z]+(\s|$)', msg))
