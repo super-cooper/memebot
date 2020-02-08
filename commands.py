@@ -68,7 +68,7 @@ class Commands:
     @staticmethod
     async def poll(args: List[str]) -> 'CommandOutput':
         help_message = CommandOutput().add_text('Simple polls.\n\n'
-        '**`!poll "question" ["ans1" ... "ansN"]`**:  '
+        '**`!poll question ans1 ... ansN`**:  '
         'Create poll with `queston`and possible answers `ans1` through `ansN`. '
         'If no answers provided, :thumbsup: and :thumbsdown: will be used.')
 
