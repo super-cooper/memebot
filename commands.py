@@ -67,6 +67,15 @@ class Commands:
 
     @staticmethod
     async def poll(args: List[str]) -> 'CommandOutput':
+        help_message = CommandOutput().add_text('Simple polls.\n\n'
+        '**`!poll question ans1 ... ansN`**:  '
+        'Create poll with `queston`and possible answers `ans1` through `ansN`. '
+        'If no answers provided, :thumbsup: and :thumbsdown: will be used.')
+
+        if len(args) < 1:
+            print('!poll: missing question argument')
+            return help_message
+
         question, *options = args
         embed = discord.Embed(
             title=':bar_chart: **New Poll!**',
@@ -75,9 +84,9 @@ class Commands:
             timestamp=datetime.datetime.utcnow()
         )
         emojis = []
-        if len(options) < 2 or options in (['yes', 'no'], ['no', 'yes'], ['yea', 'nay']):
-            embed.add_field(name=':thumbsup:', value=':)' if len(options) < 1 else options[0]).add_field(
-                name=':thumbsdown:', value=':(' if len(options) < 2 else options[1])
+        if len(options) == 0 or options in (['yes', 'no'], ['no', 'yes'], ['yea', 'nay']):
+            embed.add_field(name=':thumbsup:', value=':)').add_field(
+                    name=':thumbsdown:', value=':(')
             emojis = [':thumbsup:', ':thumbsdown:']
         else:
             for i in range(len(options)):
@@ -140,16 +149,16 @@ class Commands:
         if Commands.command_message is None:
             print('!role: Could not get command message')
             return failure_msg()
-        
+
         # get guild and author from command message
         guild = Commands.command_message.guild
-        author = guild.get_member(Commands.command_message.author.id)
-        
-        reason_str = f'Performed through MemeBot by {author.name}'
 
-        if guild is None: 
+        if guild is None:
             print('!role: Could not get Guild')
             return failure_msg()
+
+        author = guild.get_member(Commands.command_message.author.id)
+        reason_str = f'Performed through MemeBot by {author.name}'
 
         if author is None:
             print('!role: Could not get author')
