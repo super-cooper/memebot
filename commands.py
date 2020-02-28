@@ -84,6 +84,9 @@ class Commands:
             timestamp=datetime.datetime.utcnow()
         )
         emojis = []
+        if len(options) == 1:
+            print('!poll: 1 option provided')
+            return help_message
         if len(options) == 0 or options in (['yes', 'no'], ['no', 'yes'], ['yea', 'nay']):
             embed.add_field(name=':thumbsup:', value=':)').add_field(
                     name=':thumbsdown:', value=':(')
