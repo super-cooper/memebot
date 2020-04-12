@@ -117,6 +117,7 @@ class Commands:
         !role join <role>: Adds caller to <role> 
         !role leave <role>: Removes caller from <role> 
         !role delete <role>: Deletes <role> if <role> has no members
+        !role list: List all bot-managed roles
         !role list <role>: Lists members of <role>
 
         Note that because role names are not unique, these commands will act 
@@ -132,14 +133,19 @@ class Commands:
         '`!role join <role>`: Adds caller to <role>\n'
         '`!role leave <role>`: Removes caller from <role>\n'
         '`!role delete <role>`: Deletes <role> if <role> has no members\n'
+        '`!role list`: List all bot-managed roles\n'
         '`!role list <role>`: Lists members of <role>'
         )
-
-        # ensure proper usage
-        if len(args) != 2: 
+        
+        # ensure proper usage and get args
+        if len(args) == 2: 
+            action, target_name = args
+        elif len(args) == 1:
+            action = args[0]
+            target_name = ""
+        else:
             return help_message
- 
-        action, target_name = args
+            
         failure_msg = lambda msg='': CommandOutput().add_text(
                 f'Failed to {action} role {target_name}! {msg}')
         # TODO: factor this out to be common to all commands
@@ -173,7 +179,22 @@ class Commands:
             if role.name == target_name:
                 target_role = role
                 break
-
+                    
+        # handle list with no role name
+        if action == 'list' and target_role is None:
+            roles = []
+            can_manage = False
+            # Bot can manage all roles below its highest role. Find that role 
+            # and begin listing roles from that point onward.
+            for role in guild.roles[:0:-1]:  # top-down, excluding @everyone
+                if can_manage:
+                    roles.append(role.name)
+                    continue
+                if Commands.client.user in role.members:
+                    can_manage = True
+            roles.insert(0, "Roles managed through `!role` command:")
+            return CommandOutput().add_text("\n- ".join(roles))
+            
         # handle create
         if action == 'create':
             if target_role is not None:
