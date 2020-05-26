@@ -189,8 +189,7 @@ class Commands:
             for role in guild.roles[:0:-1]:  # top-down, excluding @everyone
                 if can_manage:
                     roles.append(role.name)
-                    continue
-                if Commands.client.user in role.members:
+                elif Commands.client.user in role.members:
                     can_manage = True
             roles.insert(0, "Roles managed through `!role` command:")
             return CommandOutput().add_text("\n- ".join(roles))
