@@ -181,7 +181,7 @@ class Commands:
                 break
                     
         # handle list with no role name
-        if action == 'list' and target_role is None:
+        if action == 'list' and target_name == '':
             roles = []
             can_manage = False
             # Bot can manage all roles below its highest role. Find that role 
