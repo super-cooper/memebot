@@ -32,6 +32,9 @@ class MemeBot(discord.Client):
             # ignore messages sent by this bot (for now)
             return
 
+        # convert curly quotes to straight quotes
+        message.content = message.content.replace('“','"').replace('”','"')
+
         if self.is_command(message.content):
             try:
                 command, *args = shlex.split(message.content)
