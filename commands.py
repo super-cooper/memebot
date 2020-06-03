@@ -136,8 +136,8 @@ class Commands:
         '`!role list`: List all bot-managed roles\n'
         '`!role list <role>`: Lists members of <role>'
         )
-        
         # ensure proper usage and get args
+        args = list(map(str.lower, args))
         if len(args) == 2: 
             action, target_name = args
         elif len(args) == 1:
