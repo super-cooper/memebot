@@ -14,7 +14,7 @@ def main(argv: List[str]) -> int:
     client = MemeBot()
 
     # !! DO NOT HARDCODE THE TOKEN !!
-    with open('../client_token') as token_file:
+    with open('client_token') as token_file:
         token = token_file.read().strip()
 
     return client.run(token)

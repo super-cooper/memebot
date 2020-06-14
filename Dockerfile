@@ -13,4 +13,4 @@ ENV PATH "$VIRTUAL_ENV/bin:$PATH"
 RUN python -m pip install -r requirements.txt
 
 # run memebot
-CMD ["python3", "main.py"]
+CMD ["python3", "src/main.py"]
