@@ -3,7 +3,7 @@ import shlex
 
 import discord
 
-from commands import Commands, SideEffects
+from commands.commands import Commands, SideEffects
 
 
 class MemeBot(discord.Client):
