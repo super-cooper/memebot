@@ -1,4 +1,5 @@
 import sys
+
 from typing import List
 
 from memebot import MemeBot
@@ -16,7 +17,7 @@ def main(argv: List[str]) -> int:
     # !! DO NOT HARDCODE THE TOKEN !!
     with open('client_token') as token_file:
         token = token_file.read().strip()
-
+    
     return client.run(token)
 
 
