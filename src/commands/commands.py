@@ -187,7 +187,7 @@ class Commands:
             # Bot can manage all roles below its highest role. Find that role 
             # and begin listing roles from that point onward.
             for role in guild.roles[:0:-1]:  # top-down, excluding @everyone
-                if can_manage:
+                if can_manage and role.name != Commands.client.user.name:
                     roles.append(role.name)
                 elif Commands.client.user in role.members:
                     can_manage = True
