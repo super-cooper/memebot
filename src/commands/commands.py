@@ -227,7 +227,7 @@ class Commands:
         
         # ensure role provided and exists for remaining actions
         if target_role is None: 
-            if target_role == '':
+            if target_name == '':
                 msg = f'The role `@{target_name}` was not found!'
             else:
                 msg = 'No role provided.'
