@@ -138,16 +138,19 @@ class Commands:
         )
         # ensure proper usage and get args
         args = list(map(str.lower, args))
+        aciton = ""
         if len(args) == 2: 
             action, target_name = args
         elif len(args) == 1:
             action = args[0]
             target_name = ""
-        else:
+
+        # TODO(nhawke): Change this to a dict with func vals when refactoring.
+        if action not in {'list', 'join', 'create', 'join', 'leave', 'delete'}:
             return help_message
             
         failure_msg = lambda msg='': CommandOutput().add_text(
-                f'Failed to {action} role {target_name}! {msg}')
+                f'Failed to {action} role "{target_name}"! {msg}')
         # TODO: factor this out to be common to all commands
         permission_msg = CommandOutput().add_text(
                 f'Memebot doesn\'t have permission to {action} role '
@@ -222,9 +225,13 @@ class Commands:
             return CommandOutput().add_text(
                     f'Created new role {new_role.mention}!')
         
-        # ensure role exists for remaining actions
+        # ensure role provided and exists for remaining actions
         if target_role is None: 
-            return failure_msg(f'The role `@{target_name}` was not found!')
+            if target_role == '':
+                msg = f'The role `@{target_name}` was not found!'
+            else:
+                msg = 'No role provided.'
+            return failure_msg(msg)
 
         # handle remaining actions
         if action == 'join':
