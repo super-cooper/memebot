@@ -138,7 +138,7 @@ class Commands:
         )
         # ensure proper usage and get args
         args = list(map(str.lower, args))
-        aciton = ""
+        action = ""
         if len(args) == 2: 
             action, target_name = args
         elif len(args) == 1:
