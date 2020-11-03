@@ -1,9 +1,8 @@
-import re
-import shlex
+from typing import Union
 
 import discord
 
-from commands.commands import Commands, SideEffects
+import commands
 
 
 class MemeBot(discord.Client):
@@ -13,6 +12,10 @@ class MemeBot(discord.Client):
 
     def __init__(self, **args):
         super().__init__(**args)
+        global client
+        if client is not None:
+            raise ReferenceError("There can only be one Memebot!")
+        client = self
 
     async def on_ready(self) -> None:
         """
@@ -31,23 +34,8 @@ class MemeBot(discord.Client):
         if message.author == self.user:
             # ignore messages sent by this bot (for now)
             return
+        else:
+            await commands.execution.execute_if_command(message)
 
-        # convert curly quotes to straight quotes
-        message.content = message.content.replace('“','"').replace('”','"')
 
-        if self.is_command(message.content):
-            try:
-                command, *args = shlex.split(message.content)
-            except ValueError as e:
-                await message.channel.send('Could not parse command: ' + str(e))
-                return
-
-            result = await Commands.execute(command, args, self, message)
-            new_message = await message.channel.send(**result.kwargs)
-            await SideEffects.borrow(new_message)
-
-    def is_command(self, msg: str) -> bool:
-        """Returns True if msg is a command, otherwise returns False."""
-        # re.match looks for a match anywhere in msg. Regex matches if first
-        # word of msg is ! followed by letters. 
-        return bool(re.match(r'^![a-zA-Z]+(\s|$)', msg))
+client: Union[discord.Client, None] = None
