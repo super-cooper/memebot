@@ -19,7 +19,7 @@ def dynamically_register_commands():
     Dynamically import all Command classes. Should only be called once outside of this function.
     TODO This is to be implemented by #52
     """
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 # TODO Manually registering commands like this is a temporary solution which will be fixed by #52

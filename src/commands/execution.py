@@ -19,7 +19,7 @@ async def execute_if_command(message: discord.Message) -> None:
     if not is_command(content):
         return
     try:
-        command, args = registry.parse_command_and_args(shlex.split(message.content))
+        command, args = registry.parse_command_and_args(shlex.split(prepare_input(message.content)))
     except ValueError as e:
         await message.channel.send('Could not parse command: ' + str(e))
         return

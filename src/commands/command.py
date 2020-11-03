@@ -15,11 +15,8 @@ class Command:
         - description: this is a brief description of the command, used by !help
     """
 
-    DEFAULT_NAME = "Command"
-    DEFAULT_DESC = "Unknown"
-
     @abstractmethod
-    def __init__(self, name: str = DEFAULT_NAME, description: str = DEFAULT_DESC, example_args: str = ""):
+    def __init__(self, name: str = None, description: str = None, example_args: str = ""):
         """
         Default constructor. Ensures that all pieces of command are properly implemented.
         :param name The name of the command, which is the "activation string" when typed by a user in Discord.
@@ -48,7 +45,7 @@ class Command:
         Returns a string of help text for this particular command. Describeds what the command does and how to use it.
         :returns A help message, which should be sent to the server.
         """
-        pass
+        raise NotImplementedError()
 
     def fail(self, additional_info: str = "") -> CommandOutput:
         """
@@ -76,7 +73,11 @@ class Command:
         :return: A callback function that will be called after the output is sent to the server. The function MUST
         accept a discord.Message and only a discord.Message. Any return values will be ignored.
         """
-        pass
+        raise NotImplementedError()
 
     def callback(self, *args, **kwargs) -> None:
+        """
+        Provide a callback function for the command to run after the initial response is created. This callback is run
+        after the first response (i.e. the return value of Command.exec) is sent to the server.
+        """
         pass
