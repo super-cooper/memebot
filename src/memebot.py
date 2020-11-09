@@ -11,7 +11,7 @@ class MemeBot(discord.Client):
     """
 
     def __init__(self, **args):
-        super().__init__(**args)
+        super().__init__(**args, intents=discord.Intents().all())
         global client
         if client is not None:
             raise ReferenceError("There can only be one Memebot!")
