@@ -1,13 +1,14 @@
 import typing
+
 import discord
 
 from commands import Command, CommandOutput
+from commands.command import has_subcommands
 from .create import Create
 from .delete import Delete
 from .join import Join
 from .leave import Leave
 from .list import List
-from ..command import has_subcommands
 
 
 @has_subcommands(Create, Delete, Join, Leave, List)

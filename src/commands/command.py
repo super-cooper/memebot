@@ -52,11 +52,11 @@ class Command(metaclass=CommandMeta):
         if self.__class__.__name__ == "Command":
             return
         # If the command is a top-level command
-        elif type(self.parent) is Command:
+        elif type(self.__class__.parent) is Command:
             registry.register_top_level_command(self)
         else:
             parents = []
-            parent = self.parent
+            parent = self.__class__.parent
             # Gather all of this subcommand's parents
             while type(parent) is not Command:
                 parents.append(parent.name)
