@@ -12,7 +12,6 @@ class Delete(Command):
 
     def __init__(self):
         super().__init__("delete", "Deletes <role> if <role> has no members.", "<role>")
-        self.parent = "role"
 
     def help_text(self) -> CommandOutput:
         return CommandOutput().set_text("Delete a Memebot-managed role if, and only if, the role has no members.")
@@ -42,4 +41,3 @@ class Delete(Command):
                 return CommandOutput().set_text(f"Deleted role `@{target_name}`")
         else:
             return role.action_failure_message(self.name, target_name, 'Roles must have no members to be deleted.')
-

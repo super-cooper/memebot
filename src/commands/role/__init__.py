@@ -1,10 +1,16 @@
-from typing import List
-
+import typing
 import discord
 
 from commands import Command, CommandOutput
+from .create import Create
+from .delete import Delete
+from .join import Join
+from .leave import Leave
+from .list import List
+from ..command import has_subcommands
 
 
+@has_subcommands(Create, Delete, Join, Leave, List)
 class Role(Command):
     """
     Controls creating, joining, and leaving permissonless mentionable
@@ -31,15 +37,9 @@ class Role(Command):
             "intended to serve as \"tags\" to allow mentioning multiple users at once."
         )
 
-    async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
-        # TODO Create a general way of harvesting subcommands and formatting it like this in Command.fail()
-        return self.fail(f"""
-`!{self.name} create <role>`: Creates <role>
-`!{self.name} join <role>`: Adds caller to <role>
-`!{self.name} leave <role>`: Removes caller from <role>
-`!{self.name} delete <role>`: Deletes <role> if <role> has no members
-`!{self.name} list`: Lists all bot-managed roles
-`!{self.name} list <role>`: Lists members of <role>""")
+    async def exec(self, args: typing.List[str], message: discord.Message) -> CommandOutput:
+        return self.fail(
+            '\n'.join(f"`!{self.name} {sub.name} {sub.example_args}`: {sub.description}" for sub in Role.subcommands))
 
 
 def action_failure_message(action: str, target_name: str, msg: str = "") -> CommandOutput:

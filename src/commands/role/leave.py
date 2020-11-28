@@ -12,7 +12,6 @@ class Leave(Command):
 
     def __init__(self):
         super().__init__("leave", "Removes caller from <role>", "<role>")
-        self.parent = "role"
 
     def help_text(self) -> CommandOutput:
         return CommandOutput().set_text("Leave a Memebot-managed role.")

@@ -2,8 +2,8 @@ from typing import List
 
 import discord
 
-from ..command import Command, CommandOutput
-from ..registry import top_level_command_registry
+from commands import Command, CommandOutput
+from commands.registry import top_level_command_registry
 
 
 class Help(Command):

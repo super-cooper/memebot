@@ -12,7 +12,6 @@ class Join(Command):
 
     def __init__(self):
         super().__init__("join", "Adds caller to <role>", "<role>")
-        self.parent = "role"
 
     def help_text(self) -> CommandOutput:
         return CommandOutput().set_text("Join an existing Memebot-managed role.")
