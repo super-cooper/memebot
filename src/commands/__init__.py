@@ -22,7 +22,19 @@ def dynamically_register_commands() -> None:
         cmd_class = getattr(pkg, class_and_pkg_name.capitalize())
         # If the retrieved class is a Command, initialize it
         if issubclass(cmd_class, Command):
-            cmd_class()
+            instance = cmd_class()
+            # Registration machinery:
+            # If the command is a top-level command
+            if type(cmd_class.parent) is Command:
+                registry.register_top_level_command(instance)
+            else:
+                parents = []
+                parent = cmd_class.parent
+                # Gather all of this subcommand's parents
+                while type(parent) is not Command:
+                    parents.append(parent.name)
+                    parent = parent.__class__.parent
+                registry.register_subcommand(parents, instance)
 
 
 dynamically_register_commands()

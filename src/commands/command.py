@@ -3,7 +3,6 @@ from typing import List, Callable, Union, Tuple, Type
 
 import discord
 
-from commands import registry
 from commands.command_output import CommandOutput
 
 
@@ -48,20 +47,6 @@ class Command(metaclass=CommandMeta):
             raise ValueError(f"Every command needs to have a description! ({type(self).__name__})")
         self.description: str = description
         self.example_args: str = example_args
-        # Registration machinery:
-        if self.__class__.__name__ == "Command":
-            return
-        # If the command is a top-level command
-        elif type(self.__class__.parent) is Command:
-            registry.register_top_level_command(self)
-        else:
-            parents = []
-            parent = self.__class__.parent
-            # Gather all of this subcommand's parents
-            while type(parent) is not Command:
-                parents.append(parent.name)
-                parent = parent.__class__.parent
-            registry.register_subcommand(parents, self)
 
     def __repr__(self) -> str:
         return f"Command: {type(self).__name__}(name={self.name} description={self.description})"
