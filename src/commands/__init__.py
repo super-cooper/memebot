@@ -15,9 +15,12 @@ def dynamically_register_commands() -> None:
                           f.is_dir() and not f.name.endswith("__pycache__")]
 
     for path in top_level_packages:
-        pkg_name = os.path.basename(path)
-        pkg = importlib.import_module(f"commands.{pkg_name}")
-        cmd_class = getattr(pkg, pkg_name.capitalize())
+        class_and_pkg_name = os.path.basename(path)
+        # First we import the package
+        pkg = importlib.import_module(f"commands.{class_and_pkg_name}")
+        # Then, we retrieve the class from the imported package
+        cmd_class = getattr(pkg, class_and_pkg_name.capitalize())
+        # If the retrieved class is a Command, initialize it
         if issubclass(cmd_class, Command):
             cmd_class()
 

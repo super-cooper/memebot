@@ -41,7 +41,7 @@ class Command(metaclass=CommandMeta):
         """
         if name is None:
             raise ValueError(f"Every command needs to have a name! ({type(self).__name__})")
-        if not name.islower() or any(not c.isalpha() for c in name):
+        if not (name.islower() and name.isalpha()):
             raise ValueError(f"Command names must be a single word, all lowercase! ({name})")
         self.name: str = name
         if description is None:
