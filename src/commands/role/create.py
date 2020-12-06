@@ -12,7 +12,6 @@ class Create(Command):
 
     def __init__(self):
         super().__init__("create", "Creates <role>", "<role>")
-        self.parent = "role"
 
     def help_text(self) -> CommandOutput:
         return CommandOutput().set_text("Create a new role to be managed by memebot.")

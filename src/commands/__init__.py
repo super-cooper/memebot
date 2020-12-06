@@ -1,49 +1,41 @@
-# The order of imports here could create circular dependencies... It might be a good idea to finish the current
-# machinery ASAP
+import importlib
+import os
+
 from . import registry, execution
-from .command import Command
-from .command_output import CommandOutput
-from commands.help import Help
-from commands.hello import Hello
-from commands.poll import Poll
-from commands.role import Role
-from commands.role.join import Join
-from commands.role.create import Create
-from commands.role.leave import Leave
-from commands.role.list import List
-from commands.role.delete import Delete
+from .command import Command, CommandOutput
 
 
-def dynamically_register_commands():
+def dynamically_register_commands() -> None:
     """
     Dynamically import all Command classes. Should only be called once outside of this function.
-    TODO This is to be implemented by #52
     """
-    raise NotImplementedError()
+
+    # Get all the packages located in the command package
+    top_level_packages = [f.path for f in os.scandir(os.path.dirname(os.path.realpath(__file__))) if
+                          f.is_dir() and not f.name.endswith("__pycache__")]
+
+    for path in top_level_packages:
+        class_and_pkg_name = os.path.basename(path)
+        # First we import the package
+        pkg = importlib.import_module(f"commands.{class_and_pkg_name}")
+        # Then, we retrieve the class from the imported package
+        cmd_class = getattr(pkg, class_and_pkg_name.capitalize())
+        # If the retrieved class is a Command, initialize it
+        if issubclass(cmd_class, Command):
+            instance = cmd_class()
+            # Registration machinery:
+            # If the command is a top-level command
+            if type(cmd_class.parent) is Command:
+                registry.register_top_level_command(instance)
+            else:
+                parents = []
+                parent = cmd_class.parent
+                # Gather all of this subcommand's parents
+                while type(parent) is not Command:
+                    parents.append(parent.name)
+                    parent = parent.__class__.parent
+                registry.register_subcommand(parents, instance)
 
 
-# TODO Manually registering commands like this is a temporary solution which will be fixed by #52
-cmd_help = Help()
-registry.register_top_level_command(cmd_help)
-
-cmd_hello = Hello()
-registry.register_top_level_command(cmd_hello)
-
-cmd_poll = Poll()
-registry.register_top_level_command(cmd_poll)
-
-cmd_role = Role()
-cmd_role_create = Create()
-cmd_role_delete = Delete()
-cmd_role_join = Join()
-cmd_role_leave = Leave()
-cmd_role_list = List()
-role_parents = ["role"]
-registry.register_top_level_command(cmd_role)
-registry.register_subcommand(role_parents, cmd_role_create)
-registry.register_subcommand(role_parents, cmd_role_delete)
-registry.register_subcommand(role_parents, cmd_role_join)
-registry.register_subcommand(role_parents, cmd_role_leave)
-registry.register_subcommand(role_parents, cmd_role_list)
-
+dynamically_register_commands()
 registry.lock()

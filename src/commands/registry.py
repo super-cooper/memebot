@@ -4,7 +4,7 @@ Commands module, but the registry can be _read_ at any time.
 """
 from typing import Dict, List, Tuple
 
-from .command import Command
+from commands.command import Command
 
 DEFAULT_COMMAND = "help"
 
