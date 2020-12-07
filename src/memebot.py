@@ -1,25 +1,26 @@
+import json
 import re
 import shlex
-import json
 
 import discord
 import twitter
 
 from commands.commands import Commands, SideEffects
+from lib import constants
 
 
 class MemeBot(discord.Client):
     """
     The main class that operates MemeBot, and directly controls all listeners
     """
-    with open('python_tokens.json') as python_tokens:
-        tokens = json.load(python_tokens)
+    with open('twitter_api_tokens.json') as twitter_api_tokens:
+        twitter_tokens = json.load(twitter_api_tokens)
 
-    t_api = twitter.Api(
-        tokens['consumer_key'],
-        tokens['consumer_secret'],
-        tokens['access_token_key'],
-        tokens['access_token_secret']
+    twitter_api = twitter.Api(
+        twitter_tokens['consumer_key'],
+        twitter_tokens['consumer_secret'],
+        twitter_tokens['access_token_key'],
+        twitter_tokens['access_token_secret']
     )
 
     def __init__(self, **args):
@@ -49,7 +50,15 @@ class MemeBot(discord.Client):
         if self.is_twitter(message.content):
             twitter_url, *args = shlex.split(message.content)
             tweet_id = twitter_url.split("/")[-1].split("?")[0]
-            await message.channel.send(self.get_tweet_urls(tweet_id, 0 , ""))
+            tweet_info = self.get_tweet_info(tweet_id)
+            if tweet_info.media:
+                emoji = self.get_tweet_media_count(tweet_info)
+                if emoji > 1:
+                    emoji = ":" +str(emoji)+ ":"
+                    await message.add_reaction(constants.EMOJI_MAP[emoji])
+            
+            if tweet_info.urls:
+                await message.channel.send(self.get_tweet_urls(tweet_id, 0, ""))
 
         if self.is_command(message.content):
             try:
@@ -74,25 +83,39 @@ class MemeBot(discord.Client):
         # is https://twitter.com/XXXXXXXXXXXXXX
         return bool(re.match(r'https:\/\/twitter\.com\b[-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*', msg))
 
-    def get_tweet_urls(self, tweet_id, level, tweets):
-        """Gets data of a tweet and checks if the tweet contains urls"""
+    def get_tweet_info(self, tweet_id: str) -> twitter.models.Status:
+        """
+        gets data from twitter API of a tweet ID
+        :param tweet_id: ID of tweet in message:
+        :return: data from twitter API
+        """
+        tweet_info = self.twitter_api.GetStatus(tweet_id)
+        return tweet_info
+
+    def get_tweet_media_count(self, tweet_info: twitter.models.Status) -> int:
+        """
+        counts number of media (images) in a tweet
+        :param tweet_info: data of tweet from most recent message.
+        :return: number of media in tweet
+        """
+        count = 0
+        for media in tweet_info.media:
+            count += 1
+        
+        return count
+
+    def get_tweet_urls(self, tweet_id: str, level: int, tweets: str) -> str:
+        """
+        Gets data of a tweet and checks if the tweet contains URLs
+        :param tweet_id: id of tweet
+        :param level: current depth of quote tweet(s) (max 4)
+        :param tweets: string of twitter URLs containing quote tweets
+        :return: URL of media/quote tweet(s)
+        """
         if level == 3:
             return tweets
         else:
-            tweet_info = self.t_api.GetStatus(tweet_id)
-            
-            if tweet_info.media:
-                tweets += "media at level " + str(level) + ": "
-                media_urls = ""
-                for m in tweet_info.media:
-                    if m.type == "video":
-                        print(m.video_info)
-                        for v in m.video_info["variants"]:
-                            if v["content_type"] == "video/mp4":
-                                media_urls += v["url"] + " "
-                                break
-                    media_urls += m.media_url_https + " "
-                tweets = media_urls + "\n"
+            tweet_info = self.twitter_api.GetStatus(tweet_id)
 
             if tweet_info.urls:
                 quoted_tweet_url = tweet_info.urls[0].expanded_url 
