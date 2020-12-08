@@ -4,6 +4,7 @@ from typing import List, Callable, Union, Tuple, Type
 import discord
 
 from commands.command_output import CommandOutput
+from lib import status
 
 
 class CommandMeta(type):
@@ -80,6 +81,7 @@ class Command(metaclass=CommandMeta):
         if additional_info:
             output.append_line("")
             output.append_line(additional_info)
+        output.status = status.FAIL
         return output
 
     @abstractmethod
