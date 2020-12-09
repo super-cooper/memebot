@@ -4,6 +4,7 @@ import discord
 
 from commands import Command, CommandOutput
 from commands.command import has_subcommands
+from lib import status
 from .create import Create
 from .delete import Delete
 from .join import Join
@@ -51,7 +52,7 @@ def action_failure_message(action: str, target_name: str, msg: str = "") -> Comm
     :param msg: The explanation, usually extracted from an exception.
     :return: A CommandOutput with the created message.
     """
-    return CommandOutput().set_text(f"Failed to {action} role {target_name}! {msg}")
+    return CommandOutput(status=status.FAIL).set_text(f"Failed to {action} role {target_name}! {msg}")
 
 
 def permission_failure_message(action: str, target_name: str) -> CommandOutput:
@@ -62,8 +63,8 @@ def permission_failure_message(action: str, target_name: str) -> CommandOutput:
     :return: A CommandOutput with the created message.
     """
     # TODO: factor this out to be common to all commands
-    return CommandOutput().set_text(f"Memebot doesn't have permission to {action} role {target_name}. "
-                                    "Are you sure you configured Membot's permissions correctly?")
+    return CommandOutput(status=status.FAIL).set_text(f"Memebot doesn't have permission to {action} role {target_name}. "
+                                                       "Are you sure you configured Membot's permissions correctly?")
 
 
 def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
