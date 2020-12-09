@@ -1,5 +1,5 @@
 import io
-from typing import Union, KeysView, ValuesView, List, Optional
+from typing import Union, KeysView, ValuesView, List
 
 import discord
 
@@ -125,7 +125,7 @@ class CommandOutput:
         return item in self.kwargs
 
     def __add__(self, other: 'CommandOutput') -> 'CommandOutput':
-        return CommandOutput(self.kwargs.update(other.kwargs))
+        return CommandOutput(**self.kwargs.update(other.kwargs))
 
     def keys(self) -> KeysView[str]:
         return self.kwargs.keys()

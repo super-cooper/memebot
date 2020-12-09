@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List, Callable, Union, Tuple, Type
+from typing import List, Type
 
 import discord
 
