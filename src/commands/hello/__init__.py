@@ -23,10 +23,10 @@ class Hello(Command):
         :param message: ignored
         :return: The string "Hello!"
         """
-        author: discord.abc.User = message.author
+        author = message.author
         if author is not None:
             # display_name is the nickname if it exists else the username
-            msg: str = f'Hello, {author.display_name}!'
+            msg = f'Hello, {author.display_name}!'
         else:
-            msg: str = 'Hello!'
+            msg = 'Hello!'
         return CommandOutput().set_text(msg)
