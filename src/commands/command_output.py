@@ -1,5 +1,5 @@
 import io
-from typing import Union, KeysView, ValuesView, List
+from typing import Union, KeysView, ValuesView, List, Optional
 
 import discord
 
@@ -17,12 +17,8 @@ class CommandOutput:
     LIFETIME = 'delete_after'
     NONCE = 'nonce'
 
-    def __init__(self, kwargs: dict = None):
-        if type(kwargs) is dict:
-            self.kwargs = kwargs
-        else:
-            # dict to hold keyword arguments
-            self.kwargs = {}
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
 
     def __repr__(self) -> str:
         return "CommandOutput(" + " ".join(f"{key}={repr(self.kwargs[key])}" for key in self.kwargs.keys()) + ")"

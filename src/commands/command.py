@@ -83,15 +83,12 @@ class Command(metaclass=CommandMeta):
         return output
 
     @abstractmethod
-    async def exec(self, args: List[str], message: discord.Message) -> \
-            Union[CommandOutput, Tuple[CommandOutput, Callable[[discord.Message], None]]]:
+    async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
         """
         Executes the command.
         :param args: The arguments passed to the command
         :param message: The raw Discord Message object for extracting metadata
         :return: a CommandOutput object that will be posted to Discord
-        :return: A callback function that will be called after the output is sent to the server. The function MUST
-        accept a discord.Message and only a discord.Message. Any return values will be ignored.
         """
         raise NotImplementedError()
 
