@@ -105,4 +105,4 @@ venv.bak/
 # project specific
 client_token
 twitter_api_tokens.json
-.vscode
+.vscode/
