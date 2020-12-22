@@ -15,9 +15,7 @@ def dynamically_register_commands() -> None:
         # Do a depth-first search to register subcommands
         for subcommand in top_level_command.subcommands:
             registry.register_subcommand(cmd_path, subcommand)
-            cmd_path.append(subcommand.name)
-            find_and_register_subcommands(subcommand, cmd_path)
-            cmd_path.pop()
+            find_and_register_subcommands(subcommand, cmd_path + [subcommand.name])
 
     # Get all the packages located in the command package
     top_level_packages = [f.path for f in os.scandir(os.path.dirname(os.path.realpath(__file__))) if
