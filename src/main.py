@@ -1,16 +1,13 @@
 import sys
-from typing import List
 
 from memebot import MemeBot
 
 
-def main(argv: List[str]) -> int:
+def main() -> int:
     """
     Main function, initializes MemeBot and then loops
-    :param argv: Arguments
     :return: Exit status of discord.Client.run()
     """
-    print(argv)
     client = MemeBot()
 
     # !! DO NOT HARDCODE THE TOKEN !!
@@ -23,4 +20,4 @@ def main(argv: List[str]) -> int:
     return client.run(token)
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())
