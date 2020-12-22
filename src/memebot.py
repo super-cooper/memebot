@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 import discord
 
@@ -24,7 +24,7 @@ class MemeBot(discord.Client):
         """
         print(f'Logged in as {self.user}')
 
-    async def on_message(self, message: discord.message.Message) -> None:
+    async def on_message(self, message: discord.Message) -> None:
         """
         Maintains all basic per-message functions of the bot, including extracting and executing !commands and
         updating databases with new data
@@ -38,4 +38,4 @@ class MemeBot(discord.Client):
             await commands.execution.execute_if_command(message)
 
 
-client: Union[discord.Client, None] = None
+client: Optional[discord.Client] = None

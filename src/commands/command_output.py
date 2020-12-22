@@ -17,12 +17,8 @@ class CommandOutput:
     LIFETIME = 'delete_after'
     NONCE = 'nonce'
 
-    def __init__(self, kwargs: dict = None):
-        if type(kwargs) is dict:
-            self.kwargs = kwargs
-        else:
-            # dict to hold keyword arguments
-            self.kwargs = {}
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
 
     def __repr__(self) -> str:
         return "CommandOutput(" + " ".join(f"{key}={repr(self.kwargs[key])}" for key in self.kwargs.keys()) + ")"
@@ -129,7 +125,7 @@ class CommandOutput:
         return item in self.kwargs
 
     def __add__(self, other: 'CommandOutput') -> 'CommandOutput':
-        return CommandOutput(self.kwargs.update(other.kwargs))
+        return CommandOutput(**self.kwargs.update(other.kwargs))
 
     def keys(self) -> KeysView[str]:
         return self.kwargs.keys()
