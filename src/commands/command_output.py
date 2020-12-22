@@ -19,10 +19,10 @@ class CommandOutput:
     LIFETIME = 'delete_after'
     NONCE = 'nonce'
 
-    def __init__(self, kwargs: dict = None, status: int = status.SUCCESS):
+    def __init__(self, status: int = status.SUCCESS, **kwargs):
         """
         :param kwargs: A keyword-arguments dictionary
-        :param status: The status of the command, whose value should be taken 
+        :param status: The status of the command, whose value should be taken
         from lib.status
         """
         self.status: int = status
@@ -136,7 +136,7 @@ class CommandOutput:
         return item in self.kwargs
 
     def __add__(self, other: 'CommandOutput') -> 'CommandOutput':
-        return CommandOutput(self.kwargs.update(other.kwargs))
+        return CommandOutput(**self.kwargs.update(other.kwargs))
 
     def keys(self) -> KeysView[str]:
         return self.kwargs.keys()

@@ -23,4 +23,10 @@ class Hello(Command):
         :param message: ignored
         :return: The string "Hello!"
         """
-        return CommandOutput().set_text("Hello!")
+        author = message.author
+        if author is not None:
+            # display_name is the nickname if it exists else the username
+            msg = f'Hello, {author.display_name}!'
+        else:
+            msg = 'Hello!'
+        return CommandOutput().set_text(msg)
