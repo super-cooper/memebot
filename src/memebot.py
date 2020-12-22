@@ -22,13 +22,16 @@ class MemeBot(discord.Client):
             raise ReferenceError("There can only be one Memebot!")
         client = self
 
-        twitter_api = twitter.Api(
-            twitter_tokens['consumer_key'],
-            twitter_tokens['consumer_secret'],
-            twitter_tokens['access_token_key'],
-            twitter_tokens['access_token_secret'],
-            tweet_mode='exended'
-        )
+        with open('twitter_api_tokens.json') as twitter_api_tokens:
+            twitter_tokens = json.load(twitter_api_tokens)
+
+        self.twitter_api = twitter.Api(
+                twitter_tokens['consumer_key'],
+                twitter_tokens['consumer_secret'],
+                twitter_tokens['access_token_key'],
+                twitter_tokens['access_token_secret'],
+                tweet_mode='extended'
+            )
 
     async def on_ready(self) -> None:
         """
@@ -53,7 +56,7 @@ class MemeBot(discord.Client):
         # Iterate through each word in the message, and checks each one if
         # the "word" in the message is a twitter URL
         for content in message.content.split():
-            if self.has_twitter(content):
+            if self.is_twitter_url(content):
                 twitter_url = content
 
                 # Because a twitter URL to a status is oftentimes as follows:
@@ -73,7 +76,7 @@ class MemeBot(discord.Client):
                     if quote_tweet_urls != "":
                         await message.channel.send(quote_tweet_urls)
 
-    def has_twitter(self, msg: str) -> bool:
+    def is_twitter_url(self, msg: str) -> bool:
         """Returns true if msg is a twitter link, otherwise returns False"""
         # re.match looks for a match in msg. Regex Matches if first part of msg
         # is https://twitter.com/XXXXXXXXXXXXXX
@@ -87,7 +90,7 @@ class MemeBot(discord.Client):
         """
         tweets = ""
         for level in range(3):
-            tweets = tweets + " https://twitter.com/i/web/status/" + tweet_info.quoted_status.id_str
+            tweets += "\n https://twitter.com/i/web/status/" + tweet_info.quoted_status.id_str
             tweet_info = self.twitter_api.GetStatus(tweet_info.quoted_status.id)
             if not tweet_info.quoted_status:
                 break

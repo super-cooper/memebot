@@ -14,9 +14,6 @@ def main() -> int:
     with open('client_token') as token_file:
         token = token_file.read().strip()
 
-    with open('twitter_api_tokens.json') as twitter_api_tokens:
-        twitter_tokens = json.load(twitter_api_tokens)
-
     return client.run(token)
 
 if __name__ == '__main__':
