@@ -63,8 +63,9 @@ def permission_failure_message(action: str, target_name: str) -> CommandOutput:
     :return: A CommandOutput with the created message.
     """
     # TODO: factor this out to be common to all commands
-    return CommandOutput(command_status=status.FAIL).set_text(f"Memebot doesn't have permission to {action} role `@{target_name}`. "
-                                    "Are you sure you configured Membot's permissions correctly?")
+    return CommandOutput(command_status=status.FAIL,
+                         content=f"Memebot doesn't have permission to {action} role `@{target_name}`. "
+                                  "Are you sure you configured Membot's permissions correctly?")
 
 
 def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
