@@ -19,13 +19,13 @@ class CommandOutput:
     LIFETIME = 'delete_after'
     NONCE = 'nonce'
 
-    def __init__(self, status: int = status.SUCCESS, **kwargs):
+    def __init__(self, command_status: int = status.SUCCESS, **kwargs):
         """
         :param kwargs: A keyword-arguments dictionary
-        :param status: The status of the command, whose value should be taken
+        :param command_status: The status of the command, whose value should be taken
         from lib.status
         """
-        self.status: int = status
+        self.status: int = command_status
         if type(kwargs) is dict:
             self.kwargs = kwargs
         else:
@@ -134,9 +134,6 @@ class CommandOutput:
 
     def __contains__(self, item: str) -> bool:
         return item in self.kwargs
-
-    def __add__(self, other: 'CommandOutput') -> 'CommandOutput':
-        return CommandOutput(**self.kwargs.update(other.kwargs))
 
     def keys(self) -> KeysView[str]:
         return self.kwargs.keys()
