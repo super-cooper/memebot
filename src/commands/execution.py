@@ -1,13 +1,14 @@
 """
 This file contains all the machinery for parsing and executing commands.
 """
+import asyncio
 import re
 import shlex
-from typing import Awaitable
 
 import discord
 
 from . import registry
+from lib import status
 
 
 async def execute_if_command(message: discord.Message) -> None:
@@ -24,9 +25,15 @@ async def execute_if_command(message: discord.Message) -> None:
         await message.channel.send('Could not parse command: ' + str(e))
         return
 
-    result = await command.exec(args, message)
-    response = await message.channel.send(**result.kwargs)
-    command.callback(response)
+    command_task = asyncio.create_task(command.exec(args, message))
+    result = await command_task
+    response_task = asyncio.create_task(message.channel.send(**result.kwargs))
+    response = await response_task
+    # We should only run the callback if the command and response ran successfully
+    if command_task.exception() is None and response_task.exception() is None and result.status == status.SUCCESS:
+        command.callback(response)
+    else:
+        print(f"Command !{command.name} with args {args} failed.")
 
 
 def is_command(msg: str) -> bool:
