@@ -34,8 +34,7 @@ class List(Command):
                     roles.append(role_obj.name)
                 elif memebot.client.user in role_obj.members:
                     can_manage = True
-            roles.insert(0, "Roles managed through `!role` command:")
-            return CommandOutput().set_text("\n- ".join(roles))
+            return CommandOutput(content=f"Roles managed through `!role` command:\n- " + "\n- ".join(sorted(roles)))
         else:
             target_name = args[0].lower()
             target_role = role.find_role_by_name(target_name, message.guild)
