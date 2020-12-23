@@ -32,7 +32,7 @@ class MemeBot(discord.Client):
                 tweet_mode='extended'
             )
         
-        self.twitter_url_pattern = re.compile(r'https:\/{2}twitter\.com\/([0-9a-zA-Z_]+|i\/web)\/status\/[0-9]+(\?s=\d+)?')
+        self.twitter_url_pattern = re.compile(r'https:/{2}twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?')
 
     async def on_ready(self) -> None:
         """
