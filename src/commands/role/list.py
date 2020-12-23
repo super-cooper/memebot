@@ -42,11 +42,7 @@ class List(Command):
                 return role.action_failure_message(self.name, target_name, f'The role `@{target_name}` was not found!')
             if not target_role.members:
                 return CommandOutput().set_text(f'Role `@{target_name}` has no members!')
-            members_string = f'Members of `@{target_name}`:'
-            for member in target_role.members:
-                if member.nick is not None:
-                    members_string += f'\n- {member.nick} ({member.name})'
-                else:
-                    members_string += f'\n- {member.name}'
+            members_string = f'Members of `@{target_name}`:\n- ' + '\n- '.join(
+                sorted(member.nick if member.nick is not None else member.name for member in target_role.members))
 
             return CommandOutput().set_text(members_string)
