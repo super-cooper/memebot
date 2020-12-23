@@ -34,7 +34,9 @@ class List(Command):
                     roles.append(role_obj.name)
                 elif memebot.client.user in role_obj.members:
                     can_manage = True
-            return CommandOutput(content=f"Roles managed through `!role` command:\n- " + "\n- ".join(sorted(roles)))
+            output_list = list(sorted(roles))
+            output_list.insert(0, "Roles managed through `!role` command:")
+            return CommandOutput(content="\n- ".join(output_list))
         else:
             target_name = args[0].lower()
             target_role = role.find_role_by_name(target_name, message.guild)
@@ -42,7 +44,15 @@ class List(Command):
                 return role.action_failure_message(self.name, target_name, f'The role `@{target_name}` was not found!')
             if not target_role.members:
                 return CommandOutput().set_text(f'Role `@{target_name}` has no members!')
-            members_string = f'Members of `@{target_name}`:\n- ' + '\n- '.join(
-                sorted(member.nick if member.nick is not None else member.name for member in target_role.members))
 
-            return CommandOutput().set_text(members_string)
+            member_names = []
+            for member in target_role.members:
+                if member.nick is not None:
+                    member_names.append(f'{member.nick} ({member.name})')
+                else:
+                    member_names.append(member.name)
+
+            member_names.sort()
+            member_names.insert(0, f'Members of `@{target_name}`:')
+
+            return CommandOutput(content='\n- '.join(member_names))
