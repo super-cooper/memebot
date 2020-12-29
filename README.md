@@ -19,10 +19,10 @@ optional arguments:
 
 Current commands that can be used in Discord:
 
-    !help - Learn how to use MemeBot
-    !poll - Create a simple poll.
     !hello - Say "hello" to Memebot!
-    !role - Self-contained role management
+    !help  - Learn how to use MemeBot
+    !poll  - Create a simple poll.
+    !role  - Self-contained role management
 
 ## Docker
 Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./Dockerfile) in this 
