@@ -24,6 +24,6 @@ class Help(Command):
         :param message: Ignored
         :return: A rundown of all of Memebot's commands.
         """
-        return CommandOutput().set_text("Commands:\n\t\t" + '\n\t\t'.join(sorted(
-            f"`!{cmd_name}` - {top_level_command_registry[cmd_name].command.description}" for cmd_name in
-            top_level_command_registry)))
+        return CommandOutput().set_text("Commands:\n\t\t" + '\n\t\t'.join(
+            f"`!{cmd_name:5}` - {top_level_command_registry[cmd_name].command.description}" for cmd_name in
+            sorted(top_level_command_registry)))
