@@ -26,6 +26,8 @@ class Join(Command):
         target_role = role.find_role_by_name(target_name, message.guild)
         if target_role is None:
             return role.action_failure_message(self.name, target_name, f'The role `@{target_name}` was not found!')
+        if author in target_role.members :
+            return role.action_failure_message(self.name, target_name, f'User is already a member of `@{target_name}`.')
 
         try:
             await author.add_roles(target_role, reason=role.get_reason(author.name))
