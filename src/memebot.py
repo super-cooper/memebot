@@ -6,6 +6,7 @@ import discord
 import twitter
 
 import commands
+import config
 from lib import constants
 
 
@@ -21,7 +22,7 @@ class MemeBot(discord.Client):
             raise ReferenceError("There can only be one Memebot!")
         client = self
 
-        with open('twitter_api_tokens.json') as twitter_api_tokens:
+        with open(config.twitter_api_tokens) as twitter_api_tokens:
             twitter_tokens = json.load(twitter_api_tokens)
 
         self.twitter_api = twitter.Api(
