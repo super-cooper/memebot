@@ -3,7 +3,7 @@ import re
 from typing import Optional
 
 import discord
-import twitter
+import tweepy
 
 import commands
 import config
@@ -25,15 +25,11 @@ class MemeBot(discord.Client):
         with open(config.twitter_api_tokens) as twitter_api_tokens:
             twitter_tokens = json.load(twitter_api_tokens)
 
-        self.twitter_api = twitter.Api(
-                twitter_tokens['consumer_key'],
-                twitter_tokens['consumer_secret'],
-                twitter_tokens['access_token_key'],
-                twitter_tokens['access_token_secret'],
-                tweet_mode='extended'
-            )
-        
-        self.twitter_url_pattern = re.compile(r'https:/{2}twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?')
+        self.twitter_api = tweepy.API(
+            tweepy.AppAuthHandler(twitter_tokens['consumer_key'], twitter_tokens['consumer_secret']))
+
+        self.twitter_url_pattern = re.compile(
+            r'.*(https://twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?).*')
 
     async def on_ready(self) -> None:
         """
@@ -57,7 +53,7 @@ class MemeBot(discord.Client):
 
         # Iterate through the message sent, and check if the message conatined
         # a "word" that was a twitter URL to a status.
-        twitter_url = self.get_twitter_url(message.content)
+        twitter_url = self.get_twitter_url_from_message(message.content)
         if twitter_url:
 
             """Because a twitter URL to a status is oftentimes as follows:
@@ -66,41 +62,46 @@ class MemeBot(discord.Client):
             again by the "?" in order to get the ID of the tweet being
             linked"""
             tweet_id = twitter_url.split("/")[-1].split("?")[0]
-            tweet_info = self.twitter_api.GetStatus(tweet_id)
+            tweet_info = self.twitter_api.get_status(tweet_id)
+            tweet_media = tweet_info.extended_entities['media'] if 'media' in tweet_info.entities else []
 
-            if tweet_info.media and len(tweet_info.media) > 1:
-                emoji = ":" + str(len(tweet_info.media)) + ":"
+            if len(tweet_media) > 1:
+                emoji = ":" + str(len(tweet_media)) + ":"
                 await message.add_reaction(constants.EMOJI_MAP[emoji])
 
-            if tweet_info.quoted_status:
-                quote_tweet_urls = self.get_tweet_urls(tweet_info)
-                if quote_tweet_urls != "":
+            if tweet_info.is_quote_status:
+                quote_tweet_urls = self.get_quote_tweet_urls(tweet_info)
+                if quote_tweet_urls:
                     await message.channel.send(quote_tweet_urls)
 
-    def get_twitter_url(self, content: str) -> str:
+    def get_twitter_url_from_message(self, content: str) -> str:
         """
         Loops through each "word" in conetnt, compares the word to a regex
         and returns the "word" in the message that matches the twitter URL regex
         :param content: message that was sent in discord
         """
-        for word in content.split():
-            if self.twitter_url_pattern.match(word):
-                return word
-        return ""
+        match = self.twitter_url_pattern.match(content)
+        if match:
+            return match.groups()[0]
+        else:
+            return ""
 
-    def get_tweet_urls(self, tweet_info: twitter.models.Status) -> str:
+    def get_quote_tweet_urls(self, tweet_info: tweepy.models.Status) -> str:
         """
-        Gets URLs of quoteted tweets (max 3)
+        Gets URLs of quoteted tweets (nested up to max 3)
         :param tweet_info: information of tweet
         :return: URL of media/quote tweet(s)
         """
-        tweets = "quoted tweet(s): "
+        tweets = ""
         for level in range(3):
-            tweets += "\n https://twitter.com/i/web/status/" + tweet_info.quoted_status.id_str
-            tweet_info = self.twitter_api.GetStatus(tweet_info.quoted_status.id)
-            if not tweet_info.quoted_status:
+            tweets += "\nhttps://twitter.com/" + tweet_info.quoted_status.author.screen_name + "/status/" + tweet_info.quoted_status.id_str
+            tweet_info = self.twitter_api.get_status(tweet_info.quoted_status.id)
+            if not tweet_info.is_quote_status:
                 break
-        return tweets
+        if not tweets:
+            return ""
+        else:
+            return "quoted tweet(s): " + tweets
 
 
 client: Optional[discord.Client] = None
