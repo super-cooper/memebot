@@ -71,8 +71,7 @@ class MemeBot(discord.Client):
 
             if tweet_info.is_quote_status:
                 quote_tweet_urls = self.get_quote_tweet_urls(tweet_info)
-                if quote_tweet_urls:
-                    await message.channel.send(quote_tweet_urls)
+                await message.channel.send(quote_tweet_urls)
 
     def get_twitter_url_from_message(self, content: str) -> str:
         """
@@ -92,16 +91,13 @@ class MemeBot(discord.Client):
         :param tweet_info: information of tweet
         :return: URL of media/quote tweet(s)
         """
-        tweets = ""
-        for level in range(3):
+        tweets = "quoted tweet(s): "
+        for _ in range(3):
             tweets += "\nhttps://twitter.com/" + tweet_info.quoted_status.author.screen_name + "/status/" + tweet_info.quoted_status.id_str
             tweet_info = self.twitter_api.get_status(tweet_info.quoted_status.id)
             if not tweet_info.is_quote_status:
                 break
-        if not tweets:
-            return ""
-        else:
-            return "quoted tweet(s): " + tweets
+        return tweets
 
 
 client: Optional[discord.Client] = None
