@@ -48,6 +48,7 @@ class Command(metaclass=CommandMeta):
             raise ValueError(f"Every command needs to have a description! ({type(self).__name__})")
         self.description: str = description
         self.example_args: str = example_args
+        self.requires_database: bool = False
 
     def __repr__(self) -> str:
         return f"Command: {type(self).__name__}(name={self.name} description={self.description})"

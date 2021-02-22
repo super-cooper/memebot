@@ -25,5 +25,5 @@ Current commands that can be used in Discord:
     !role  - Self-contained role management
 
 ## Docker
-Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./Dockerfile) in this 
+Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./docker/Dockerfile) in this 
 repository. This image can be used for both deployment and testing purposes.
