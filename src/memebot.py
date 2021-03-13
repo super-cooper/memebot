@@ -1,6 +1,5 @@
 import json
 import re
-from typing import Optional
 
 import discord
 import tweepy
@@ -17,10 +16,6 @@ class MemeBot(discord.Client):
 
     def __init__(self, **args):
         super().__init__(**args, intents=discord.Intents().all())
-        global client
-        if client is not None:
-            raise ReferenceError("There can only be one Memebot!")
-        client = self
 
         with open(config.twitter_api_tokens) as twitter_api_tokens:
             twitter_tokens = json.load(twitter_api_tokens)
@@ -100,4 +95,4 @@ class MemeBot(discord.Client):
         return tweets
 
 
-client: Optional[discord.Client] = None
+client: discord.Client = MemeBot()

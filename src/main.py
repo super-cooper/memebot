@@ -1,7 +1,7 @@
 import sys
 
 import config
-from memebot import MemeBot
+import memebot
 
 
 def main() -> int:
@@ -9,7 +9,7 @@ def main() -> int:
     Main function, initializes MemeBot and then loops
     :return: Exit status of discord.Client.run()
     """
-    client = MemeBot()
+    client = memebot.client
 
     # !! DO NOT HARDCODE THE TOKEN !!
     with open(config.discord_api_token) as token_file:
