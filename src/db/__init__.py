@@ -12,6 +12,5 @@ def test() -> bool:
     Functions as a "ping" to the databse to ensure that there is an available connection
     :return: True if the test succeeds
     """
-    test_db = db_internals.get_db("test")
-    test_db.list_collection_names()
+    db_internals.client.server_info()
     return True

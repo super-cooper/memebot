@@ -27,11 +27,7 @@ def populate_config_from_command_line():
                         type=pathlib.Path)
 
     # Database Configuration
-    parser.add_argument("--database-enabled",
-                        help="Enable the database connection, and all features which require it.",
-                        dest='database_enabled',
-                        action='store_true')
-    parser.add_argument("--database-disabled",
+    parser.add_argument("--nodb",
                         help="Disable the database connection, and all features which require it.",
                         dest="database_enabled",
                         action="store_false")
