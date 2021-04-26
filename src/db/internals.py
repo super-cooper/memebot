@@ -1,7 +1,6 @@
 from typing import Optional
 
 import pymongo as mongo
-import pymongo.database
 
 import config
 

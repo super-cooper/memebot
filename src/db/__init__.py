@@ -12,5 +12,6 @@ def test() -> bool:
     Functions as a "ping" to the databse to ensure that there is an available connection
     :return: True if the test succeeds
     """
-    db_internals.client.server_info()
+    if config.database_enabled:
+        db_internals.client.server_info()
     return True
