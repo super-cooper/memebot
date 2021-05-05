@@ -6,6 +6,7 @@ import tweepy
 
 import commands
 import config
+import db
 from lib import constants
 
 
@@ -25,6 +26,8 @@ class MemeBot(discord.Client):
 
         self.twitter_url_pattern = re.compile(
             r'.*(https://twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?).*')
+
+        db.test()
 
     async def on_ready(self) -> None:
         """
