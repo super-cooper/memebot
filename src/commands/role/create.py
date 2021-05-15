@@ -22,7 +22,7 @@ class Create(Command):
 
         guild = message.guild
         author = guild.get_member(message.author.id)
-        target_name = args[0].lower()
+        target_name = args[0].lower().lstrip('@')
         target_role = role.find_role_by_name(target_name, message.guild)
         if target_role is not None:
             return role.action_failure_message(self.name, target_name, f'The role `@{target_name}` already exists!')
