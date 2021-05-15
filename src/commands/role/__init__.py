@@ -79,12 +79,10 @@ def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
     # a string that looks like <@&1234567890>.
     role_id = 0
     try:
-        id_str = target_name[3:len(target_name) - 1]
-        role_id = int(id_str)
-    except ValueError:
+        role_id = int(target_name[3:-1])
+    except (ValueError, IndexError):
         pass
-    finally:
-        mentioned_role = guild.get_role(role_id)
+    mentioned_role = guild.get_role(role_id)
     if mentioned_role:
         return mentioned_role
     # If the target_name is not an @ mention, we search for an existing role with an equal name.
