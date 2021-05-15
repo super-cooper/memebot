@@ -75,7 +75,8 @@ def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
     :param guild: The guild to search through.
     :return: A discord.Role object with the same name as ``target_name``.
     """
-    # First we check to see if the target_name is an `@` mention
+    # First we check to see if the target_name is an `@` mention, which would be indicated by
+    # a string that looks like <@&1234567890>.
     role_id = 0
     try:
         id_str = target_name[3:len(target_name) - 1]
@@ -86,6 +87,7 @@ def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
         mentioned_role = guild.get_role(role_id)
     if mentioned_role:
         return mentioned_role
+    # If the target_name is not an @ mention, we search for an existing role with an equal name.
     for role in guild.roles:
         if role.name == target_name:
             return role
