@@ -43,7 +43,7 @@ class List(Command):
             if target_role is None:
                 return role.action_failure_message(self.name, target_name, f'The role `@{target_name}` was not found!')
             if not target_role.members:
-                return CommandOutput().set_text(f'Role `@{target_name}` has no members!')
+                return CommandOutput().set_text(f'Role `@{target_role.name}` has no members!')
 
             member_names = []
             for member in target_role.members:
@@ -53,6 +53,6 @@ class List(Command):
                     member_names.append(member.name)
 
             member_names.sort()
-            member_names.insert(0, f'Members of `@{target_name}`:')
+            member_names.insert(0, f'Members of `@{target_role.name}`:')
 
             return CommandOutput(content='\n- '.join(member_names))

@@ -65,7 +65,7 @@ def permission_failure_message(action: str, target_name: str) -> CommandOutput:
     # TODO: factor this out to be common to all commands
     return CommandOutput(command_status=status.FAIL,
                          content=f"Memebot doesn't have permission to {action} role `@{target_name}`. "
-                                  "Are you sure you configured Membot's permissions correctly?")
+                                 "Are you sure you configured Membot's permissions correctly?")
 
 
 def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
@@ -75,6 +75,17 @@ def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
     :param guild: The guild to search through.
     :return: A discord.Role object with the same name as ``target_name``.
     """
+    # First we check to see if the target_name is an `@` mention, which would be indicated by
+    # a string that looks like <@&1234567890>.
+    role_id = 0
+    try:
+        role_id = int(target_name[3:-1])
+    except (ValueError, IndexError):
+        pass
+    mentioned_role = guild.get_role(role_id)
+    if mentioned_role:
+        return mentioned_role
+    # If the target_name is not an @ mention, we search for an existing role with an equal name.
     for role in guild.roles:
         if role.name == target_name:
             return role

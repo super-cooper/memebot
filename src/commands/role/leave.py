@@ -30,10 +30,10 @@ class Leave(Command):
         try:
             await author.remove_roles(target_role, reason=role.get_reason(author.name))
         except discord.Forbidden:
-            print(f'!role: Forbidden: {author.name}.remove_role( {target_name} )')
-            return role.permission_failure_message(self.name, target_name)
+            print(f'!role: Forbidden: {author.name}.remove_role( {target_role.name} )')
+            return role.permission_failure_message(self.name, target_role.name)
         except discord.HTTPException:
-            print(f'!role: Failed API call: {author.name}.remove_role( {target_name} )')
-            return role.permission_failure_message(self.name, target_name)
+            print(f'!role: Failed API call: {author.name}.remove_role( {target_role.name} )')
+            return role.permission_failure_message(self.name, target_role.name)
         finally:
-            return CommandOutput().set_text(f'{author.name} successfully left `@{target_name}`')
+            return CommandOutput().set_text(f'{author.name} successfully left `@{target_role.name}`')
