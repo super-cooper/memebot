@@ -7,7 +7,7 @@ If you are hosting yourself, you will need to create a file in the root director
 Usage of the bot is as follows:
 
 ```
-usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-tokens TWITTER_API_TOKENS]
+usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-tokens TWITTER_API_TOKENS] [--no-twitter] [--nodb] [--database-uri DATABASE_URI]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -15,6 +15,10 @@ optional arguments:
                         Path to the file containing the Discord API token
   --twitter-api-tokens TWITTER_API_TOKENS
                         Path to the file containing the Twitter API tokens, in JSON format.
+  --no-twitter          Disable Twitter integration
+  --nodb                Disable the database connection, and all features which require it.
+  --database-uri DATABASE_URI
+                        URI of the MongoDB database server
 ```
 
 Current commands that can be used in Discord:

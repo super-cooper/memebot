@@ -7,6 +7,9 @@ discord_api_token: pathlib.Path
 # Path to the JSON file containing the Twitter API tokens
 twitter_api_tokens: pathlib.Path
 
+# Flag which tells if Twitter integration is enabled
+twitter_enabled: bool
+
 # Flag which tells if a database connection is enabled
 database_enabled: bool
 # MongoDB URI
@@ -26,6 +29,13 @@ def populate_config_from_command_line():
                         default="twitter_api_tokens.json",
                         type=pathlib.Path)
 
+    # Twitter Integration
+    parser.add_argument("--no-twitter",
+                        help="Disable Twitter integration",
+                        dest="twitter_enabled",
+                        action="store_false")
+    parser.set_defaults(twitter_enabled=True)
+
     # Database Configuration
     parser.add_argument("--nodb",
                         help="Disable the database connection, and all features which require it.",
@@ -44,6 +54,9 @@ def populate_config_from_command_line():
     global twitter_api_tokens
     discord_api_token = args.discord_api_token
     twitter_api_tokens = args.twitter_api_tokens
+
+    global twitter_enabled
+    twitter_enabled = args.twitter_enabled
 
     global database_enabled
     global database_uri
