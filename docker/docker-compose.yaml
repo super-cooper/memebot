@@ -17,6 +17,8 @@ services:
       PYTHONUNBUFFERED: 1
     networks:
       default:
+    dns:
+      - 172.19.0.1
   db:
     container_name: memebot-db
     image: mongo:4.4.4-bionic
@@ -26,6 +28,8 @@ services:
       - ../src/config/mongod.yaml:/etc/mongo/mongod.yaml:ro
     networks:
       default:
+    dns:
+      - 172.19.0.1
 
 networks:
   default:
