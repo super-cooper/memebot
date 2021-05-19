@@ -25,7 +25,7 @@ class MemeBot(discord.Client):
             tweepy.AppAuthHandler(twitter_tokens['consumer_key'], twitter_tokens['consumer_secret']))
 
         self.twitter_url_pattern = re.compile(
-            r'.*(https://twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?).*')
+            r'(https://twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?)')
 
         db.test()
 
@@ -43,17 +43,14 @@ class MemeBot(discord.Client):
         :param message: The most recent message sent to the server
         :return: None
         """
-        if message.author == self.user:
-            # ignore messages sent by this bot (for now)
-            return
-        else:
+        # Ignore commands sent by this bot (for now).
+        if message.author != self.user:
             await commands.execution.execute_if_command(message)
 
         # Iterate through the message sent, and check if the message conatined
         # a "word" that was a twitter URL to a status.
         twitter_url = self.get_twitter_url_from_message(message.content)
         if twitter_url:
-
             """Because a twitter URL to a status is oftentimes as follows:
             https://twitter.com/USER/status/xxxxxxxxxxxxxxxxxxx?s=yy
             We need to split up the URL by the "/", and then split it up
@@ -73,11 +70,11 @@ class MemeBot(discord.Client):
 
     def get_twitter_url_from_message(self, content: str) -> str:
         """
-        Loops through each "word" in conetnt, compares the word to a regex
+        Loops through each "word" in content, compares the word to a regex
         and returns the "word" in the message that matches the twitter URL regex
         :param content: message that was sent in discord
         """
-        match = self.twitter_url_pattern.match(content)
+        match = self.twitter_url_pattern.search(content)
         if match:
             return match.groups()[0]
         else:
@@ -85,7 +82,7 @@ class MemeBot(discord.Client):
 
     def get_quote_tweet_urls(self, tweet_info: tweepy.models.Status) -> str:
         """
-        Gets URLs of quoteted tweets (nested up to max 3)
+        Gets URLs of quoted tweets (nested up to max 3)
         :param tweet_info: information of tweet
         :return: URL of media/quote tweet(s)
         """
