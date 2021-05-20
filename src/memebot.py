@@ -33,13 +33,11 @@ class MemeBot(discord.Client):
         :param message: The most recent message sent to the server
         :return: None
         """
-        if message.author == self.user:
-            # ignore messages sent by this bot (for now)
-            return
-        else:
+        # Ignore commands sent by this bot (for now).
+        if message.author != self.user:
             await commands.execution.execute_if_command(message)
 
         asyncio.create_task(twitter.process_message_for_interaction(message))
 
-
+        
 client: discord.Client = MemeBot()
