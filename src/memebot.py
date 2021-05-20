@@ -37,7 +37,8 @@ class MemeBot(discord.Client):
         if message.author != self.user:
             await commands.execution.execute_if_command(message)
 
-        asyncio.create_task(twitter.process_message_for_interaction(message))
+        if config.twitter_enabled:
+            asyncio.create_task(twitter.process_message_for_interaction(message))
 
         
 client: discord.Client = MemeBot()
