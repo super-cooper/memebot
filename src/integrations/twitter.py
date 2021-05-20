@@ -23,8 +23,8 @@ twitter_api: tweepy.API
 
 def init(api_token_path: pathlib.Path):
     """
-    Authenticates to the Twitter API. This function must be synchronous, as any further interaction with Twitter
-    depends on this function executing and returning successfully.
+    Authenticates to the Twitter API. This function is left synchronous, as any further interaction with Twitter
+    depends on this function executing and returning successfully, and it should only be run once at startup.
     :param api_token_path: The path to the file containing the Twitter API tokens, in JSON format
     """
     global twitter_api
