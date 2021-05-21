@@ -30,20 +30,21 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         info instead of debug.
         """
         with self.lock:
-            # Capture the stack here, on a line without the string "print(" in it
-            stack = inspect.stack()
-            # Find the stack frame which (hopefully) contains the call to print
-            print_frame = next((frame for frame in stack if "print(" in frame.code_context[0]), None)
-            namespace = inspect.getmodulename(print_frame.filename) if print_frame is not None else "stdout"
-            old_name = self.name
-            self.name = namespace
             if msg and not msg.isspace():
-                if print_frame is not None and not print_frame.filename.startswith(os.getcwd()):
-                    # We want to use debug logging for any non-memebot modules using print
-                    for line in msg.splitlines():
-                        self.debug(line)
-                else:
-                    # If someone puts a print statement inside memebot code, output it regardless of log level
-                    for line in msg.splitlines():
-                        self.info(line)
-            self.name = old_name
+                # Capture the stack here, on a line without the string "print(" in it
+                stack = inspect.stack()
+                # Find the stack frame which (hopefully) contains the call to print
+                print_frame = next((frame for frame in stack if "print(" in frame.code_context[0]), None)
+                namespace = inspect.getmodulename(print_frame.filename) if print_frame is not None else "stdout"
+                old_name = self.name
+                self.name = namespace
+                if print_frame is not None:
+                    if not print_frame.filename.startswith(os.getcwd()):
+                        # We want to use debug logging for any non-memebot modules using print
+                        for line in msg.splitlines():
+                            self.debug(line)
+                    else:
+                        # If someone puts a print statement inside memebot code, output it regardless of log level
+                        for line in msg.splitlines():
+                            self.info(line)
+                self.name = old_name
