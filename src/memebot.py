@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 import discord
 
@@ -6,6 +7,8 @@ import commands
 import config
 import db
 from integrations import twitter
+
+logger = logging.getLogger(__name__)
 
 
 class MemeBot(discord.Client):
@@ -19,12 +22,11 @@ class MemeBot(discord.Client):
             twitter.init(config.twitter_api_tokens)
         db.test()
 
-    async def on_ready(self) -> None:
+    async def on_ready(self):
         """
         Determines what the bot does as soon as it is logged into discord
-        :return: None
         """
-        print(f'Logged in as {self.user}')
+        logger.info(f'Logged in as {self.user}')
 
     async def on_message(self, message: discord.Message) -> None:
         """
@@ -40,5 +42,5 @@ class MemeBot(discord.Client):
         if config.twitter_enabled:
             asyncio.create_task(twitter.process_message_for_interaction(message))
 
-        
+
 client: discord.Client = MemeBot()
