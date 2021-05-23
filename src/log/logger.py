@@ -51,7 +51,6 @@ class MemeBotLogger(logging.Logger, io.IOBase):
             super()._log(level, msg, args, exc_info, extra, stack_info, stacklevel)
             return
         # Log the line number on which the log statement was made
-        memebot_lineno = f"{line_number}:"
         callsite = get_module_name_from_path(file_name)
         updated_extra = {'_lineno': line_number, '_callsite': callsite if callsite else self.name}
         if extra is not None:
