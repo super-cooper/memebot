@@ -9,10 +9,6 @@ import sys
 
 
 # Logging validators
-def validate_log_level(level: str) -> int:
-    return logging._checkLevel(level)
-
-
 def validate_log_location(location: str) -> logging.Handler:
     return collections.defaultdict((lambda: logging.FileHandler(location)), **{
         "stdout": logging.StreamHandler(sys.stdout),

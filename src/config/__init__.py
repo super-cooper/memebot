@@ -38,13 +38,25 @@ def populate_config_from_command_line():
                         type=pathlib.Path)
 
     # Logging Configuration
-    parser.add_argument("--log-level",
-                        help="Set the log level for MemeBot.",
-                        default=logging.INFO,
-                        type=validators.validate_log_level)
+    logging_verbosity_group = parser.add_mutually_exclusive_group()
+    # Accept all log levels recognized by the logging library except NOTSET
+    logging_verbosity_group.add_argument("--log-level",
+                                         help=f"Set logging level",
+                                         choices=[logging.getLevelName(level) for level in (
+                                             logging.DEBUG, logging.INFO, logging.WARN, logging.ERROR,
+                                             logging.CRITICAL)],
+                                         default=logging.getLevelName(logging.INFO),
+                                         type=str)
+    logging_verbosity_group.add_argument("-v",
+                                         "--verbose",
+                                         help="Use verbose logging. Equivalent to --log-level DEBUG",
+                                         dest="log_level",
+                                         action="store_const",
+                                         const=logging.getLevelName(logging.DEBUG))
     parser.add_argument("--log-location",
-                        help="Set the location for MemeBot's log (stdout, stderr, syslog, /path/to/file)",
+                        help="Set the location for MemeBot's log",
                         default="stdout",
+                        metavar="{stdout,stderr,syslog,/path/to/file}",
                         type=validators.validate_log_location)
 
     # Twitter Integration

@@ -6,6 +6,7 @@ import discord
 import commands
 import config
 import db
+import log
 from integrations import twitter
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ class MemeBot(discord.Client):
         """
         Determines what the bot does as soon as it is logged into discord
         """
-        logger.info(f'Logged in as {self.user}')
+        log.info(f'Logged in as {self.user}')
 
     async def on_message(self, message: discord.Message) -> None:
         """
