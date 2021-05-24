@@ -56,7 +56,7 @@ class Poll(Command):
 
         return CommandOutput().add_embed(embed)
 
-    def callback(self, message: discord.Message) -> None:
+    async def callback(self, message: discord.Message) -> None:
         for emote in self.reactions:
             asyncio.create_task(message.add_reaction(constants.EMOJI_MAP[emote]))
         self.reactions.clear()

@@ -95,7 +95,7 @@ class Command(metaclass=CommandMeta):
         """
         raise NotImplementedError()
 
-    def callback(self, *args, **kwargs) -> None:
+    async def callback(self, *args, **kwargs) -> None:
         """
         Provide a callback function for the command to run after the initial response is created. This callback is run
         after the first response (i.e. the return value of Command.exec) is sent to the server.

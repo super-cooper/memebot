@@ -35,7 +35,7 @@ class MemeBot(discord.Client):
         """
         # Ignore commands sent by this bot (for now).
         if message.author != self.user:
-            await commands.execution.execute_if_command(message)
+            asyncio.create_task(commands.execution.execute_if_command(message))
 
         if config.twitter_enabled:
             asyncio.create_task(twitter.process_message_for_interaction(message))
