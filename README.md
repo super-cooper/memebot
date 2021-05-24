@@ -7,7 +7,7 @@ If you are hosting yourself, you will need to create a file in the root director
 Usage of the bot is as follows:
 
 ```
-usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-tokens TWITTER_API_TOKENS] [--log-level LOG_LEVEL] [--log-location LOG_LOCATION] [--no-twitter] [--nodb] [--database-uri DATABASE_URI]
+usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-tokens TWITTER_API_TOKENS] [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL} | -v] [--log-location {stdout,stderr,syslog,/path/to/file}] [--no-twitter] [--nodb] [--database-uri DATABASE_URI]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -15,10 +15,11 @@ optional arguments:
                         Path to the file containing the Discord API token
   --twitter-api-tokens TWITTER_API_TOKENS
                         Path to the file containing the Twitter API tokens, in JSON format.
-  --log-level LOG_LEVEL
-                        Set the log level for MemeBot.
-  --log-location LOG_LOCATION
-                        Set the location for MemeBot's log (stdout, stderr, syslog, /path/to/file)
+  --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        Set logging level
+  -v, --verbose         Use verbose logging. Equivalent to --log-level DEBUG
+  --log-location {stdout,stderr,syslog,/path/to/file}
+                        Set the location for MemeBot's log
   --no-twitter          Disable Twitter integration
   --nodb                Disable the database connection, and all features which require it.
   --database-uri DATABASE_URI

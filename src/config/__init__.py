@@ -11,7 +11,7 @@ discord_api_token: pathlib.Path
 twitter_api_tokens: pathlib.Path
 
 # The logging level for MemeBot
-log_level: int
+log_level: str
 # The location for MemeBot's log
 log_location: logging.Handler
 
