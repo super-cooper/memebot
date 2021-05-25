@@ -20,7 +20,7 @@ class Poll(Command):
         self.reactions: List[str] = []
         self.lock = threading.Lock()
 
-    def help_text(self) -> CommandOutput:
+    def long_description(self) -> CommandOutput:
         return CommandOutput().set_text(
             "Create a simple poll with a question and multiple answers.\n"
             "If no answers are provided, :thumbsup: and :thumbsdown: will be used.")

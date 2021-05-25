@@ -54,34 +54,45 @@ class Command(metaclass=CommandMeta):
         return f"Command: {type(self).__name__}(name={self.name} description={self.description})"
 
     @abstractmethod
-    def help_text(self) -> CommandOutput:
+    def long_description(self) -> CommandOutput:
         """
-        Returns a string of help text for this particular command. Describeds what the command does and how to use it.
-        :returns A help message, which should be sent to the server.
+        Returns a CommandOutput describing this particular command in detail.
+        :returns A long description of the command, which should be sent to the server.
         """
         raise NotImplementedError()
 
-    def fail(self, additional_info: str = "") -> CommandOutput:
+    def help_text(self) -> CommandOutput:
         """
-        Default behavior for when a command fails. Creates a message that prints information about the command as well
-        as how it is used.
-        Any overrides of this method are permitted to behave in whatever way desired, and may return whatever
-        information desired, at discretion of the developer.
-        :return: Information to be presented to the server upon failure of this command.
+        Creates useful information to help the user understand the command. By default, combines the Command's
+        long_description with usage information.
+        :return: a CommandOutput object containing the above information
         """
         parent_list = []
         current_parent = self.parent
         while type(current_parent) is not Command:
             parent_list.append(current_parent.name)
-            current_parent = self.parent
+            current_parent = current_parent.parent
         cmd_preamble = ' '.join(parent_list)
         if len(cmd_preamble) > 0:
             cmd_preamble += ' '
-        output = self.help_text().append_line(
+        output = self.long_description().append_line(
             f"**`!{cmd_preamble}{self.name}" + (f" {self.example_args}`**" if len(self.example_args) > 0 else "`**"))
+        if self.subcommands:
+            output.append_line("").append_line('\n'.join(
+                f"`!{self.name} {sub.name} {sub.example_args}`: {sub.description}" for sub in self.subcommands))
+        return output
+
+    def fail(self, additional_info: str = "") -> CommandOutput:
+        """
+        Default behavior for when a command fails. Combines this Command's help_text with additional_info, and sets
+        the output's status to FAIL.
+        Any overrides of this method are permitted to behave in whatever way desired, and may return whatever
+        information desired, at discretion of the developer.
+        :return: Information to be presented to the server upon failure of this command.
+        """
+        output = self.help_text()
         if additional_info:
-            output.append_line("")
-            output.append_line(additional_info)
+            output.append_line("").append_line(additional_info)
         output.status = status.FAIL
         return output
 

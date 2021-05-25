@@ -33,15 +33,14 @@ class Role(Command):
     def __init__(self):
         super().__init__("role", "Self-contained role management")
 
-    def help_text(self) -> CommandOutput:
+    def long_description(self) -> CommandOutput:
         return CommandOutput().set_text(
             "Controls creating, joining, leaving, and listing permissionless mentionable roles. These roles are "
             "intended to serve as \"tags\" to allow mentioning multiple users at once."
         )
 
     async def exec(self, args: typing.List[str], message: discord.Message) -> CommandOutput:
-        return self.fail(
-            '\n'.join(f"`!{self.name} {sub.name} {sub.example_args}`: {sub.description}" for sub in Role.subcommands))
+        return self.help_text()
 
 
 def action_failure_message(action: str, target_name: str, msg: str = "") -> CommandOutput:

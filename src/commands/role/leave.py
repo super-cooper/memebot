@@ -13,7 +13,7 @@ class Leave(Command):
     def __init__(self):
         super().__init__("leave", "Removes caller from <role>", "<role>")
 
-    def help_text(self) -> CommandOutput:
+    def long_description(self) -> CommandOutput:
         return CommandOutput().set_text("Leave a Memebot-managed role.")
 
     async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
