@@ -10,6 +10,8 @@ import discord
 from . import registry
 from lib import status
 
+command_regex = re.compile(r'^![a-zA-Z]+(\s|$)')
+
 
 async def execute_if_command(message: discord.Message) -> None:
     """
@@ -22,7 +24,7 @@ async def execute_if_command(message: discord.Message) -> None:
     try:
         command, args = registry.parse_command_and_args(shlex.split(prepare_input(message.content)))
     except ValueError as e:
-        await message.channel.send('Could not parse command: ' + str(e))
+        asyncio.create_task(message.channel.send('Could not parse command: ' + str(e)))
         return
 
     command_task = asyncio.create_task(command.exec(args, message))
@@ -31,7 +33,7 @@ async def execute_if_command(message: discord.Message) -> None:
     response = await response_task
     # We should only run the callback if the command and response ran successfully
     if command_task.exception() is None and response_task.exception() is None and result.status == status.SUCCESS:
-        command.callback(response)
+        asyncio.create_task(command.callback(response))
     else:
         print(f"Command !{command.name} with args {args} failed.")
 
@@ -44,7 +46,7 @@ def is_command(msg: str) -> bool:
     """
     # re.match looks for a match anywhere in msg. Regex matches if first
     # word of msg is ! followed by letters.
-    return bool(re.match(r'^![a-zA-Z]+(\s|$)', msg))
+    return bool(command_regex.match(msg))
 
 
 def prepare_input(msg: str) -> str:
