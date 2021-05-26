@@ -12,11 +12,13 @@ class List(Command):
     """
 
     def __init__(self):
-        super().__init__("list", "List all roles managed by Memebot, or list all members of a role.", "[role]")
-
-    def long_description(self) -> CommandOutput:
-        return CommandOutput().set_text("List all roles managed by Memebot, or provide the name of a role and list "
-                                        "all members of that role.")
+        super().__init__(
+            name="list",
+            description="List all roles managed by Memebot, or list all members of a role.",
+            long_description="List all roles managed by Memebot, or provide the name of a role and list "
+                             "all members of that role.",
+            example_args="[role]"
+        )
 
     async def exec(self, args: typing.List[str], message: discord.Message) -> CommandOutput:
         if len(args) > 1:

@@ -11,10 +11,11 @@ class Hello(Command):
     """
 
     def __init__(self):
-        super().__init__("hello", "Say \"hello\" to Memebot!")
-
-    def long_description(self) -> CommandOutput:
-        return CommandOutput().set_text("A simple ping command. Memebot should respond \"Hello!\"")
+        super().__init__(
+            name="hello",
+            description="Say \"hello\" to Memebot!",
+            long_description="A simple ping command. Memebot should respond \"Hello!\""
+        )
 
     async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
         """

@@ -11,10 +11,12 @@ class Join(Command):
     """
 
     def __init__(self):
-        super().__init__("join", "Adds caller to <role>", "<role>")
-
-    def long_description(self) -> CommandOutput:
-        return CommandOutput().set_text("Join an existing Memebot-managed role.")
+        super().__init__(
+            name="join",
+            description="Adds caller to <role>",
+            long_description="Join an existing Memebot-managed role.",
+            example_args="<role>"
+        )
 
     async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
         if len(args) != 1:

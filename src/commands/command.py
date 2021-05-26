@@ -17,7 +17,7 @@ class CommandMeta(type):
         if cls.__name__ == "Command":
             cls.parent: None
         else:
-            cls.parent: Command = Command("default", "")
+            cls.parent: Command = Command(name="default", description="", long_description="")
         cls.subcommands: List[Command] = []
 
 
@@ -28,16 +28,20 @@ class Command(metaclass=CommandMeta):
 
         - name: this is the activator for the command, i.e. the thing used like `!name`
         - description: this is a brief description of the command, used by !help
+        - long_description: this is a longer description of the command which gives the user more context about its use
     """
 
     @abstractmethod
-    def __init__(self, name: str = None, description: str = None, example_args: str = ""):
+    def __init__(self, name: str = None, description: str = None, long_description: str = None, example_args: str = ""):
         """
         Default constructor. Ensures that all pieces of command are properly implemented.
-        :param name The name of the command, which is the "activation string" when typed by a user in Discord.
-        :param description A _very_ brief description of the command to be printed by the !help command.
-        :param example_args An example of arguments to be used with this command, to be printed as a usage message.
-        :raise ValueError if a required attribute is not set or is invalid.
+        Default values are used for required arguments so that subclasses are able to override this method without
+        requiring the arguments.
+        :param name: The name of the command, which is the "activation string" when typed by a user in Discord.
+        :param description: A _very_ brief description of the command to be printed by the !help command.
+        :param long_description: a long description with more context about the command's use
+        :param example_args: An example of arguments to be used with this command, to be printed as a usage message.
+        :raise ValueError: if a required attribute is not set or is invalid.
         """
         if name is None:
             raise ValueError(f"Every command needs to have a name! ({type(self).__name__})")
@@ -46,20 +50,15 @@ class Command(metaclass=CommandMeta):
         self.name: str = name
         if description is None:
             raise ValueError(f"Every command needs to have a description! ({type(self).__name__})")
+        if long_description is None:
+            raise ValueError(f"Every command needs to have a long description! ({type(self).__name__}")
         self.description: str = description
+        self.long_description = long_description
         self.example_args: str = example_args
         self.requires_database: bool = False
 
     def __repr__(self) -> str:
         return f"Command: {type(self).__name__}(name={self.name} description={self.description})"
-
-    @abstractmethod
-    def long_description(self) -> CommandOutput:
-        """
-        Returns a CommandOutput describing this particular command in detail.
-        :returns A long description of the command, which should be sent to the server.
-        """
-        raise NotImplementedError()
 
     def help_text(self) -> CommandOutput:
         """
@@ -75,7 +74,7 @@ class Command(metaclass=CommandMeta):
         cmd_preamble = ' '.join(parent_list)
         if len(cmd_preamble) > 0:
             cmd_preamble += ' '
-        output = self.long_description().append_line(
+        output = CommandOutput(content=self.long_description).append_line(
             f"**`!{cmd_preamble}{self.name}" + (f" {self.example_args}`**" if len(self.example_args) > 0 else "`**"))
         if self.subcommands:
             output.append_line("").append_line('\n'.join(

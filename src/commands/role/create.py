@@ -11,10 +11,12 @@ class Create(Command):
     """
 
     def __init__(self):
-        super().__init__("create", "Creates <role>", "<role>")
-
-    def long_description(self) -> CommandOutput:
-        return CommandOutput().set_text("Create a new role to be managed by memebot.")
+        super().__init__(
+            name="create",
+            description="Creates <role>",
+            long_description="Create a new role to be managed by memebot.",
+            example_args="<role>"
+        )
 
     async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
         if len(args) != 1:

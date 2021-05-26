@@ -11,10 +11,12 @@ class Delete(Command):
     """
 
     def __init__(self):
-        super().__init__("delete", "Deletes <role> if <role> has no members.", "<role>")
-
-    def long_description(self) -> CommandOutput:
-        return CommandOutput().set_text("Delete a Memebot-managed role if, and only if, the role has no members.")
+        super().__init__(
+            name="delete",
+            description="Deletes <role> if <role> has no members.",
+            long_description="Delete a Memebot-managed role if, and only if, the role has no members.",
+            example_args="<role>"
+        )
 
     async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
         if len(args) != 1:
