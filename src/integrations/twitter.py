@@ -104,8 +104,6 @@ async def process_message_for_interaction(message: discord.Message):
             asyncio.create_task(message.add_reaction(constants.EMOJI_MAP[emoji]))
 
         # Post quote tweet links.
-        print("message author: " + repr(message.author))
-        print("bot user: " + repr(bot_user))
         if tweet_info.is_quote_status and message.author != bot_user:
             quote_tweet_urls = await get_quote_tweet_urls(tweet_info)
             asyncio.create_task(message.channel.send(quote_tweet_urls))
