@@ -12,7 +12,7 @@ import log
 memebot_context = os.getcwd()
 
 
-@functools.cache
+@functools.lru_cache
 def get_module_name_from_path(path: str) -> str:
     """
     Returns the module name for a given file as it would appear in an import statement
