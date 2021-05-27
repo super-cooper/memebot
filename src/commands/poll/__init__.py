@@ -16,14 +16,15 @@ class Poll(Command):
     """
 
     def __init__(self):
-        super().__init__("poll", "Create a simple poll.", "\"question\" \"ans1\" \"ans2\" ... \"ansN\"")
+        super().__init__(
+            name="poll",
+            description="Create a simple poll.",
+            long_description="Create a simple poll with a question and multiple answers.\n"
+                             "If no answers are provided, :thumbsup: and :thumbsdown: will be used.",
+            example_args="\"question\" \"ans1\" \"ans2\" ... \"ansN\""
+        )
         self.reactions: List[str] = []
         self.lock = threading.Lock()
-
-    def help_text(self) -> CommandOutput:
-        return CommandOutput().set_text(
-            "Create a simple poll with a question and multiple answers.\n"
-            "If no answers are provided, :thumbsup: and :thumbsdown: will be used.")
 
     async def exec(self, args: List[str], message: discord.Message) -> 'CommandOutput':
         if len(args) < 1:
