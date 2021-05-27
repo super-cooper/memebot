@@ -9,8 +9,6 @@ import db
 import log
 from integrations import twitter
 
-logger = logging.getLogger(__name__)
-
 
 class MemeBot(discord.Client):
     """
@@ -19,15 +17,15 @@ class MemeBot(discord.Client):
 
     def __init__(self, **args):
         super().__init__(**args, intents=discord.Intents().all())
-        if config.twitter_enabled:
-            twitter.init(config.twitter_api_tokens)
-        db.test()
 
     async def on_ready(self):
         """
         Determines what the bot does as soon as it is logged into discord
         """
         log.info(f'Logged in as {self.user}')
+        if config.twitter_enabled:
+            twitter.init(config.twitter_api_tokens, self.user)
+        db.test()
 
     async def on_message(self, message: discord.Message) -> None:
         """

@@ -20,17 +20,23 @@ twitter_url_pattern = re.compile(r'https://twitter\.com/([0-9a-zA-Z_]+|i/web)/st
 # Twitter API handle
 twitter_api: tweepy.API
 
+# Current bot user
+bot_user: discord.ClientUser
 
-def init(api_token_path: pathlib.Path):
+
+def init(api_token_path: pathlib.Path, user: discord.ClientUser):
     """
     Authenticates to the Twitter API. This function is left synchronous, as any further interaction with Twitter
     depends on this function executing and returning successfully, and it should only be run once at startup.
     :param api_token_path: The path to the file containing the Twitter API tokens, in JSON format
+    :param user: The user object for the bot user.
     """
     global twitter_api
+    global bot_user
     with open(api_token_path) as twitter_api_tokens:
         twitter_tokens = json.load(twitter_api_tokens)
     twitter_api = tweepy.API(tweepy.AppAuthHandler(twitter_tokens['consumer_key'], twitter_tokens['consumer_secret']))
+    bot_user = user
 
 
 def get_twitter_api() -> tweepy.API:
@@ -97,7 +103,9 @@ async def process_message_for_interaction(message: discord.Message):
             emoji = ":" + str(len(tweet_media)) + ":"
             asyncio.create_task(message.add_reaction(constants.EMOJI_MAP[emoji]))
 
-        # Post
-        if tweet_info.is_quote_status:
+        # Post quote tweet links.
+        print("message author: " + repr(message.author))
+        print("bot user: " + repr(bot_user))
+        if tweet_info.is_quote_status and message.author != bot_user:
             quote_tweet_urls = await get_quote_tweet_urls(tweet_info)
             asyncio.create_task(message.channel.send(quote_tweet_urls))
