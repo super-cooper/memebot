@@ -63,7 +63,10 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         This method also attempts to differentiate calls to print made within the memebot repo and print them as
         info instead of debug.
         """
-        if msg and not msg.isspace():
+        # This means we are in interactive mode, in which case peeking at the stack can get very wonky
+        if sys.stdin.isatty() or "pydev" in repr(__builtins__.get("__import__")):
+            sys.__stdout__.writelines([msg])
+        elif msg and not msg.isspace():
             # Capture the stack here, on a line without the string "print(" in it
             stack = inspect.stack()
             # Find the stack frame which (hopefully) contains the call to print
