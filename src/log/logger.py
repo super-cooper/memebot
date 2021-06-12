@@ -11,7 +11,6 @@ import log
 
 memebot_context = os.getcwd()
 
-
 @functools.lru_cache
 def get_module_name_from_path(path: str) -> str:
     """
@@ -32,6 +31,7 @@ class MemeBotLogger(logging.Logger, io.IOBase):
     def __init__(self, name: str, level: Union[int, str] = config.log_level):
         super().__init__(name, level)
         self.propagate = False
+        self.is_interactive = sys.stdin.isatty() or "pydev" in repr(__builtins__.get("__import__"))
         super().addHandler(config.log_location)
 
     def addHandler(self, _: logging.Handler):
@@ -64,7 +64,7 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         info instead of debug.
         """
         # This means we are in interactive mode, in which case peeking at the stack can get very wonky
-        if sys.stdin.isatty() or "pydev" in repr(__builtins__.get("__import__")):
+        if self.is_interactive:
             sys.__stdout__.writelines([msg])
         elif msg and not msg.isspace():
             # Capture the stack here, on a line without the string "print(" in it
