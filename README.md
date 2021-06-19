@@ -36,3 +36,11 @@ Current commands that can be used in Discord:
 ## Docker
 Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./docker/Dockerfile) in this 
 repository. This image can be used for both deployment and testing purposes.
+
+Configure the Docker build/deployment using environment variables. 
+The variables should be filled out in a file called `.env` in the root of the repository. 
+For a template of what variables can be set, look at [template.env](./docker/template.env). 
+The easiest way to create your `.env` is by copying [template.env](./docker/template.env), 
+and then filling out whichever environment variables are desired. 
+Leaving variables empty just means that default values will be used, 
+as defined in [docker-compose.yaml](./docker/docker-compose.yaml)
