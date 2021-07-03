@@ -102,6 +102,8 @@ async def process_message_for_interaction(message: discord.Message):
         if len(tweet_media) > 1:
             emoji = ":" + str(len(tweet_media)) + ":"
             asyncio.create_task(message.add_reaction(constants.EMOJI_MAP[emoji]))
+        elif len(tweet_media) == 1 and 'video' in tweet_media[0]['media_url']:
+            asyncio.create_task(message.add_reaction('🎞'))
 
         # Post quote tweet links.
         if tweet_info.is_quote_status and message.author != bot_user:
