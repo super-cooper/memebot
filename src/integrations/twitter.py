@@ -102,8 +102,12 @@ async def process_message_for_interaction(message: discord.Message):
         if len(tweet_media) > 1:
             emoji = ":" + str(len(tweet_media)) + ":"
             asyncio.create_task(message.add_reaction(constants.EMOJI_MAP[emoji]))
-        elif len(tweet_media) == 1 and 'video' in tweet_media[0]['media_url']:
-            asyncio.create_task(message.add_reaction('🎞'))
+        elif len(tweet_media) == 1 and 'video_info' in tweet_media[0]:
+            # The media_url of a media dict is actually a thumbnail
+            # To get the video, we have to pull it out of its video_info
+            # We will choose the variant with the highest bitrate
+            video_url = max(tweet_media[0]['video_info']['variants'], key=lambda v: v.get('bitrate', -1))['url']
+            asyncio.create_task(message.channel.send(f"embedded video:\n{video_url}"))
 
         # Post quote tweet links.
         if tweet_info.is_quote_status and message.author != bot_user:
