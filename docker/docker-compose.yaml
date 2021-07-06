@@ -1,14 +1,15 @@
-version: '3.1'
+version: '3.5'
 
 services:
   bot:
-    container_name: memebot-bot
+    container_name: ${MEMEBOT_CONTAINER_NAME:-memebot-test-bot}
+    image: ${MEMEBOT_IMAGE_NAME:-memebot-test}
     build:
       dockerfile: docker/Dockerfile
       context: ..
       args:
-        CLIENT_TOKEN_FILE: client_token
-        TWITTER_API_TOKENS_FILE: twitter_api_tokens.json
+        CLIENT_TOKEN_FILE: ${MEMEBOT_CLIENT_TOKEN_FILE:-client_token}
+        TWITTER_API_TOKENS_FILE: ${MEMEBOT_TWITTER_TOKENS_FILE:-twitter_api_tokens.json} 
         DATABASE_URI: "mongodb://db:27017"
     restart: always
     depends_on:
@@ -18,9 +19,9 @@ services:
     networks:
       default:
     dns:
-      - 172.19.0.1
+      - ${MEMEBOT_NETWORK_DNS_SERVER:-9.9.9.9}
   db:
-    container_name: memebot-db
+    container_name: ${MEMEBOT_CONTAINER_NAME_DB:-memebot-test-db}
     image: mongo:4.4.4-bionic
     restart: always
     volumes:
@@ -29,11 +30,12 @@ services:
     networks:
       default:
     dns:
-      - 172.19.0.1
+      - ${MEMEBOT_NETWORK_DNS_SERVER:-9.9.9.9}
 
 networks:
   default:
+    name: memebot
     driver: bridge
     ipam:
       config:
-        - subnet: 172.19.0.0/24
+        - subnet: ${MEMEBOT_NETWORK_SUBNET:-172.19.0.0/24}
