@@ -11,10 +11,12 @@ class Create(Command):
     """
 
     def __init__(self):
-        super().__init__("create", "Creates <role>", "<role>")
-
-    def help_text(self) -> CommandOutput:
-        return CommandOutput().set_text("Create a new role to be managed by memebot.")
+        super().__init__(
+            name="create",
+            description="Creates <role>",
+            long_description="Create a new role to be managed by memebot.",
+            example_args="<role>"
+        )
 
     async def exec(self, args: List[str], message: discord.Message) -> CommandOutput:
         if len(args) != 1:
@@ -23,6 +25,8 @@ class Create(Command):
         guild = message.guild
         author = guild.get_member(message.author.id)
         target_name = args[0].lower()
+        if '@' in target_name:
+            return role.action_failure_message(self.name, target_name, "Created roles cannot contain the `@` symbol.")
         target_role = role.find_role_by_name(target_name, message.guild)
         if target_role is not None:
             return role.action_failure_message(self.name, target_name, f'The role `@{target_name}` already exists!')

@@ -1,8 +1,12 @@
-from typing import Optional
+import asyncio
 
 import discord
 
 import commands
+import config
+import db
+import log
+from integrations import twitter
 
 
 class MemeBot(discord.Client):
@@ -12,17 +16,15 @@ class MemeBot(discord.Client):
 
     def __init__(self, **args):
         super().__init__(**args, intents=discord.Intents().all())
-        global client
-        if client is not None:
-            raise ReferenceError("There can only be one Memebot!")
-        client = self
 
-    async def on_ready(self) -> None:
+    async def on_ready(self):
         """
         Determines what the bot does as soon as it is logged into discord
-        :return: None
         """
-        print(f'Logged in as {self.user}')
+        log.info(f'Logged in as {self.user}')
+        if config.twitter_enabled:
+            twitter.init(config.twitter_api_tokens, self.user)
+        db.test()
 
     async def on_message(self, message: discord.Message) -> None:
         """
@@ -31,11 +33,12 @@ class MemeBot(discord.Client):
         :param message: The most recent message sent to the server
         :return: None
         """
-        if message.author == self.user:
-            # ignore messages sent by this bot (for now)
-            return
-        else:
-            await commands.execution.execute_if_command(message)
+        # Ignore commands sent by this bot (for now).
+        if message.author != self.user:
+            asyncio.create_task(commands.execution.execute_if_command(message))
+
+        if config.twitter_enabled:
+            asyncio.create_task(twitter.process_message_for_interaction(message))
 
 
-client: Optional[discord.Client] = None
+client: discord.Client = MemeBot()

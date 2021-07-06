@@ -1,6 +1,8 @@
 import importlib
 import os
+from typing import List
 
+import config
 from . import registry, execution
 from .command import Command, CommandOutput
 
@@ -9,6 +11,13 @@ def dynamically_register_commands() -> None:
     """
     Dynamically import all Command classes. Should only be called once outside of this function.
     """
+
+    def find_and_register_subcommands(top_level_command: Command, cmd_path: List[str]) -> None:
+        # Do a depth-first search to register subcommands
+        for subcommand in top_level_command.subcommands:
+            if not subcommand.requires_database or config.database_enabled:
+                registry.register_subcommand(cmd_path, subcommand)
+                find_and_register_subcommands(subcommand, cmd_path + [subcommand.name])
 
     # Get all the packages located in the command package
     top_level_packages = [f.path for f in os.scandir(os.path.dirname(os.path.realpath(__file__))) if
@@ -24,17 +33,10 @@ def dynamically_register_commands() -> None:
         if issubclass(cmd_class, Command):
             instance = cmd_class()
             # Registration machinery:
-            # If the command is a top-level command
-            if type(cmd_class.parent) is Command:
+            # If the command is a top-level command and meets configuration requirements
+            if type(cmd_class.parent) is Command and (not instance.requires_database or config.database_enabled):
                 registry.register_top_level_command(instance)
-            else:
-                parents = []
-                parent = cmd_class.parent
-                # Gather all of this subcommand's parents
-                while type(parent) is not Command:
-                    parents.append(parent.name)
-                    parent = parent.__class__.parent
-                registry.register_subcommand(parents, instance)
+                find_and_register_subcommands(instance, [instance.name])
 
 
 dynamically_register_commands()

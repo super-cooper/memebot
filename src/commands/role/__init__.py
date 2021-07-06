@@ -4,6 +4,7 @@ import discord
 
 from commands import Command, CommandOutput
 from commands.command import has_subcommands
+from lib import status
 from .create import Create
 from .delete import Delete
 from .join import Join
@@ -30,17 +31,15 @@ class Role(Command):
     """
 
     def __init__(self):
-        super().__init__("role", "Self-contained role management")
-
-    def help_text(self) -> CommandOutput:
-        return CommandOutput().set_text(
-            "Controls creating, joining, leaving, and listing permissionless mentionable roles. These roles are "
-            "intended to serve as \"tags\" to allow mentioning multiple users at once."
+        super().__init__(
+            name="role",
+            description="Self-contained role management",
+            long_description="Controls creating, joining, leaving, and listing permissionless mentionable roles. "
+                             "These roles are intended to serve as \"tags\" to allow mentioning multiple users at once."
         )
 
     async def exec(self, args: typing.List[str], message: discord.Message) -> CommandOutput:
-        return self.fail(
-            '\n'.join(f"`!{self.name} {sub.name} {sub.example_args}`: {sub.description}" for sub in Role.subcommands))
+        return self.help_text()
 
 
 def action_failure_message(action: str, target_name: str, msg: str = "") -> CommandOutput:
@@ -51,7 +50,7 @@ def action_failure_message(action: str, target_name: str, msg: str = "") -> Comm
     :param msg: The explanation, usually extracted from an exception.
     :return: A CommandOutput with the created message.
     """
-    return CommandOutput().set_text(f"Failed to {action} role {target_name}! {msg}")
+    return CommandOutput(command_status=status.FAIL).set_text(f"Failed to {action} role `@{target_name}`! {msg}")
 
 
 def permission_failure_message(action: str, target_name: str) -> CommandOutput:
@@ -62,8 +61,9 @@ def permission_failure_message(action: str, target_name: str) -> CommandOutput:
     :return: A CommandOutput with the created message.
     """
     # TODO: factor this out to be common to all commands
-    return CommandOutput().set_text(f"Memebot doesn't have permission to {action} role {target_name}. "
-                                    "Are you sure you configured Membot's permissions correctly?")
+    return CommandOutput(command_status=status.FAIL,
+                         content=f"Memebot doesn't have permission to {action} role `@{target_name}`. "
+                                 "Are you sure you configured Membot's permissions correctly?")
 
 
 def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
@@ -73,6 +73,17 @@ def find_role_by_name(target_name: str, guild: discord.Guild) -> discord.Role:
     :param guild: The guild to search through.
     :return: A discord.Role object with the same name as ``target_name``.
     """
+    # First we check to see if the target_name is an `@` mention, which would be indicated by
+    # a string that looks like <@&1234567890>.
+    role_id = 0
+    try:
+        role_id = int(target_name[3:-1])
+    except (ValueError, IndexError):
+        pass
+    mentioned_role = guild.get_role(role_id)
+    if mentioned_role:
+        return mentioned_role
+    # If the target_name is not an @ mention, we search for an existing role with an equal name.
     for role in guild.roles:
         if role.name == target_name:
             return role

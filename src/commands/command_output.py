@@ -3,6 +3,8 @@ from typing import Union, KeysView, ValuesView, List
 
 import discord
 
+from lib import status
+
 
 class CommandOutput:
     """
@@ -17,8 +19,17 @@ class CommandOutput:
     LIFETIME = 'delete_after'
     NONCE = 'nonce'
 
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
+    def __init__(self, command_status: int = status.SUCCESS, **kwargs):
+        """
+        :param kwargs: A keyword-arguments dictionary
+        :param command_status: The status of the command, whose value should be taken
+        from lib.status
+        """
+        self.status: int = command_status
+        if type(kwargs) is dict:
+            self.kwargs = kwargs
+        else:
+            self.kwargs = {}
 
     def __repr__(self) -> str:
         return "CommandOutput(" + " ".join(f"{key}={repr(self.kwargs[key])}" for key in self.kwargs.keys()) + ")"
@@ -123,9 +134,6 @@ class CommandOutput:
 
     def __contains__(self, item: str) -> bool:
         return item in self.kwargs
-
-    def __add__(self, other: 'CommandOutput') -> 'CommandOutput':
-        return CommandOutput(**self.kwargs.update(other.kwargs))
 
     def keys(self) -> KeysView[str]:
         return self.kwargs.keys()

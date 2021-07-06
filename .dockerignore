@@ -1,0 +1,8 @@
+**/__pycache__/
+.dockerignore
+.git/
+.github/
+.gitignore
+data/
+docker/
+install.bash
