@@ -7,7 +7,7 @@ import sys
 from typing import Union
 
 import config
-import log
+from log import handler
 
 memebot_context = os.getcwd()
 
@@ -32,7 +32,7 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         super().__init__(name, level)
         self.propagate = False
         self.is_interactive = sys.stdin.isatty() or "pydev" in repr(__builtins__.get("__import__"))
-        super().addHandler(config.log_location)
+        super().addHandler(handler.MemeBotLogHandler(config.log_location))
 
     def addHandler(self, _: logging.Handler):
         # We want to avoid external packages overwriting our custom handler
@@ -76,12 +76,12 @@ class MemeBotLogger(logging.Logger, io.IOBase):
                 log_extra = {"_callsite": module_name, "_lineno": print_frame.lineno}
                 if print_frame.filename.startswith(memebot_context):
                     # If someone puts a print statement inside memebot code, output it regardless of log level
-                    log.log_all(self.info, msg.splitlines(), extra=log_extra)
+                    self.info(msg, extra=log_extra)
                 else:
                     # We want to use debug logging for any non-memebot modules using print
-                    log.log_all(self.debug, msg.splitlines(), extra=log_extra)
+                    self.debug(msg, extra=log_extra)
             else:
                 self.error(
                     f"Attempted to format a print statement, but couldn't figure out where the print came from",
                     stack_info=True)
-                log.log_all(self.info, msg.splitlines())
+                self.info(msg)
