@@ -1,4 +1,4 @@
-FROM python:3.8.1-slim
+FROM python:3.9.6-slim
 
 ARG CLIENT_TOKEN_FILE
 ARG TWITTER_API_TOKENS_FILE
