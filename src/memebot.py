@@ -15,7 +15,7 @@ class MemeBot(discord.Client):
     """
 
     def __init__(self, **args):
-        super().__init__(**args, intents=discord.Intents().all())
+        super().__init__(**args, intents=discord.Intents().all(), activity=discord.Game(name="• !help"))
 
     async def on_ready(self):
         """
