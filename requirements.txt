@@ -1,4 +1,4 @@
-discord.py
+discord.py==1.7.3
 pymongo
 tweepy
-aiohttp>=3.8.0 # not directly required, pinned by Snyk to avoid a vulnerability
+aiohttp
