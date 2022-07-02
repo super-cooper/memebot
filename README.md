@@ -1,10 +1,10 @@
-# MemeBot 
+# Memebot 
 
-This is MemeBot, a discord bot.
+This is Memebot, a discord bot.
 
 If you are hosting yourself, you will need to pass a Discord API client token to the bot
 as a string, either via a command-line parameter or an environment variable. 
-See [Configuration](#configuration)
+See [Configuration](#configuration) for more context.
 
 ## Configuration
 
@@ -29,7 +29,7 @@ optional arguments:
                         Set logging level
   -v, --verbose         Use verbose logging. Equivalent to --log-level DEBUG
   --log-location {stdout,stderr,syslog,/path/to/file}
-                        Set the location for MemeBot's log
+                        Set the location for Memebot's log
   --no-twitter          Disable Twitter integration
   --nodb                Disable the database connection, and all features which require it.
   --database-uri DATABASE_URI
@@ -37,17 +37,17 @@ optional arguments:
 ```
 
 ### Environment Variables
-MemeBot can also be configured with environment variables, although command-line arguments
+Memebot can also be configured with environment variables, although command-line arguments
 will take precedence.
 
-To get see which environment variables can be used to configure MemeBot, see [template.env](./docker/template.env).
+To see which environment variables can be used to configure Memebot, see [template.env](./docker/template.env).
 
 ## Commands
 
 Current commands that can be used in Discord:
 
     !hello - Say "hello" to Memebot!
-    !help  - Learn how to use MemeBot
+    !help  - Learn how to use Memebot
     !poll  - Create a simple poll.
     !role  - Self-contained role management
 
@@ -55,8 +55,8 @@ Current commands that can be used in Discord:
 Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./docker/Dockerfile) in this 
 repository. This image can be used for both deployment and testing purposes.
 
-The MemeBot image is designed to be used as an "executable," since it is only designed to
-run MemeBot and nothing else. 
+The Memebot image is designed to be used as an "executable," since it is only designed to
+run Memebot and nothing else. 
 
 For example:
 ```shell
