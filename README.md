@@ -1,20 +1,30 @@
-# Memebot 
+# MemeBot 
 
 This is MemeBot, a discord bot.
 
-If you are hosting yourself, you will need to create a file in the root directory of your local repository called 
-`client_token` and paste your Discord developer client token into that file. Nothing else should be in the file.
-Usage of the bot is as follows:
+If you are hosting yourself, you will need to pass a Discord API client token to the bot
+as a string, either via a command-line parameter or an environment variable. 
+See [Configuration](#configuration)
+
+## Configuration
+
+### Command-line parameters
 
 ```
-usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-tokens TWITTER_API_TOKENS] [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL} | -v] [--log-location {stdout,stderr,syslog,/path/to/file}] [--no-twitter] [--nodb] [--database-uri DATABASE_URI]
+usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-consumer-key TWITTER_API_CONSUMER_KEY]
+               [--twitter-api-consumer-secret TWITTER_API_CONSUMER_SECRET]
+               [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL} | -v]
+               [--log-location {stdout,stderr,syslog,/path/to/file}] [--no-twitter] [--nodb]
+               [--database-uri DATABASE_URI]
 
 optional arguments:
   -h, --help            show this help message and exit
   --discord-api-token DISCORD_API_TOKEN
-                        Path to the file containing the Discord API token
-  --twitter-api-tokens TWITTER_API_TOKENS
-                        Path to the file containing the Twitter API tokens, in JSON format.
+                        The Discord API client token
+  --twitter-api-consumer-key TWITTER_API_CONSUMER_KEY
+                        The Twitter API consumer key
+  --twitter-api-consumer-secret TWITTER_API_CONSUMER_SECRET
+                        The Twitter API consumer secret
   --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         Set logging level
   -v, --verbose         Use verbose logging. Equivalent to --log-level DEBUG
@@ -25,6 +35,14 @@ optional arguments:
   --database-uri DATABASE_URI
                         URI of the MongoDB database server
 ```
+
+### Environment Variables
+MemeBot can also be configured with environment variables, although command-line arguments
+will take precedence.
+
+To get see which environment variables can be used to configure MemeBot, see [template.env](./docker/template.env).
+
+## Commands
 
 Current commands that can be used in Discord:
 
@@ -37,10 +55,14 @@ Current commands that can be used in Discord:
 Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./docker/Dockerfile) in this 
 repository. This image can be used for both deployment and testing purposes.
 
-Configure the Docker build/deployment using environment variables. 
-The variables should be filled out in a file called `.env` in the root of the repository. 
-For a template of what variables can be set, look at [template.env](./docker/template.env). 
+The MemeBot image is designed to be used as an "executable," since it is only designed to
+run MemeBot and nothing else. 
+
+For example:
+```shell
+$ docker run --env-file docker/.env --rm -it memebot --discord-api-token ...
+```
+
 The easiest way to create your `.env` is by copying [template.env](./docker/template.env), 
 and then filling out whichever environment variables are desired. 
-Leaving variables empty just means that default values will be used, 
-as defined in [docker-compose.yaml](./docker/docker-compose.yaml)
+Leaving variables empty just means that default values will be used.
