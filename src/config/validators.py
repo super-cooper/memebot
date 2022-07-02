@@ -6,7 +6,6 @@ import collections
 import logging
 import logging.handlers
 import sys
-from typing import Union
 
 
 # Logging validators
