@@ -6,7 +6,7 @@ services:
     image: ${MEMEBOT_IMAGE_NAME:-memebot-test}
     build:
       dockerfile: docker/Dockerfile
-      context: ..
+      context: .
     restart: always
     depends_on:
       - db
