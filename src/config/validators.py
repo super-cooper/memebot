@@ -16,6 +16,6 @@ def validate_log_location(location: str) -> logging.Handler:
         "syslog": logging.handlers.SysLogHandler(),
     })[location]
 
-
+# Type validators
 def validate_bool(val: str) -> bool:
-    return val.lower() in ("true", "yes", "y")
+    return val.lower() in ("true", "yes", "y", "1")
