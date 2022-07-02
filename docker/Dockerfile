@@ -1,16 +1,8 @@
 FROM python:3.9.6-slim
 
-ARG CLIENT_TOKEN_FILE
-ARG TWITTER_API_TOKENS_FILE
-
-ARG DATABASE_URI
-ENV MEMEBOT_DATABASE_URI ${DATABASE_URI}
-
 # pull in required files for environment
 WORKDIR /home/memebot/
 COPY requirements.txt requirements.txt
-COPY ${CLIENT_TOKEN_FILE} client_token
-COPY ${TWITTER_API_TOKENS_FILE} twitter_api_tokens.json
 
 # set up virtual environment
 ENV MEMEBOT_VIRTUAL_ENV "/venv"
@@ -28,4 +20,4 @@ RUN \
 COPY src src
 
 # run memebot
-CMD ${MEMEBOT_PYTHON} src/main.py --database-uri ${MEMEBOT_DATABASE_URI}
+ENTRYPOINT ${MEMEBOT_PYTHON} src/main.py

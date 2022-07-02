@@ -7,26 +7,25 @@ services:
     build:
       dockerfile: docker/Dockerfile
       context: ..
-      args:
-        CLIENT_TOKEN_FILE: ${MEMEBOT_CLIENT_TOKEN_FILE:-client_token}
-        TWITTER_API_TOKENS_FILE: ${MEMEBOT_TWITTER_TOKENS_FILE:-twitter_api_tokens.json} 
-        DATABASE_URI: "mongodb://db:27017"
     restart: always
     depends_on:
       - db
     environment:
       PYTHONUNBUFFERED: 1
+    env_file:
+      - docker/.env
     networks:
       default:
     dns:
       - ${MEMEBOT_NETWORK_DNS_SERVER:-9.9.9.9}
+
   db:
     container_name: ${MEMEBOT_CONTAINER_NAME_DB:-memebot-test-db}
     image: mongo:4.4.4-bionic
     restart: always
     volumes:
-      - ../data/db:/data/db
-      - ../src/config/mongod.yaml:/etc/mongo/mongod.yaml:ro
+      - ./data/db:/data/db
+      - ./src/config/mongod.yaml:/etc/mongo/mongod.yaml:ro
     networks:
       default:
     dns:

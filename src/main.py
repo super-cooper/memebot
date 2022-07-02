@@ -16,10 +16,7 @@ def main() -> int:
     client = memebot.client
 
     # !! DO NOT HARDCODE THE TOKEN !!
-    with open(config.discord_api_token) as token_file:
-        token = token_file.read().strip()
-
-    return client.run(token)
+    return client.run(config.discord_api_token)
 
 
 if __name__ == '__main__':

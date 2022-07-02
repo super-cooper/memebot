@@ -6,6 +6,7 @@ import collections
 import logging
 import logging.handlers
 import sys
+from typing import Union
 
 
 # Logging validators
@@ -15,3 +16,7 @@ def validate_log_location(location: str) -> logging.Handler:
         "stderr": logging.StreamHandler(sys.stderr),
         "syslog": logging.handlers.SysLogHandler(),
     })[location]
+
+
+def validate_bool(val: str) -> bool:
+    return val.lower() in ("true", "yes", "y")
