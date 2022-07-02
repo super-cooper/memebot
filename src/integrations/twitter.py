@@ -5,13 +5,12 @@ it maintains is whether or not the API has been initialized.
 All functions that make any network communication, except for init, should be asynchronous and stateless.
 """
 import asyncio
-import json
 import re
-import pathlib
 
 import discord
 import tweepy
 
+import config
 from lib import constants
 
 # Regular expression that describes the pattern of a Tweet URL
@@ -24,18 +23,15 @@ twitter_api: tweepy.API
 bot_user: discord.ClientUser
 
 
-def init(api_token_path: pathlib.Path, user: discord.ClientUser):
+def init(user: discord.ClientUser):
     """
     Authenticates to the Twitter API. This function is left synchronous, as any further interaction with Twitter
     depends on this function executing and returning successfully, and it should only be run once at startup.
-    :param api_token_path: The path to the file containing the Twitter API tokens, in JSON format
     :param user: The user object for the bot user.
     """
     global twitter_api
     global bot_user
-    with open(api_token_path) as twitter_api_tokens:
-        twitter_tokens = json.load(twitter_api_tokens)
-    twitter_api = tweepy.API(tweepy.AppAuthHandler(twitter_tokens['consumer_key'], twitter_tokens['consumer_secret']))
+    twitter_api = tweepy.API(tweepy.AppAuthHandler(config.twitter_api_consumer_key, config.twitter_api_consumer_secret))
     bot_user = user
 
 

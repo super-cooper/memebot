@@ -23,7 +23,7 @@ class MemeBot(discord.Client):
         """
         log.info(f'Logged in as {self.user}')
         if config.twitter_enabled:
-            twitter.init(config.twitter_api_tokens, self.user)
+            twitter.init(self.user)
         db.test()
 
     async def on_message(self, message: discord.Message) -> None:

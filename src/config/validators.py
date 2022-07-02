@@ -15,3 +15,7 @@ def validate_log_location(location: str) -> logging.Handler:
         "stderr": logging.StreamHandler(sys.stderr),
         "syslog": logging.handlers.SysLogHandler(),
     })[location]
+
+# Type validators
+def validate_bool(val: str) -> bool:
+    return val.lower() in ("true", "yes", "y", "1")
