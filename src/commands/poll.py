@@ -11,7 +11,8 @@ from lib import constants, exception
 @discord.ext.commands.command(
     brief="Create a simple poll.",
     help="Create a simple poll with a question and multiple answers.\n"
-         "If no answers are provided, :thumbsup: and :thumbsdown: will be used.",
+         f"If no answers are provided, {constants.EMOJI_MAP[':thumbsup:']} and "
+         f"{constants.EMOJI_MAP[':thumbsdown:']} will be used.",
 )
 async def poll(ctx: discord.ext.commands.Context, question: str, *choices: str):
     """
