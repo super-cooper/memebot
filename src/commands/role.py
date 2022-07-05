@@ -82,15 +82,14 @@ async def create(ctx: discord.ext.commands.Context, role_name: str):
     if target_role is not None:
         raise RoleActionError(ctx.command.name, target_name, f"The role `@{target_name}` already exists!")
 
-    new_role = None
     try:
         new_role = await guild.create_role(name=target_name, mentionable=True, reason=get_reason(author.name))
     except discord.Forbidden:
         raise RolePermissionError(ctx.command.name, target_name)
     except (discord.HTTPException, discord.InvalidArgument):
         raise RoleActionError(ctx.command.name, target_name)
-    finally:
-        await ctx.send(f"Created new role {new_role.mention}!")
+
+    await ctx.send(f"Created new role {new_role.mention}!")
 
 
 @role.command(
@@ -99,17 +98,17 @@ async def create(ctx: discord.ext.commands.Context, role_name: str):
 )
 async def delete(ctx: discord.ext.commands.Context, target_role: discord.Role):
     # Ensure the role is empty before deleting
-    if len(target_role.members) == 0:
-        try:
-            await target_role.delete(reason=get_reason(ctx.author.name))
-        except discord.Forbidden:
-            raise RolePermissionError(ctx.command.name, target_role.name)
-        except discord.HTTPException:
-            raise RoleActionError(ctx.command.name, target_role.name)
-        finally:
-            await ctx.send(f"Deleted role `@{target_role.name}`")
-    else:
+    if len(target_role.members) > 0:
         raise RoleActionError(ctx.command.name, target_role.name, "Roles must have no members to be deleted.")
+
+    try:
+        await target_role.delete(reason=get_reason(ctx.author.name))
+    except discord.Forbidden:
+        raise RolePermissionError(ctx.command.name, target_role.name)
+    except discord.HTTPException:
+        raise RoleActionError(ctx.command.name, target_role.name)
+
+    await ctx.send(f"Deleted role `@{target_role.name}`")
 
 
 @role.command(
@@ -126,8 +125,8 @@ async def join(ctx: discord.ext.commands.Context, target_role: discord.Role):
         raise RolePermissionError(ctx.command.name, target_role.name)
     except discord.HTTPException:
         raise RoleActionError(ctx.command.name, target_role.name)
-    finally:
-        await ctx.send(f"{ctx.author.name} successfully joined `@{target_role.name}`")
+
+    await ctx.send(f"{ctx.author.name} successfully joined `@{target_role.name}`")
 
 
 @role.command(
@@ -147,8 +146,8 @@ async def leave(ctx: discord.ext.commands.Context, target_role: discord.Role):
         raise RolePermissionError(ctx.command.name, target_role.name)
     except discord.HTTPException:
         raise RoleActionError(ctx.command.name, target_role.name)
-    finally:
-        await ctx.send(f"{ctx.author.name} successfully left `@{target_role.name}`")
+
+    await ctx.send(f"{ctx.author.name} successfully left `@{target_role.name}`")
 
 
 @role.command(
