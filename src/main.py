@@ -13,10 +13,9 @@ def main() -> int:
     :return: Exit status of discord.Client.run()
     """
     log.set_third_party_logging()
-    client = memebot.client
 
     # !! DO NOT HARDCODE THE TOKEN !!
-    return client.run(config.discord_api_token)
+    return memebot.run(config.discord_api_token)
 
 
 if __name__ == '__main__':

@@ -13,5 +13,8 @@ def test() -> bool:
     :return: True if the test succeeds
     """
     if config.database_enabled:
-        db_internals.client.server_info()
+        try:
+            db_internals.client.server_info()
+        except Exception:
+            return False
     return True
