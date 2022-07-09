@@ -1,6 +1,7 @@
 # In order to ensure consistent logging, log must always be the first thing imported by the main module
-import config
 import log
+
+import config
 import memebot
 
 
