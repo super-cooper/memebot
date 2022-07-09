@@ -1,0 +1,21 @@
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+follow_imports_for_stubs = true
+namespace_packages = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+pretty = true
+exclude = [
+    "data",
+    "venv"
+]
+
+# tweepy does not provide type annotations, but it is desired for 4.x
+[[tool.mypy.overrides]]
+module = "tweepy"
+ignore_missing_imports = true
