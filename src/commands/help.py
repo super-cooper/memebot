@@ -1,10 +1,11 @@
 import contextlib
-import math
+import sys
+from typing import Optional, Union, Any
 
 import discord.ext.commands
 
 
-class MessageCache(discord.abc.Messageable):
+class MessageCache(discord.DMChannel):
     """
     Dummy class which disguises itself as a destination for a message to be sent.
 
@@ -14,16 +15,23 @@ class MessageCache(discord.abc.Messageable):
     the message is not actually sent, but stored in an internal buffer.
     """
 
-    def __init__(self):
-        self.message_text = None
+    def __init__(self) -> None:
+        self.message_text: object = None
 
-    async def _get_channel(self):
-        pass
-
-    async def send(self, content=None, *, tts=False, embed=None, file=None,
-                   files=None, delete_after=None, nonce=None,
-                   allowed_mentions=None, reference=None,
-                   mention_author=None):
+    async def send(  # type: ignore[override]
+            self,
+            content: Optional[object] = None,
+            *,
+            tts: bool = False,
+            embed: Optional[discord.Embed] = None,
+            file: Optional[discord.File] = None,
+            files: Optional[list[discord.File]] = None,
+            delete_after: Optional[float] = None,
+            nonce: Optional[int] = None,
+            allowed_mentions: Optional[discord.AllowedMentions] = None,
+            reference: Optional[Union[discord.Message, discord.MessageReference]] = None,
+            mention_author: Optional[bool] = None,
+    ) -> None:
         self.message_text = content
 
 
@@ -32,19 +40,19 @@ class Help(discord.ext.commands.DefaultHelpCommand):
    Output general help text for each command.
    """
 
-    def __init__(self, **options):
+    def __init__(self, **options: Any) -> None:
         super(Help, self).__init__(
             no_category="Commands",
-            paginator=discord.ext.commands.Paginator(max_size=math.inf),
+            paginator=discord.ext.commands.Paginator(max_size=sys.maxsize),
             **options
         )
         self.cache_next = False
         self.cache = MessageCache()
 
-    def set_cache_next(self):
+    def set_cache_next(self) -> None:
         self.cache_next = True
 
-    def unset_cache_next(self):
+    def unset_cache_next(self) -> None:
         self.cache_next = False
 
     def get_ending_note(self) -> str:
@@ -66,21 +74,21 @@ class Help(discord.ext.commands.DefaultHelpCommand):
                 await self.send_command_help(command)
         return f"{super(Help, self).subcommand_not_found(command, string)}\n{self.cache.message_text}"
 
-    async def prepare_help_command(self, ctx: discord.ext.commands.Context, command: discord.ext.commands.Command):
+    async def prepare_help_command(self, ctx: discord.ext.commands.Context, command: Optional[str] = None) -> None:
         """
         Override which injects additional error information to the help output, if the help command was triggered
         by a user error
         """
         if error := ctx.kwargs.get("error"):
-            prefix = self.paginator.prefix
-            self.paginator.prefix = None 
+            prefix = self.paginator.prefix  # type: ignore[attr-defined]
+            self.paginator.prefix = None  # type: ignore[attr-defined]
             await super(Help, self).prepare_help_command(ctx, command)
             self.paginator.add_line(f"{str(error)}\n{prefix}")
-            self.paginator.prefix = prefix
+            self.paginator.prefix = prefix  # type: ignore[attr-defined]
         else:
             await super(Help, self).prepare_help_command(ctx, command)
 
-    def get_destination(self) -> discord.abc.Messageable:
+    def get_destination(self) -> Union[discord.TextChannel, discord.DMChannel, discord.GroupChannel]:
         if self.cache_next:
             return self.cache
         else:

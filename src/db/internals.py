@@ -10,7 +10,7 @@ class DatabaseInternals:
     Class for managing all database internals that do not need to be exposed to the command programmer.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client: Optional[mongo.MongoClient] = None
 
     def connect(self) -> None:
@@ -20,5 +20,7 @@ class DatabaseInternals:
         if self.client is None:
             self.client = mongo.MongoClient(config.database_uri.geturl())
 
-    def get_db(self, db_name: str) -> mongo.database.Database:
-        return self.client[db_name]
+    def get_db(self, db_name: str) -> Optional[mongo.database.Database]:
+        if self.client:
+            return self.client[db_name]
+        return None

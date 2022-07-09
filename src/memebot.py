@@ -8,7 +8,7 @@ from integrations import twitter
 from lib import exception
 
 
-async def on_ready():
+async def on_ready() -> None:
     """
     Determines what the bot does as soon as it is logged into discord
     """

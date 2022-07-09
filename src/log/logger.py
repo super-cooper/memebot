@@ -4,7 +4,7 @@ import io
 import logging
 import os
 import sys
-from typing import Union
+from typing import Union, Mapping
 
 import config
 
@@ -29,16 +29,18 @@ class MemeBotLogger(logging.Logger, io.IOBase):
     """
 
     def __init__(self, name: str, level: Union[int, str] = config.log_level):
-        super().__init__(name, level)
+        super(MemeBotLogger, self).__init__(name, level)
         self.propagate = False
-        self.is_interactive = sys.stdin.isatty() or "pydev" in repr(__builtins__.get("__import__"))
-        super().addHandler(config.log_location)
+        self.is_interactive = sys.stdin.isatty() or "pydev" in repr(
+            __builtins__.get("__import__"))  # type: ignore[attr-defined]
+        super(MemeBotLogger, self).addHandler(config.log_location)
 
-    def addHandler(self, _: logging.Handler):
+    def addHandler(self, _: logging.Handler) -> None:
         # We want to avoid external packages overwriting our custom handler
         return
 
-    def _log(self, level, msg, args, exc_info=None, extra=None, stack_info=False, stacklevel=1):
+    def _log(self, level, msg, args, exc_info=None, extra=None, stack_info=False,  # type: ignore[no-untyped-def]
+             stacklevel=1) -> None:
         """
         Apply some hooks to the internal logging function.
         """
@@ -46,18 +48,19 @@ class MemeBotLogger(logging.Logger, io.IOBase):
             file_name, line_number, _, _ = self.findCaller(stack_info, stacklevel)
         except ValueError:
             # If we can't extract MemeBot logging metadata, just do the best we can
-            super()._log(logging.ERROR, "Could not determine log statement callsite.", (),
-                         extra={'_callsite': __name__, "_lineno": inspect.getframeinfo(inspect.currentframe()).lineno})
-            super()._log(level, msg, args, exc_info, extra, stack_info, stacklevel)
+            super(MemeBotLogger, self)._log(logging.ERROR, "Could not determine log statement callsite.", (),
+                                            extra={'_callsite': __name__,
+                                                   "_lineno": "logging_error"})
+            super(MemeBotLogger, self)._log(level, msg, args, exc_info, extra, stack_info, stacklevel)
             return
         # Log the line number on which the log statement was made
         callsite = get_module_name_from_path(file_name)
         updated_extra = {'_lineno': line_number, '_callsite': callsite if callsite else self.name}
         if extra is not None:
             updated_extra.update(extra)
-        super()._log(level, msg, args, exc_info, updated_extra, stack_info, stacklevel)
+        super(MemeBotLogger, self)._log(level, msg, args, exc_info, updated_extra, stack_info, stacklevel)
 
-    def write(self, msg: str):
+    def write(self, msg: str) -> None:
         """
         This method is purely for stdout redirection, as contextlib requires a file-like object for redirection.
         This method also attempts to differentiate calls to print made within the memebot repo and print them as
@@ -70,7 +73,7 @@ class MemeBotLogger(logging.Logger, io.IOBase):
             # Capture the stack here, on a line without the string "print(" in it
             stack = inspect.stack()
             # Find the stack frame which (hopefully) contains the call to print
-            print_frame = next((frame for frame in stack if "print(" in frame.code_context[0]), None)
+            print_frame = next((frame for frame in stack if "print(" in (frame.code_context or "_")[0]), None)
             if print_frame is not None:
                 module_name = get_module_name_from_path(print_frame.filename)
                 log_extra = {"_callsite": module_name, "_lineno": print_frame.lineno}

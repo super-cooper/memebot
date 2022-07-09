@@ -13,13 +13,13 @@ memebot_logger = logging.getLogger("memebot")
 
 # Redirect all stdout to a logger, as some packages in the stdlib still use print for debug messages
 stdout_logger = logging.getLogger("stdout")
-contextlib.redirect_stdout(stdout_logger).__enter__()
+contextlib.redirect_stdout(stdout_logger).__enter__()  # type: ignore[type-var]
 
 # Ensure the handler is properly flushed when MemeBot is killed
 atexit.register(logging.shutdown)
 
 
-def set_third_party_logging():
+def set_third_party_logging() -> None:
     """
     Enable logging on third-party packages that can't be overwritten with MemeBotLogger
     """

@@ -4,7 +4,6 @@ from string import ascii_lowercase as alphabet
 import discord
 import discord.ext.commands
 
-import log
 from lib import constants, exception
 
 
@@ -14,7 +13,7 @@ from lib import constants, exception
          f"If no answers are provided, {constants.EMOJI_MAP[':thumbsup:']} and "
          f"{constants.EMOJI_MAP[':thumbsdown:']} will be used.",
 )
-async def poll(ctx: discord.ext.commands.Context, question: str, *choices: str):
+async def poll(ctx: discord.ext.commands.Context, question: str, *choices: str) -> None:
     """
     Poll command for creating a simple, reaction-based poll.
     """
@@ -40,9 +39,5 @@ async def poll(ctx: discord.ext.commands.Context, question: str, *choices: str):
             embed.add_field(name=emoji, value=choice)
 
     message = await ctx.send(embed=embed)
-    if not isinstance(message, discord.Message):
-        log.error("Failed to get sent message for poll command")
-        return
-
     for reaction in reactions:
         await message.add_reaction(constants.EMOJI_MAP[reaction])
