@@ -4,7 +4,7 @@ import io
 import logging
 import os
 import sys
-from typing import Union, Mapping
+from typing import Union
 
 import config
 
