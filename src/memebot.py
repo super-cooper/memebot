@@ -30,8 +30,9 @@ async def on_command_error(ctx: discord.ext.commands.Context, error: Exception):
         ctx.kwargs["error"] = error
         await ctx.send_help(ctx.command)
     else:
-        log.exception(error)
-        await ctx.send(f"Internal error occurred with command `{ctx.prefix}{ctx.command.qualified_name}`")
+        invocation = " ".join(ctx.message.content.split())
+        log.exception(f"`{invocation}` raised an unhandled exception: ", exc_info=error)
+        await ctx.send(f"Internal error occurred with command `{invocation}`")
 
 
 memebot = discord.ext.commands.Bot(command_prefix="!", help_command=commands.Help(), intents=discord.Intents().all(),
