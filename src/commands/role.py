@@ -1,5 +1,6 @@
-import discord.ext.commands
 from typing import Optional
+
+import discord.ext.commands
 
 from lib import exception
 
@@ -16,7 +17,7 @@ class RoleActionError(exception.MemebotUserError):
         super(RoleActionError, self).__init__(message=f"Failed to {action} role `@{target_name}`! {msg}", *args)
 
 
-class RolePermissionError(discord.ext.commands.CommandError):
+class RolePermissionError(exception.MemebotInternalError):
 
     def __init__(self, action: str, target_name: str, *args):
         """

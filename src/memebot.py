@@ -24,13 +24,18 @@ async def on_ready():
 
 
 async def on_command_error(ctx: discord.ext.commands.Context, error: Exception):
-    # For user-facing errors
-    if isinstance(error, exception.MemebotUserError):
+    invocation = f"{ctx.prefix}{' '.join(ctx.message.content.split())}"
+    if isinstance(error, exception.MemebotInternalError):
+        # For internal errors
+        log.exception(f"`{invocation}` raised an internal exception: ", exc_info=error)
+        await ctx.send(f"Internal error occurred with command `{invocation}`")
+    elif isinstance(error, discord.ext.commands.CommandError):
+        # For user-facing errors
         # This is the easiest way to attach the exception to the context such that the help command is able to access it
         ctx.kwargs["error"] = error
         await ctx.send_help(ctx.command)
     else:
-        invocation = " ".join(ctx.message.content.split())
+        # For unhandled exceptions
         log.exception(f"`{invocation}` raised an unhandled exception: ", exc_info=error)
         await ctx.send(f"Internal error occurred with command `{invocation}`")
 
