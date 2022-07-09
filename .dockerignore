@@ -1,8 +1,9 @@
-**/__pycache__/
 .dockerignore
 .git/
 .github/
 .gitignore
+.mypy_cache/
 data/
 docker/
 install.bash
+venv/
