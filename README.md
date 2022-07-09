@@ -63,6 +63,53 @@ For example:
 $ docker run --env-file docker/.env --rm -it memebot --discord-api-token ...
 ```
 
+The Memebot image has two build targets: `release` and `test`. 
+
+`release` contains only the dependencies to run Memebot, and only copies the source
+directory. The `test` target has testing dependencies installed, and copies in the entire
+repository. The default target is `test`, as it is the most convenient for development
+and testing. `release` produces a slightly slimmer image which is only used for deployment. 
+
 The easiest way to create your `.env` is by copying [template.env](./docker/template.env), 
 and then filling out whichever environment variables are desired. 
 Leaving variables empty just means that default values will be used.
+
+## Tests
+
+### mypy
+
+Memebot uses static type checking from [mypy](http://mypy-lang.org) to improve code correctness. The config
+for mypy is in [pyproject.toml](pyproject.toml). Most warnings and errors are enabled. 
+
+To run mypy locally, ensure it is installed to the same python environment as all of your
+Memebot dependencies, and then run it using the proper interpreter. 
+
+```shell
+$ venv/bin/mypy src
+
+# OR
+
+$ source venv/bin/activate
+$ mypy src
+```
+
+To run mypy in Docker, ensure you are using an image built from the `test` target. 
+
+```shell
+$ docker run --rm -it --entrypoint mypy memebot:test src
+
+# OR
+
+$ docker-compose run --rm --entrypoint mypy bot src
+```
+
+You can speed up subsequent runs of mypy by mounting the `.mypy-cache` directory as a volume.
+This way, mypy can reuse the cache it generates inside the container on the next run. 
+
+```shell
+$ docker run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy -it memebot:test src
+
+# OR
+
+$ docker-compose run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy bot src
+```
