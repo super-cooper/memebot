@@ -25,10 +25,8 @@ def set_third_party_logging():
     """
     # Tweepy does not use a unified logger, so the best we can do is enable its debug mode.
     import asyncio
-    import tweepy
     if config.log_level == logging.getLevelName(logging.DEBUG):
         asyncio.get_event_loop().set_debug(True)
-        tweepy.debug()
 
 
 # Forward memebot_logger's logging methods as module-level functions

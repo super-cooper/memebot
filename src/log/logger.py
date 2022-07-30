@@ -7,9 +7,9 @@ import sys
 from typing import Union
 
 import config
-from log import handler
 
 memebot_context = os.getcwd()
+
 
 @functools.lru_cache
 def get_module_name_from_path(path: str) -> str:
@@ -32,7 +32,7 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         super().__init__(name, level)
         self.propagate = False
         self.is_interactive = sys.stdin.isatty() or "pydev" in repr(__builtins__.get("__import__"))
-        super().addHandler(handler.MemeBotLogHandler(config.log_location))
+        super().addHandler(config.log_location)
 
     def addHandler(self, _: logging.Handler):
         # We want to avoid external packages overwriting our custom handler
