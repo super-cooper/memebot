@@ -6,12 +6,13 @@ All functions that make any network communication, except for init, should be as
 """
 import asyncio
 import re
+from typing import Tuple
 
 import discord
 import tweepy
 
 import config
-from lib import constants
+from lib import constants, util
 
 # Regular expression that describes the pattern of a Tweet URL
 twitter_url_pattern = re.compile(r'https://twitter\.com/([0-9a-zA-Z_]+|i/web)/status/[0-9]+(\?s=\d+)?')
@@ -46,29 +47,33 @@ def get_twitter_api() -> tweepy.API:
     return twitter_api
 
 
-def get_twitter_url_from_message_content(content: str) -> str:
+def get_twitter_url_from_message_content(content: str) -> Tuple[str, bool]:
     """
-    Loops through each "word" in conetnt, compares the word to a regex
+    Loops through each "word" in content, compares the word to a regex
     and returns the "word" in the message that matches the twitter URL regex
     :param content: message that was sent in discord
     """
     match = twitter_url_pattern.search(content)
     if match:
-        return match[0]
+        return match[0], util.is_spoil(content, match.start())
     else:
-        return ""
+        return "", False
 
 
-async def get_quote_tweet_urls(tweet_info: tweepy.models.Status) -> str:
+async def get_quote_tweet_urls(tweet_info: tweepy.models.Status, spoiled: bool) -> str:
     """
     Gets URLs of quoteted tweets (nested up to max 3)
     :param tweet_info: information of tweet
+    :param spoiled: whether the quote tweets should be spoiled
     :return: URL of media/quote tweet(s)
     """
     tweets = "quoted tweet(s): "
     for _ in range(3):
-        tweets += f"\nhttps://twitter.com/{tweet_info.quoted_status.author.screen_name}" \
-                  f"/status/{tweet_info.quoted_status.id_str}"
+        tweets += util.maybe_make_link_spoler(
+            f"\nhttps://twitter.com/{tweet_info.quoted_status.author.screen_name}"
+            f"/status/{tweet_info.quoted_status.id_str}",
+            spoiled,
+        )
         tweet_info = get_twitter_api().get_status(tweet_info.quoted_status.id)
         if not tweet_info.is_quote_status:
             break
@@ -84,7 +89,7 @@ async def process_message_for_interaction(message: discord.Message):
     """
     # Iterate through the message sent, and check if the message contained
     # a "word" that was a twitter URL to a status.
-    twitter_url = get_twitter_url_from_message_content(message.content)
+    twitter_url, spoiled = get_twitter_url_from_message_content(message.content)
     if twitter_url:
         # Because a twitter URL to a status is oftentimes as follows:
         # https://twitter.com/USER/status/xxxxxxxxxxxxxxxxxxx?s=yy
@@ -103,9 +108,9 @@ async def process_message_for_interaction(message: discord.Message):
             # To get the video, we have to pull it out of its video_info
             # We will choose the variant with the highest bitrate
             video_url = max(tweet_media[0]['video_info']['variants'], key=lambda v: v.get('bitrate', -1))['url']
-            asyncio.create_task(message.channel.send(f"embedded video:\n{video_url}"))
+            asyncio.create_task(message.channel.send(f"embedded video:\n{util.maybe_make_link_spoler(video_url, spoiled)}"))
 
         # Post quote tweet links.
         if tweet_info.is_quote_status and message.author != bot_user:
-            quote_tweet_urls = await get_quote_tweet_urls(tweet_info)
+            quote_tweet_urls = await get_quote_tweet_urls(tweet_info, spoiled)
             asyncio.create_task(message.channel.send(quote_tweet_urls))
