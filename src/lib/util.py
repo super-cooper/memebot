@@ -42,5 +42,4 @@ def maybe_make_link_spoiler(message: str, spoil: bool) -> str:
     """Returns message maybe wrapped in spoiler tags."""
     # Discord will only embed links with spoilers if there is padding
     # between the spoiler tags and the link.
-    spoiler_fmt = "|| {} ||" if spoil else "{}"
-    return spoiler_fmt.format(message)
+    return f"|| {message} ||" if spoil else message
