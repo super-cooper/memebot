@@ -60,7 +60,7 @@ def get_twitter_url_from_message_content(content: str) -> Tuple[str, bool]:
         return "", False
 
 
-async def get_quote_tweet_urls(tweet_info: tweepy.models.Status, spoiled: bool) -> str:
+def get_quote_tweet_urls(tweet_info: tweepy.models.Status, spoiled: bool) -> str:
     """
     Gets URLs of quoteted tweets (nested up to max 3)
     :param tweet_info: information of tweet
@@ -69,7 +69,7 @@ async def get_quote_tweet_urls(tweet_info: tweepy.models.Status, spoiled: bool) 
     """
     tweets = "quoted tweet(s): "
     for _ in range(3):
-        tweets += util.maybe_make_link_spoler(
+        tweets += util.maybe_make_link_spoiler(
             f"\nhttps://twitter.com/{tweet_info.quoted_status.author.screen_name}"
             f"/status/{tweet_info.quoted_status.id_str}",
             spoiled,
@@ -108,9 +108,9 @@ async def process_message_for_interaction(message: discord.Message):
             # To get the video, we have to pull it out of its video_info
             # We will choose the variant with the highest bitrate
             video_url = max(tweet_media[0]['video_info']['variants'], key=lambda v: v.get('bitrate', -1))['url']
-            asyncio.create_task(message.channel.send(f"embedded video:\n{util.maybe_make_link_spoler(video_url, spoiled)}"))
+            asyncio.create_task(message.channel.send(f"embedded video:\n{util.maybe_make_link_spoiler(video_url, spoiled)}"))
 
         # Post quote tweet links.
         if tweet_info.is_quote_status and message.author != bot_user:
-            quote_tweet_urls = await get_quote_tweet_urls(tweet_info, spoiled)
+            quote_tweet_urls = get_quote_tweet_urls(tweet_info, spoiled)
             asyncio.create_task(message.channel.send(quote_tweet_urls))
