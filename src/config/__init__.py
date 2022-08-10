@@ -29,59 +29,94 @@ def populate_config_from_command_line() -> None:
     parser = argparse.ArgumentParser()
 
     # API Tokens
-    parser.add_argument("--discord-api-token",
-                        help="The Discord API client token",
-                        default=os.getenv("MEMEBOT_DISCORD_CLIENT_TOKEN"),
-                        type=str)
-    parser.add_argument("--twitter-api-consumer-key",
-                        help="The Twitter API consumer key",
-                        default=os.getenv("MEMEBOT_TWITTER_CONSUMER_KEY"),
-                        type=str)
-    parser.add_argument("--twitter-api-consumer-secret",
-                        help="The Twitter API consumer secret",
-                        default=os.getenv("MEMEBOT_TWITTER_CONSUMER_SECRET"),
-                        type=str)
+    parser.add_argument(
+        "--discord-api-token",
+        help="The Discord API client token",
+        default=os.getenv("MEMEBOT_DISCORD_CLIENT_TOKEN"),
+        type=str,
+    )
+    parser.add_argument(
+        "--twitter-api-consumer-key",
+        help="The Twitter API consumer key",
+        default=os.getenv("MEMEBOT_TWITTER_CONSUMER_KEY"),
+        type=str,
+    )
+    parser.add_argument(
+        "--twitter-api-consumer-secret",
+        help="The Twitter API consumer secret",
+        default=os.getenv("MEMEBOT_TWITTER_CONSUMER_SECRET"),
+        type=str,
+    )
 
     # Logging Configuration
     logging_verbosity_group = parser.add_mutually_exclusive_group()
     # Accept all log levels recognized by the logging library except NOTSET
-    logging_verbosity_group.add_argument("--log-level",
-                                         help="Set logging level",
-                                         choices=[logging.getLevelName(level) for level in (
-                                             logging.DEBUG, logging.INFO, logging.WARN, logging.ERROR,
-                                             logging.CRITICAL)],
-                                         default=os.getenv("MEMEBOT_LOG_LEVEL", logging.getLevelName(logging.INFO)),
-                                         type=str)
-    logging_verbosity_group.add_argument("-v",
-                                         "--verbose",
-                                         help="Use verbose logging. Equivalent to --log-level DEBUG",
-                                         dest="log_level",
-                                         action="store_const",
-                                         const=logging.getLevelName(logging.DEBUG))
-    parser.add_argument("--log-location",
-                        help="Set the location for MemeBot's log",
-                        default=os.getenv("MEMEBOT_LOG_LOCATION", "stdout"),
-                        metavar="{stdout,stderr,syslog,/path/to/file}",
-                        type=validators.validate_log_location)
+    logging_verbosity_group.add_argument(
+        "--log-level",
+        help="Set logging level",
+        choices=[
+            logging.getLevelName(level)
+            for level in (
+                logging.DEBUG,
+                logging.INFO,
+                logging.WARN,
+                logging.ERROR,
+                logging.CRITICAL,
+            )
+        ],
+        default=os.getenv("MEMEBOT_LOG_LEVEL", logging.getLevelName(logging.INFO)),
+        type=str,
+    )
+    logging_verbosity_group.add_argument(
+        "-v",
+        "--verbose",
+        help="Use verbose logging. Equivalent to --log-level DEBUG",
+        dest="log_level",
+        action="store_const",
+        const=logging.getLevelName(logging.DEBUG),
+    )
+    parser.add_argument(
+        "--log-location",
+        help="Set the location for MemeBot's log",
+        default=os.getenv("MEMEBOT_LOG_LOCATION", "stdout"),
+        metavar="{stdout,stderr,syslog,/path/to/file}",
+        type=validators.validate_log_location,
+    )
 
     # Twitter Integration
-    parser.add_argument("--no-twitter",
-                        help="Disable Twitter integration",
-                        dest="twitter_enabled",
-                        action="store_false")
-    parser.set_defaults(twitter_enabled=validators.validate_bool(os.getenv("MEMEBOT_TWITTER_ENABLED", str(True))))
+    parser.add_argument(
+        "--no-twitter",
+        help="Disable Twitter integration",
+        dest="twitter_enabled",
+        action="store_false",
+    )
+    parser.set_defaults(
+        twitter_enabled=validators.validate_bool(
+            os.getenv("MEMEBOT_TWITTER_ENABLED", str(True))
+        )
+    )
 
     # Database Configuration
-    parser.add_argument("--nodb",
-                        help="Disable the database connection, and all features which require it.",
-                        dest="database_enabled",
-                        action="store_false")
-    parser.set_defaults(database_enabled=validators.validate_bool(os.getenv("MEMEBOT_DATABASE_ENABLED", str(True))))
+    parser.add_argument(
+        "--nodb",
+        help="Disable the database connection, and all features which require it.",
+        dest="database_enabled",
+        action="store_false",
+    )
+    parser.set_defaults(
+        database_enabled=validators.validate_bool(
+            os.getenv("MEMEBOT_DATABASE_ENABLED", str(True))
+        )
+    )
 
-    parser.add_argument("--database-uri",
-                        help="URI of the MongoDB database server",
-                        default=urllib.parse.urlparse(os.getenv("MEMEBOT_DATABASE_URI", "mongodb://127.0.0.1:27017")),
-                        type=urllib.parse.urlparse)
+    parser.add_argument(
+        "--database-uri",
+        help="URI of the MongoDB database server",
+        default=urllib.parse.urlparse(
+            os.getenv("MEMEBOT_DATABASE_URI", "mongodb://127.0.0.1:27017")
+        ),
+        type=urllib.parse.urlparse,
+    )
 
     args = parser.parse_args()
 

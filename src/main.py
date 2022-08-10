@@ -1,4 +1,5 @@
-# In order to ensure consistent logging, log must always be the first thing imported by the main module
+# In order to ensure consistent logging,
+# log must always be the first thing imported by the main module
 import log
 
 import config
@@ -16,5 +17,5 @@ def main() -> None:
     memebot.run(config.discord_api_token)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -11,7 +11,8 @@ logging.setLoggerClass(logger.MemeBotLogger)
 # We use a project-wide logger because of how we shim metadata into log statements
 memebot_logger = logging.getLogger("memebot")
 
-# Redirect all stdout to a logger, as some packages in the stdlib still use print for debug messages
+# Redirect all stdout to a logger, as some packages in the stdlib still use print
+# for debug messages
 stdout_logger = logging.getLogger("stdout")
 contextlib.redirect_stdout(stdout_logger).__enter__()  # type: ignore[type-var]
 
@@ -23,8 +24,10 @@ def set_third_party_logging() -> None:
     """
     Enable logging on third-party packages that can't be overwritten with MemeBotLogger
     """
-    # Tweepy does not use a unified logger, so the best we can do is enable its debug mode.
+    # Tweepy does not use a unified logger, so the best we can do is
+    # enable its debug mode.
     import asyncio
+
     if config.log_level == logging.getLevelName(logging.DEBUG):
         asyncio.get_event_loop().set_debug(True)
 

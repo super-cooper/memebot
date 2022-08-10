@@ -19,32 +19,32 @@ class MessageCache(discord.DMChannel):
         self.message_text: object = None
 
     async def send(  # type: ignore[override]
-            self,
-            content: Optional[object] = None,
-            *,
-            tts: bool = False,
-            embed: Optional[discord.Embed] = None,
-            file: Optional[discord.File] = None,
-            files: Optional[list[discord.File]] = None,
-            delete_after: Optional[float] = None,
-            nonce: Optional[int] = None,
-            allowed_mentions: Optional[discord.AllowedMentions] = None,
-            reference: Optional[Union[discord.Message, discord.MessageReference]] = None,
-            mention_author: Optional[bool] = None,
+        self,
+        content: Optional[object] = None,
+        *,
+        tts: bool = False,
+        embed: Optional[discord.Embed] = None,
+        file: Optional[discord.File] = None,
+        files: Optional[list[discord.File]] = None,
+        delete_after: Optional[float] = None,
+        nonce: Optional[int] = None,
+        allowed_mentions: Optional[discord.AllowedMentions] = None,
+        reference: Optional[Union[discord.Message, discord.MessageReference]] = None,
+        mention_author: Optional[bool] = None,
     ) -> None:
         self.message_text = content
 
 
 class Help(discord.ext.commands.DefaultHelpCommand):
     """
-   Output general help text for each command.
-   """
+    Output general help text for each command.
+    """
 
     def __init__(self, **options: Any) -> None:
         super(Help, self).__init__(
             no_category="Commands",
             paginator=discord.ext.commands.Paginator(max_size=sys.maxsize),
-            **options
+            **options,
         )
         self.cache_next = False
         self.cache = MessageCache()
@@ -58,7 +58,9 @@ class Help(discord.ext.commands.DefaultHelpCommand):
     def get_ending_note(self) -> str:
         return f"Type {self.clean_prefix}{self.invoked_with} <command> for more info on a command."
 
-    async def subcommand_not_found(self, command: discord.ext.commands.Command, string: str) -> str:
+    async def subcommand_not_found(
+        self, command: discord.ext.commands.Command, string: str
+    ) -> str:
         # We will fake sending out the help text, and cache it in an internal buffer.
         # We do this because the help text is generated in the same function in which it is sent,
         # so there is no way to just gather the help message.
@@ -74,7 +76,9 @@ class Help(discord.ext.commands.DefaultHelpCommand):
                 await self.send_command_help(command)
         return f"{super(Help, self).subcommand_not_found(command, string)}\n{self.cache.message_text}"
 
-    async def prepare_help_command(self, ctx: discord.ext.commands.Context, command: Optional[str] = None) -> None:
+    async def prepare_help_command(
+        self, ctx: discord.ext.commands.Context, command: Optional[str] = None
+    ) -> None:
         """
         Override which injects additional error information to the help output, if the help command was triggered
         by a user error
@@ -88,7 +92,9 @@ class Help(discord.ext.commands.DefaultHelpCommand):
         else:
             await super(Help, self).prepare_help_command(ctx, command)
 
-    def get_destination(self) -> Union[discord.TextChannel, discord.DMChannel, discord.GroupChannel]:
+    def get_destination(
+        self,
+    ) -> Union[discord.TextChannel, discord.DMChannel, discord.GroupChannel]:
         if self.cache_next:
             return self.cache
         else:
