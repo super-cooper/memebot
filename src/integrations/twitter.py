@@ -13,7 +13,7 @@ import emoji
 import tweepy
 
 import config
-from lib import constants, util
+from lib import util
 
 # Regular expression that describes the pattern of a Tweet URL
 twitter_url_pattern = re.compile(
