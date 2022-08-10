@@ -1,4 +1,4 @@
-FROM python:3.9.6-slim
+FROM python:3.9.6-slim as release
 
 # pull in required files for environment
 WORKDIR /opt/memebot/
@@ -16,3 +16,9 @@ COPY src src
 
 # run memebot
 ENTRYPOINT ["python3", "src/main.py"]
+
+FROM release as test
+
+COPY . .
+
+RUN python3 -m pip install -r tests/requirements.txt

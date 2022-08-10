@@ -25,7 +25,7 @@ database_enabled: bool
 database_uri: urllib.parse.ParseResult
 
 
-def populate_config_from_command_line():
+def populate_config_from_command_line() -> None:
     parser = argparse.ArgumentParser()
 
     # API Tokens

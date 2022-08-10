@@ -1,4 +1,5 @@
 discord.py==1.7.3
+discord.py-stubs==1.7.3
 pymongo
 tweepy
 aiohttp

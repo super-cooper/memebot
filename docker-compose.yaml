@@ -3,10 +3,11 @@ version: '3.5'
 services:
   bot:
     container_name: ${MEMEBOT_CONTAINER_NAME:-memebot-test-bot}
-    image: ${MEMEBOT_IMAGE_NAME:-memebot-test}
+    image: ${MEMEBOT_IMAGE_NAME:-memebot:test}
     build:
       dockerfile: docker/Dockerfile
       context: .
+      target: ${MEMEBOT_BUILD_TARGET:-test}
     restart: always
     depends_on:
       - db

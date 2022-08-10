@@ -1,13 +1,11 @@
 # In order to ensure consistent logging, log must always be the first thing imported by the main module
 import log
 
-import sys
-
 import config
 import memebot
 
 
-def main() -> int:
+def main() -> None:
     """
     Main function, initializes MemeBot and then loops
     :return: Exit status of discord.Client.run()
@@ -15,8 +13,8 @@ def main() -> int:
     log.set_third_party_logging()
 
     # !! DO NOT HARDCODE THE TOKEN !!
-    return memebot.run(config.discord_api_token)
+    memebot.run(config.discord_api_token)
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()

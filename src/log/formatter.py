@@ -7,7 +7,7 @@ class MemeBotLogFormatter(logging.Formatter):
     Defines the log formatting for MemeBot
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             # This format will print as such:
             # [YYYY-MM-DD HH:MM:SS.uuu   LOGLEVEL    log.statement.call.site:line] I am a log message!
@@ -15,7 +15,8 @@ class MemeBotLogFormatter(logging.Formatter):
             style='{'
         )
         # Have the milliseconds in timestamps separated by '.' instead of ','
-        self.default_msec_format = self.default_msec_format.replace(',', '.')
+        if self.default_msec_format:
+            self.default_msec_format = self.default_msec_format.replace(',', '.')
 
     def formatMessage(self, record: logging.LogRecord) -> str:
         """

@@ -14,7 +14,7 @@ def test() -> bool:
     """
     if config.database_enabled:
         try:
-            db_internals.client.server_info()
+            db_internals.client.server_info()  # type: ignore[union-attr]
         except Exception:
             return False
     return True
