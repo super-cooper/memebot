@@ -12,11 +12,11 @@ class MemeBotLogFormatter(logging.Formatter):
             # This format will print as such:
             # [YYYY-MM-DD HH:MM:SS.uuu   LOGLEVEL    log.statement.call.site:line] I am a log message!
             fmt="[{asctime}\t{levelname}\t{_callsite}:{_lineno}]\t{message}",
-            style='{'
+            style="{",
         )
         # Have the milliseconds in timestamps separated by '.' instead of ','
         if self.default_msec_format:
-            self.default_msec_format = self.default_msec_format.replace(',', '.')
+            self.default_msec_format = self.default_msec_format.replace(",", ".")
 
     def formatMessage(self, record: logging.LogRecord) -> str:
         """
@@ -33,7 +33,7 @@ class MemeBotLogFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """
-        This override causes exceptions to be formatted in the same way as 
+        This override causes exceptions to be formatted in the same way as
         messages. This method is overriden instead of formatException, because
         the latter only accepts exception info as an argument rather than a LogRecord.
 
@@ -45,7 +45,8 @@ class MemeBotLogFormatter(logging.Formatter):
             return super(MemeBotLogFormatter, self).format(record)
 
         with contextlib.ExitStack() as stack:
-            # Pop out the record's exception info so that it doesn't get appended to the message
+            # Pop out the record's exception info so that it doesn't get appended
+            # to the message
             exc_info = record.exc_info
             record.exc_info = None
             stack.callback(lambda: setattr(record, "exc_info", exc_info))
