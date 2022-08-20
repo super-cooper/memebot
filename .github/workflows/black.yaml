@@ -1,4 +1,6 @@
 ---
+name: "Black"
+
 on:
   pull_request:
   push:
