@@ -1,0 +1,38 @@
+---
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pip install -r requirements.txt -r tests/requirements.txt
+      - name: Test with pytest
+        env:
+          MEMEBOT_DISCORD_CLIENT_TOKEN: ${{ secrets.MEMEBOT_DISCORD_CLIENT_TOKEN }}
+          MEMEBOT_TWITTER_CONSUMER_KEY: ${{ secrets.MEMEBOT_TWITTER_CONSUMER_KEY }}
+          MEMEBOT_TWITTER_CONSUMER_SECRET: ${{ secrets.MEMEBOT_TWITTER_CONSUMER_SECRET }}
+        run: |
+          pytest
