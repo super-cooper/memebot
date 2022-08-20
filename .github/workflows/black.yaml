@@ -13,4 +13,4 @@ jobs:
         with:
           python-version: 3.9
       - name: Lint with Black
-        uses: psf/black@stab
+        uses: psf/black@stable
