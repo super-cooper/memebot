@@ -3,7 +3,13 @@ name: 'yamllint'
 on:
   push:
     branches: ["master"]
+    paths:
+      - "*.yaml"
+      - "*.yml"
   pull_request:
+    paths:
+      - "*.yaml"
+      - "*.yml"
 jobs:
   yamllint:
     name: 'Yamllint'

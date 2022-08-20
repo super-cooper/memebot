@@ -3,8 +3,12 @@ name: "Black"
 
 on:
   pull_request:
+    paths:
+      - "*.py"
   push:
     branches: ["master"]
+    paths:
+      - "*.py"
 
 jobs:
   black:
