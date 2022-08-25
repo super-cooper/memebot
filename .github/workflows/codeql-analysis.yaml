@@ -16,6 +16,8 @@ on:
   push:
     branches: ["master"]
   pull_request:
+  schedule:
+    - cron: '42 22 * * 6'
 
 jobs:
   analyze:
