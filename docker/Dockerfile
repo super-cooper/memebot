@@ -7,7 +7,9 @@ COPY requirements.txt requirements.txt
 RUN \
     apt-get update -y && \
     # gcc is required to build package aiohttp (https://docs.aiohttp.org/en/stable/) required by discord.py
-    apt-get install -y gcc && \
+    apt-get install --no-install-recommends -y gcc=4:8.3.0-1 && \
+    # Remove apt lists
+    rm -rf /var/lib/apt/lists/* && \
     # install dependencies
     python3 -m pip install --no-cache-dir -r requirements.txt
 
@@ -21,4 +23,4 @@ FROM release as test
 
 COPY . .
 
-RUN python3 -m pip install -r tests/requirements.txt
+RUN python3 -m pip install --no-cache-dir -r tests/requirements.txt
