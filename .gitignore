@@ -102,6 +102,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# GitHub
+.secrets
+
 # project specific
 client_token
 data/
