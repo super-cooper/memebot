@@ -2,8 +2,10 @@
 name: Docker
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Pytest"]
     branches: ["master"]
+    types: ["completed"]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -14,7 +16,7 @@ env:
 
 jobs:
   build:
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,15 +59,6 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      # Don't build image for broken revisions
-      - name: Wait on tests to succeed
-        uses: lewagon/wait-on-check-action@v1.0.0
-        with:
-          ref: ${{ github.ref }}
-          check-name: "Test with pytest"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
