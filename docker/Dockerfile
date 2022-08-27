@@ -5,11 +5,11 @@ WORKDIR /opt/memebot/
 COPY requirements.txt requirements.txt
 
 RUN \
-    apt update -y && \
+    apt-get update -y && \
     # gcc is required to build package aiohttp (https://docs.aiohttp.org/en/stable/) required by discord.py
-    apt install -y gcc && \
+    apt-get install -y gcc && \
     # install dependencies
-    python3 -m pip install -r requirements.txt
+    python3 -m pip install --no-cache-dir -r requirements.txt
 
 # bring in memebot source code
 COPY src src
