@@ -114,8 +114,10 @@ async def process_message_for_interaction(message: discord.Message) -> None:
 
         # React with a numeric emoji to Tweets containing multiple images
         if (n_images := len(tweet_media)) > 1:
-            asyncio.create_task(message.add_reaction(emoji.emojize(f":keycap_{n_images}:")))
-        elif n_images == 1 and 'video_info' in tweet_media[0]:
+            asyncio.create_task(
+                message.add_reaction(emoji.emojize(f":keycap_{n_images}:"))
+            )
+        elif n_images == 1 and "video_info" in tweet_media[0]:
             # The media_url of a media dict is actually a thumbnail
             # To get the video, we have to pull it out of its video_info
             # We will choose the variant with the highest bitrate
