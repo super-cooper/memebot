@@ -1,14 +1,11 @@
 ---
-name: Lint
+name: mypy
 
 on:
   push:
-    paths:
-      - '*.py'
     branches: ["master"]
   pull_request:
-    paths:
-      - '*.py'
+    branches: ["master"]
 
 jobs:
   mypy:

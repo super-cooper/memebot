@@ -9,6 +9,8 @@ on:
   pull_request:
     paths:
       - docker/*
+      - requirements.txt
+      - .dockerignore
 
 env:
   # Use docker.io for Docker Hub if empty
