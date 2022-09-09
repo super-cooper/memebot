@@ -5,11 +5,11 @@ on:
   pull_request:
     branches: ["master"]
     paths:
-      - "*.py"
+      - "**.py"
   push:
     branches: ["master"]
     paths:
-      - "*.py"
+      - "**.py"
 
 jobs:
   black:
