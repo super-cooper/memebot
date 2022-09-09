@@ -3,7 +3,7 @@ name: "Black"
 
 on:
   pull_request:
-    branches: ["*"]
+    branches: ["master"]
     paths:
       - "*.py"
   push:
