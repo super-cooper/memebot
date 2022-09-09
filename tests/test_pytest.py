@@ -1,2 +1,2 @@
-def test_pytest():
+def test_pytest() -> None:
     assert True
