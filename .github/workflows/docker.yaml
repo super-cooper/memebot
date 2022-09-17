@@ -9,6 +9,8 @@ on:
   pull_request:
     paths:
       - docker/*
+  schedule:
+    - cron: '0 12 * * 6'
 
 env:
   # Use docker.io for Docker Hub if empty
