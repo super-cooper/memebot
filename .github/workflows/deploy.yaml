@@ -2,8 +2,6 @@
 name: Trigger deployment
 
 on:
-  pull_request:
-    branches: ["master"]
   workflow_run:
     workflows: ["Docker"]
     branches: ["master"]
