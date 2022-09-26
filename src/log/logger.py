@@ -4,7 +4,7 @@ import io
 import logging
 import os
 import sys
-from typing import Union, Mapping
+from typing import Union, Mapping, Any
 
 import config
 
@@ -52,8 +52,8 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         self,
         level: int,
         msg: object,
-        args: logging._ArgsType,
-        exc_info: Union[logging._ExcInfoType, None] = None,
+        args: Any,
+        exc_info: Any = None,
         extra: Union[Mapping[str, object], None] = None,
         stack_info: bool = False,
         stacklevel: int = 1,
