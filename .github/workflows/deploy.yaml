@@ -1,0 +1,20 @@
+---
+name: Trigger deployment
+
+on:
+  pull_request:
+    branches: ["master"]
+  workflow_run:
+    workflows: ["Docker"]
+    branches: ["master"]
+    types: ["completed"]
+
+jobs:
+  prod:
+    runs-on: ubuntu-latest
+    environment: Production
+    permissions:
+      deployments: write
+    steps:
+      - name: Deploy
+        run: echo "Triggering deployment..."
