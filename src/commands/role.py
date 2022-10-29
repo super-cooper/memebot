@@ -1,5 +1,6 @@
-from typing import Optional, Any
+from typing import Optional, Any, cast
 
+import discord
 import discord.ext.commands
 
 from lib import exception
@@ -46,6 +47,13 @@ class RoleLocationError(exception.MemebotUserError):
             "Unable to access roles outside of a server text channel."
         )
 
+class LowercaseRoleConverter(discord.ext.commands.RoleConverter):
+    """
+    Argument converter for converting a command argument to a discord.Role object
+    whose name matches the lowercased argument.
+    """
+    async def convert(self, ctx: discord.ext.commands.Context, arg: str) -> discord.Role:
+        return await super().convert(ctx, arg.lower())
 
 def get_reason(author_name: str) -> str:
     """
@@ -121,7 +129,10 @@ async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
     brief="Deletes <role> if <role> has no members.",
     help="Delete a Memebot-managed role if, and only if, the role has no members.",
 )
-async def delete(ctx: discord.ext.commands.Context, target_role: discord.Role) -> None:
+async def delete(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) -> None:
+    # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
+    target_role = cast(discord.Role, role)
+
     # Ensure the role is empty before deleting
     if len(target_role.members) > 0:
         raise RoleActionError(
@@ -143,10 +154,13 @@ async def delete(ctx: discord.ext.commands.Context, target_role: discord.Role) -
 @role.command(
     brief="Adds caller to <role>", help="Join an existing Memebot-managed role."
 )
-async def join(ctx: discord.ext.commands.Context, target_role: discord.Role) -> None:
+async def join(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) -> None:
     """
     Join an existing Memebot-managed role
     """
+    # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
+    target_role = cast(discord.Role, role)
+
     author = ctx.author
     if not isinstance(author, discord.Member):
         # Ensure the command was called from within a server text channel
@@ -165,10 +179,13 @@ async def join(ctx: discord.ext.commands.Context, target_role: discord.Role) -> 
     brief="Removes caller from <role>",
     help="Leave a Memebot-managed role.",
 )
-async def leave(ctx: discord.ext.commands.Context, target_role: discord.Role) -> None:
+async def leave(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) -> None:
     """
     Leave a Memebot-managed role of which the caller is a member
     """
+    # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
+    target_role = cast(discord.Role, role)
+
     author = ctx.author
     if author not in target_role.members:
         raise RoleActionError(
@@ -197,11 +214,14 @@ async def leave(ctx: discord.ext.commands.Context, target_role: discord.Role) ->
     "all members of that role.",
 )
 async def role_list(
-    ctx: discord.ext.commands.Context, target_role: Optional[discord.Role]
+    ctx: discord.ext.commands.Context, role: Optional[LowercaseRoleConverter]
 ) -> None:
     """
     List all roles managed by Memebot, or all members of a role managed by Memebot.
     """
+    # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
+    target_role = cast(discord.Role, role)
+
     if not ctx.guild:
         raise RoleLocationError
 
