@@ -135,51 +135,53 @@ async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
     help="Delete a Memebot-managed role if, and only if, the role has no members.",
 )
 async def delete(
-    ctx: discord.ext.commands.Context, role: LowercaseRoleConverter
+    ctx: discord.ext.commands.Context, target_role: LowercaseRoleConverter
 ) -> None:
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
-    target_role = cast(discord.Role, role)
+    tgt_role = cast(discord.Role, target_role)
 
     # Ensure the role is empty before deleting
-    if len(target_role.members) > 0:
+    if len(tgt_role.members) > 0:
         raise RoleActionError(
             ctx.command.name,
-            target_role.name,
+            tgt_role.name,
             "Roles must have no members to be deleted.",
         )
 
     try:
-        await target_role.delete(reason=get_reason(ctx.author.name))
+        await tgt_role.delete(reason=get_reason(ctx.author.name))
     except discord.Forbidden:
-        raise RolePermissionError(ctx.command.name, target_role.name)
+        raise RolePermissionError(ctx.command.name, tgt_role.name)
     except discord.HTTPException:
-        raise RoleActionError(ctx.command.name, target_role.name)
+        raise RoleActionError(ctx.command.name, tgt_role.name)
 
-    await ctx.send(f"Deleted role `@{target_role.name}`")
+    await ctx.send(f"Deleted role `@{tgt_role.name}`")
 
 
 @role.command(
     brief="Adds caller to <role>", help="Join an existing Memebot-managed role."
 )
-async def join(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) -> None:
+async def join(
+    ctx: discord.ext.commands.Context, target_role: LowercaseRoleConverter
+) -> None:
     """
     Join an existing Memebot-managed role
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
-    target_role = cast(discord.Role, role)
+    tgt_role = cast(discord.Role, target_role)
 
     author = ctx.author
     if not isinstance(author, discord.Member):
         # Ensure the command was called from within a server text channel
         raise RoleLocationError
     try:
-        await author.add_roles(target_role, reason=get_reason(author.name))
+        await author.add_roles(tgt_role, reason=get_reason(author.name))
     except discord.Forbidden:
-        raise RolePermissionError(ctx.command.name, target_role.name)
+        raise RolePermissionError(ctx.command.name, tgt_role.name)
     except discord.HTTPException:
-        raise RoleActionError(ctx.command.name, target_role.name)
+        raise RoleActionError(ctx.command.name, tgt_role.name)
 
-    await ctx.send(f"{author.name} successfully joined `@{target_role.name}`")
+    await ctx.send(f"{author.name} successfully joined `@{tgt_role.name}`")
 
 
 @role.command(
@@ -187,33 +189,33 @@ async def join(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) 
     help="Leave a Memebot-managed role.",
 )
 async def leave(
-    ctx: discord.ext.commands.Context, role: LowercaseRoleConverter
+    ctx: discord.ext.commands.Context, target_role: LowercaseRoleConverter
 ) -> None:
     """
     Leave a Memebot-managed role of which the caller is a member
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
-    target_role = cast(discord.Role, role)
+    tgt_role = cast(discord.Role, target_role)
 
     author = ctx.author
-    if author not in target_role.members:
+    if author not in tgt_role.members:
         raise RoleActionError(
             ctx.command.name,
-            target_role.name,
-            f"User is not a member of `@{target_role.name}`.",
+            tgt_role.name,
+            f"User is not a member of `@{tgt_role.name}`.",
         )
     if not isinstance(author, discord.Member):
         # Ensure the command was called from within a server text channel
         raise RoleLocationError
 
     try:
-        await author.remove_roles(target_role, reason=get_reason(author.name))
+        await author.remove_roles(tgt_role, reason=get_reason(author.name))
     except discord.Forbidden:
-        raise RolePermissionError(ctx.command.name, target_role.name)
+        raise RolePermissionError(ctx.command.name, tgt_role.name)
     except discord.HTTPException:
-        raise RoleActionError(ctx.command.name, target_role.name)
+        raise RoleActionError(ctx.command.name, tgt_role.name)
 
-    await ctx.send(f"{author.name} successfully left `@{target_role.name}`")
+    await ctx.send(f"{author.name} successfully left `@{tgt_role.name}`")
 
 
 @role.command(
@@ -223,18 +225,18 @@ async def leave(
     "all members of that role.",
 )
 async def role_list(
-    ctx: discord.ext.commands.Context, role: Optional[LowercaseRoleConverter]
+    ctx: discord.ext.commands.Context, target_role: Optional[LowercaseRoleConverter]
 ) -> None:
     """
     List all roles managed by Memebot, or all members of a role managed by Memebot.
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
-    target_role = cast(discord.Role, role)
+    target = cast(discord.Role, target_role)
 
     if not ctx.guild:
         raise RoleLocationError
 
-    if not target_role:
+    if not target:
         roles = []
         can_manage = False
         # Memebot can manage all roles below its highest role.
@@ -251,19 +253,19 @@ async def role_list(
         )
         await ctx.send("\n- ".join(roles))
     else:
-        if not target_role.members:
+        if not target.members:
             raise RoleActionError(
                 ctx.command.name,
-                target_role.name,
-                msg=f"Role `@{target_role.name}` has no members!",
+                target.name,
+                msg=f"Role `@{target.name}` has no members!",
             )
 
         member_names = [
             f"{member.nick} ({member.name})" if member.nick else member.name
-            for member in target_role.members
+            for member in target.members
         ]
 
         member_names.sort()
-        member_names.insert(0, f"Members of `@{target_role.name}`:")
+        member_names.insert(0, f"Members of `@{target.name}`:")
 
         await ctx.send("\n- ".join(member_names))
