@@ -47,13 +47,18 @@ class RoleLocationError(exception.MemebotUserError):
             "Unable to access roles outside of a server text channel."
         )
 
+
 class LowercaseRoleConverter(discord.ext.commands.RoleConverter):
     """
     Argument converter for converting a command argument to a discord.Role object
     whose name matches the lowercased argument.
     """
-    async def convert(self, ctx: discord.ext.commands.Context, arg: str) -> discord.Role:
+
+    async def convert(
+        self, ctx: discord.ext.commands.Context, arg: str
+    ) -> discord.Role:
         return await super().convert(ctx, arg.lower())
+
 
 def get_reason(author_name: str) -> str:
     """
@@ -129,7 +134,9 @@ async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
     brief="Deletes <role> if <role> has no members.",
     help="Delete a Memebot-managed role if, and only if, the role has no members.",
 )
-async def delete(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) -> None:
+async def delete(
+    ctx: discord.ext.commands.Context, role: LowercaseRoleConverter
+) -> None:
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
     target_role = cast(discord.Role, role)
 
@@ -179,7 +186,9 @@ async def join(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) 
     brief="Removes caller from <role>",
     help="Leave a Memebot-managed role.",
 )
-async def leave(ctx: discord.ext.commands.Context, role: LowercaseRoleConverter) -> None:
+async def leave(
+    ctx: discord.ext.commands.Context, role: LowercaseRoleConverter
+) -> None:
     """
     Leave a Memebot-managed role of which the caller is a member
     """
