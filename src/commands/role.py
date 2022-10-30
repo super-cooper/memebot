@@ -226,9 +226,9 @@ async def leave(
 
 @role.command(
     name="list",
-    brief="List all roles managed by Memebot, or list all members of a role.",
-    help="List all roles managed by Memebot, or provide the name of a role and list "
-    "all members of that role.",
+    brief="List all roles managed by Memebot, all members of a given role, or all roles of a given user.",
+    help="List all roles managed by Memebot. Optionally, if the name of a role is provided, list "
+    "all members of that role, or if a username is provided, list all roles for that user.",
 )
 async def role_list(
     ctx: discord.ext.commands.Context,
