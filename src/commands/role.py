@@ -175,11 +175,11 @@ async def join(
     if not isinstance(author, discord.Member):
         # Ensure the command was called from within a server text channel
         raise RoleLocationError
-    if discord.utils.get(author.roles, name=target_role.name):
+    if discord.utils.get(author.roles, name=tgt_role.name):
         raise RoleActionError(
             ctx.command.name,
-            target_role.name,
-            f"{author.name} already a member of `@{target_role.name}`",
+            tgt_role.name,
+            f"{author.name} already a member of `@{tgt_role.name}`",
         )
     try:
         await author.add_roles(tgt_role, reason=get_reason(author.name))
@@ -233,13 +233,13 @@ async def leave(
 )
 async def role_list(
     ctx: discord.ext.commands.Context,
-    role: Optional[Union[LowercaseRoleConverter, discord.Member]],
+    role_or_user: Optional[Union[LowercaseRoleConverter, discord.Member]],
 ) -> None:
     """
     List all roles managed by Memebot, or all members of a role managed by Memebot.
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
-    target = cast(Optional[Union[discord.Role, discord.Member]], role)
+    target = cast(Optional[Union[discord.Role, discord.Member]], role_or_user)
 
     if not ctx.guild:
         raise RoleLocationError
