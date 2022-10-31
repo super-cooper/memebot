@@ -1,4 +1,4 @@
-from typing import Optional, Any, cast
+from typing import Optional, Any, cast, Union
 
 import discord
 import discord.ext.commands
@@ -231,34 +231,19 @@ async def leave(
     "all members of that role.",
 )
 async def role_list(
-    ctx: discord.ext.commands.Context, target_role: Optional[LowercaseRoleConverter]
+    ctx: discord.ext.commands.Context,
+    role: Optional[Union[LowercaseRoleConverter, discord.Member]],
 ) -> None:
     """
     List all roles managed by Memebot, or all members of a role managed by Memebot.
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
-    target = cast(discord.Role, target_role)
+    target = cast(Optional[Union[discord.Role, discord.Member]], role)
 
     if not ctx.guild:
         raise RoleLocationError
 
-    if not target:
-        roles = []
-        can_manage = False
-        # Memebot can manage all roles below its highest role.
-        # Find that role and begin listing roles from that point onward.
-        # TODO in the future, we can just store the managed roles in the database
-        for role_obj in ctx.guild.roles[:0:-1]:  # Top-down, excluding @everyone
-            if can_manage and role_obj.name != ctx.bot.user.name:
-                roles.append(role_obj.name)
-            elif ctx.bot.user in role_obj.members:
-                can_manage = True
-        roles.sort()
-        roles.insert(
-            0, f"Roles managed through `{ctx.prefix}{ctx.command.name}` command:"
-        )
-        await ctx.send("\n- ".join(roles))
-    else:
+    if isinstance(target, discord.Role):
         if not target.members:
             raise RoleActionError(
                 ctx.command.name,
@@ -275,3 +260,23 @@ async def role_list(
         member_names.insert(0, f"Members of `@{target.name}`:")
 
         await ctx.send("\n- ".join(member_names))
+    else:
+        roles = []
+        can_manage = False
+        # Memebot can manage all roles below its highest role.
+        # Find that role and begin listing roles from that point onward.
+        # TODO in the future, we can just store the managed roles in the database
+        for role_obj in ctx.guild.roles[:0:-1]:  # Top-down, excluding @everyone
+            if can_manage and role_obj.name != ctx.bot.user.name:
+                if target is None or target in role_obj.members:
+                    roles.append(role_obj.name)
+            elif ctx.bot.user in role_obj.members:
+                can_manage = True
+        roles.sort()
+
+        usr_msg = f"for user {target.name} " if target else ""
+        roles.insert(
+            0,
+            f"Roles {usr_msg}managed through `{ctx.prefix}{ctx.command.name}` command:",
+        )
+        await ctx.send("\n- ".join(roles))
