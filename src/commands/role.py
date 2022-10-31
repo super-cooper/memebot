@@ -278,6 +278,6 @@ async def role_list(
         usr_msg = f"for user {target.name} " if target else ""
         roles.insert(
             0,
-            f"Roles {usr_msg}managed through `{ctx.prefix}{ctx.command.name}` command:",
+            f"Roles {usr_msg}managed through `{ctx.prefix}{ctx.command.parent}` command:",
         )
         await ctx.send("\n- ".join(roles))
