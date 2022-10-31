@@ -86,6 +86,7 @@ async def role(ctx: discord.ext.commands.Context) -> None:
     !role delete <role>: Deletes <role> if <role> has no members
     !role list: List all bot-managed roles
     !role list <role>: Lists members of <role>
+    !role list <user>: Lists roles of a user
 
     Note that because role names are not unique, these commands will act
     on the first instance (hierarchically) of a role with name <role>
