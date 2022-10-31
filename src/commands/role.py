@@ -174,6 +174,12 @@ async def join(
     if not isinstance(author, discord.Member):
         # Ensure the command was called from within a server text channel
         raise RoleLocationError
+    if discord.utils.get(author.roles, name=target_role.name):
+        raise RoleActionError(
+            ctx.command.name,
+            target_role.name,
+            f"{author.name} already a member of `@{target_role.name}`",
+        )
     try:
         await author.add_roles(tgt_role, reason=get_reason(author.name))
     except discord.Forbidden:
