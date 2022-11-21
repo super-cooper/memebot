@@ -56,7 +56,7 @@ class Help(discord.ext.commands.DefaultHelpCommand):
         self.cache_next = False
 
     def get_ending_note(self) -> str:
-        return f"Type {self.clean_prefix}{self.invoked_with} <command> for more info on a command."
+        return f"Type {self.context.clean_prefix}{self.invoked_with} <command> for more info on a command."
 
     async def subcommand_not_found(
         self, command: discord.ext.commands.Command, string: str
