@@ -2,6 +2,7 @@ import contextlib
 import sys
 from typing import Optional, Union, Any
 
+import discord
 import discord.ext.commands
 
 
@@ -58,7 +59,7 @@ class Help(discord.ext.commands.DefaultHelpCommand):
     def get_ending_note(self) -> str:
         return f"Type {self.context.clean_prefix}{self.invoked_with} <command> for more info on a command."
 
-    async def subcommand_not_found(
+    def subcommand_not_found(
         self, command: discord.ext.commands.Command, string: str
     ) -> str:
         # We will fake sending out the help text, and cache it in an internal buffer.
@@ -71,9 +72,9 @@ class Help(discord.ext.commands.DefaultHelpCommand):
             # Ensure that the cache is turned off regardless of whether caching the help text fails
             stack.callback(self.unset_cache_next)
             if isinstance(command, discord.ext.commands.Group):
-                await self.send_group_help(command)
+                self.context.bot.loop.create_task(self.send_group_help(command))
             else:
-                await self.send_command_help(command)
+                self.context.bot.loop.create_task(self.send_command_help(command))
         return f"{super(Help, self).subcommand_not_found(command, string)}\n{self.cache.message_text}"
 
     async def prepare_help_command(
@@ -84,11 +85,11 @@ class Help(discord.ext.commands.DefaultHelpCommand):
         by a user error
         """
         if error := ctx.kwargs.get("error"):
-            prefix = self.paginator.prefix  # type: ignore[attr-defined]
-            self.paginator.prefix = None  # type: ignore[attr-defined]
+            prefix = self.paginator.prefix
+            self.paginator.prefix = None
             await super(Help, self).prepare_help_command(ctx, command)
             self.paginator.add_line(f"{str(error)}\n{prefix}")
-            self.paginator.prefix = prefix  # type: ignore[attr-defined]
+            self.paginator.prefix = prefix
         else:
             await super(Help, self).prepare_help_command(ctx, command)
 
@@ -98,4 +99,4 @@ class Help(discord.ext.commands.DefaultHelpCommand):
         if self.cache_next:
             return self.cache
         else:
-            return super(Help, self).get_destination()
+            return super(Help, self).get_destination()  # type: ignore
