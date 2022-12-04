@@ -14,7 +14,7 @@ async def on_ready() -> None:
     Determines what the bot does as soon as it is logged into discord
     """
     if not memebot.user:
-        raise exception.MemebotInternalError("Cannot get logged in user")
+        raise exception.MemebotInternalError("Memebot is not logged in to Discord")
     log.info(f"Logged in as {memebot.user}")
     if config.twitter_enabled:
         twitter.init(memebot.user)
