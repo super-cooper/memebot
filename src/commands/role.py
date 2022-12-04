@@ -95,7 +95,7 @@ async def role(ctx: discord.ext.commands.Context) -> None:
         raise exception.MemebotUserError
 
 
-@role.command(
+@role.command(  # type: ignore
     brief="Creates <role>", help="Create a new role to be managed by Memebot."
 )
 async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
@@ -105,6 +105,8 @@ async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
     guild = ctx.guild
     author = ctx.author
     target_name = role_name.lower()
+    if not ctx.command:
+        raise exception.MemebotInternalError("Cannot get command from context")
     if "@" in target_name:
         raise RoleActionError(
             ctx.command.name,
@@ -125,13 +127,13 @@ async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
         )
     except discord.Forbidden:
         raise RolePermissionError(ctx.command.name, target_name)
-    except (discord.HTTPException, discord.InvalidArgument):
+    except (discord.HTTPException, TypeError):
         raise RoleActionError(ctx.command.name, target_name)
 
     await ctx.send(f"Created new role {new_role.mention}!")
 
 
-@role.command(
+@role.command(  # type: ignore
     brief="Deletes <role> if <role> has no members.",
     help="Delete a Memebot-managed role if, and only if, the role has no members.",
 )
@@ -140,6 +142,8 @@ async def delete(
 ) -> None:
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
     tgt_role = cast(discord.Role, target_role)
+    if not ctx.command:
+        raise exception.MemebotInternalError("Cannot get command from context")
 
     # Ensure the role is empty before deleting
     if len(tgt_role.members) > 0:
@@ -159,7 +163,7 @@ async def delete(
     await ctx.send(f"Deleted role `@{tgt_role.name}`")
 
 
-@role.command(
+@role.command(  # type: ignore
     brief="Adds caller to <role>", help="Join an existing Memebot-managed role."
 )
 async def join(
@@ -170,6 +174,8 @@ async def join(
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
     tgt_role = cast(discord.Role, target_role)
+    if not ctx.command:
+        raise exception.MemebotInternalError("Cannot get command from context")
 
     author = ctx.author
     if not isinstance(author, discord.Member):
@@ -191,7 +197,7 @@ async def join(
     await ctx.send(f"{author.name} successfully joined `@{tgt_role.name}`")
 
 
-@role.command(
+@role.command(  # type: ignore
     brief="Removes caller from <role>",
     help="Leave a Memebot-managed role.",
 )
@@ -203,6 +209,8 @@ async def leave(
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
     tgt_role = cast(discord.Role, target_role)
+    if not ctx.command:
+        raise exception.MemebotInternalError("Cannot get command from context")
 
     author = ctx.author
     if author not in tgt_role.members:
@@ -225,7 +233,7 @@ async def leave(
     await ctx.send(f"{author.name} successfully left `@{tgt_role.name}`")
 
 
-@role.command(
+@role.command(  # type: ignore
     name="list",
     brief="List all roles managed by Memebot, all members of a given role, or all roles of a given user.",
     help="List all roles managed by Memebot. Optionally, if the name of a role is provided, list "
@@ -240,6 +248,8 @@ async def role_list(
     """
     # TODO: Replace this cast with typing.Annotation after migrating to discord.py 2.0
     target = cast(Optional[Union[discord.Role, discord.Member]], role_or_user)
+    if not ctx.command:
+        raise exception.MemebotInternalError("Cannot get command from context")
 
     if not ctx.guild:
         raise RoleLocationError

@@ -1,4 +1,5 @@
-import discord.ext.commands.bot
+import discord
+import discord.ext.commands
 
 import commands
 import config
@@ -12,6 +13,8 @@ async def on_ready() -> None:
     """
     Determines what the bot does as soon as it is logged into discord
     """
+    if not memebot.user:
+        raise exception.MemebotInternalError("Memebot is not logged in to Discord")
     log.info(f"Logged in as {memebot.user}")
     if config.twitter_enabled:
         twitter.init(memebot.user)

@@ -17,6 +17,8 @@ async def poll(ctx: discord.ext.commands.Context, question: str, *choices: str) 
     """
     Poll command for creating a simple, reaction-based poll.
     """
+    if not ctx.command:
+        raise exception.MemebotInternalError("Cannot get command from context")
     embed = discord.Embed(
         title=":bar_chart: **New Poll!**",
         description=f"_{question}_",
@@ -34,7 +36,7 @@ async def poll(ctx: discord.ext.commands.Context, question: str, *choices: str) 
         ["yea", "nay"],
         ["nay", "yea"],
     ):
-        embed.add_field(name=":thumbsup:", value=":)").add_field(
+        embed.add_field(name=":thumbsup:", value=":)").add_field(  # type: ignore[attr-defined]
             name=":thumbsdown:", value=":("
         )
         reactions = [":thumbsup:", ":thumbsdown:"]
