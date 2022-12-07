@@ -60,6 +60,9 @@ class LowercaseRoleConverter(discord.ext.commands.RoleConverter):
         return await super().convert(ctx, arg.lower())
 
 
+RoleIgnoreCase = Annotated[discord.Role, LowercaseRoleConverter]
+
+
 def get_reason(author_name: str) -> str:
     """
     Create a default reason string that will be embedded in new roles.
@@ -139,7 +142,7 @@ async def create(ctx: discord.ext.commands.Context, role_name: str) -> None:
 )
 async def delete(
     ctx: discord.ext.commands.Context,
-    target_role: Annotated[discord.Role, LowercaseRoleConverter],
+    target_role: RoleIgnoreCase,
 ) -> None:
     if not ctx.command:
         raise exception.MemebotInternalError("Cannot get command from context")
@@ -167,7 +170,7 @@ async def delete(
 )
 async def join(
     ctx: discord.ext.commands.Context,
-    target_role: Annotated[discord.Role, LowercaseRoleConverter],
+    target_role: RoleIgnoreCase,
 ) -> None:
     """
     Join an existing Memebot-managed role
@@ -201,7 +204,7 @@ async def join(
 )
 async def leave(
     ctx: discord.ext.commands.Context,
-    target_role: Annotated[discord.Role, LowercaseRoleConverter],
+    target_role: RoleIgnoreCase,
 ) -> None:
     """
     Leave a Memebot-managed role of which the caller is a member
@@ -238,9 +241,7 @@ async def leave(
 )
 async def role_list(
     ctx: discord.ext.commands.Context,
-    target: Optional[
-        Union[Annotated[discord.Role, LowercaseRoleConverter], discord.Member]
-    ],
+    target: Optional[Union[RoleIgnoreCase, discord.Member]],
 ) -> None:
     """
     List all roles managed by Memebot, or all members of a role managed by Memebot.
