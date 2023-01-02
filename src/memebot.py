@@ -33,7 +33,7 @@ async def on_command_error(
 ) -> None:
     command = interaction.command
     if not isinstance(command, discord.app_commands.Command):
-        log.warning("Interaction not a command")
+        log.exception(error)
         return
     log.exception(f"`{command.name}` raised an unhandled exception: ", exc_info=error)
     await interaction.response.send_message(
