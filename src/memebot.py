@@ -6,7 +6,8 @@ import config
 import db
 import log
 from integrations import twitter
-from lib import exception
+from lib import exception, util
+from typing import Optional, cast
 
 
 async def on_ready() -> None:
@@ -35,9 +36,25 @@ async def on_command_error(
     if not isinstance(command, discord.app_commands.Command):
         log.exception(error)
         return
-    log.exception(f"`{command.name}` raised an unhandled exception: ", exc_info=error)
+
+    invocation = util.parse_invocation(interaction.data)
+
+    if isinstance(error, exception.MemebotInternalError):
+        # For intentionally thrown internal errors
+        log.exception(f"`{invocation}` raised an internal exception: ", exc_info=error)
+        err_msg = f"Internal error occurred with `{invocation}`"
+    elif isinstance(error, discord.app_commands.CommandInvokeError):
+        # For uncaught exceptions
+        # (discord.py wraps these in a CommandInvokeError and re-raises)
+        log.exception(
+            f"`{invocation}` raised an unhandled exception: ", exc_info=error.original
+        )
+        err_msg = f"Unhandled error occurred with `{invocation}`"
+    else:
+        err_msg = str(error)
+
     await interaction.response.send_message(
-        error,
+        err_msg,
         ephemeral=True,
     )
 
