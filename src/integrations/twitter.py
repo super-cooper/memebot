@@ -9,10 +9,11 @@ import re
 from typing import Tuple
 
 import discord
+import emoji
 import tweepy
 
 import config
-from lib import constants, util
+from lib import util
 
 # Regular expression that describes the pattern of a Tweet URL
 twitter_url_pattern = re.compile(
@@ -112,10 +113,11 @@ async def process_message_for_interaction(message: discord.Message) -> None:
         )
 
         # React with a numeric emoji to Tweets containing multiple images
-        if len(tweet_media) > 1:
-            emoji = ":" + str(len(tweet_media)) + ":"
-            asyncio.create_task(message.add_reaction(constants.EMOJI_MAP[emoji]))
-        elif len(tweet_media) == 1 and "video_info" in tweet_media[0]:
+        if (n_images := len(tweet_media)) > 1:
+            asyncio.create_task(
+                message.add_reaction(emoji.emojize(f":keycap_{n_images}:"))
+            )
+        elif n_images == 1 and "video_info" in tweet_media[0]:
             # The media_url of a media dict is actually a thumbnail
             # To get the video, we have to pull it out of its video_info
             # We will choose the variant with the highest bitrate

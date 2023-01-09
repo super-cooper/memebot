@@ -1,5 +1,6 @@
 discord.py==2.1.0
+emoji==2.0.0
 pymongo
 pymongo-stubs
 tweepy
-aiohttp
+types-emoji==2.0.0

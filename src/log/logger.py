@@ -4,7 +4,7 @@ import io
 import logging
 import os
 import sys
-from typing import Union, Mapping, Any
+from typing import Union, Mapping, Optional
 
 import config
 
@@ -48,12 +48,12 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         # We want to avoid external packages overwriting our custom handler
         return
 
-    def _log(
+    def _log(  # type: ignore
         self,
         level: int,
         msg: object,
-        args: Any,
-        exc_info: Any = None,
+        args: tuple[object],
+        exc_info: Optional[BaseException] = None,
         extra: Union[Mapping[str, object], None] = None,
         stack_info: bool = False,
         stacklevel: int = 1,

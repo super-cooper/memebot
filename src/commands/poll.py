@@ -1,8 +1,9 @@
 from datetime import datetime
-from string import ascii_lowercase as alphabet
 from typing import Optional
 
 import discord
+import discord.ext.commands
+import emoji
 
 from lib import constants, exception
 
@@ -43,18 +44,19 @@ async def poll(
         ["yea", "nay"],
         ["nay", "yea"],
     ):
-        embed.add_field(name=":thumbsup:", value=":)").add_field(  # type: ignore[attr-defined]
-            name=":thumbsdown:", value=":("
-        )
-        reactions = [":thumbsup:", ":thumbsdown:"]
+        embed.add_field(name=":thumbs_up:", value=":)")
+        embed.add_field(name=":thumbs_down:", value=":(")
+        reactions = [":thumbs_up:", ":thumbs_down:"]
     else:
         reactions = []
         for i, choice in enumerate(choices):
-            emoji = f":regional_indicator_{alphabet[i]}:"
-            reactions.append(emoji)
-            embed.add_field(name=emoji, value=choice)
+            letter_emoji = chr(
+                ord("🇦") + i
+            )  # emoji does not support regional indicators yet
+            reactions.append(letter_emoji)
+            embed.add_field(name=letter_emoji, value=choice)
 
     await interaction.response.send_message(embed=embed)
     message = await interaction.original_response()
     for reaction in reactions:
-        await message.add_reaction(constants.EMOJI_MAP[reaction])
+        await message.add_reaction(emoji.emojize(reaction, language="alias"))
