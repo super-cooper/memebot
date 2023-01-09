@@ -1,4 +1,7 @@
-from typing import Tuple, List
+from typing import Tuple, List, Optional, cast, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from discord.types.interactions import InteractionData
 
 
 def is_spoil(message: str, idx: int) -> bool:
@@ -43,3 +46,29 @@ def maybe_make_link_spoiler(message: str, spoil: bool) -> str:
     # Discord will only embed links with spoilers if there is padding
     # between the spoiler tags and the link.
     return f"|| {message} ||" if spoil else message
+
+
+def parse_invocation(interaction_data: Optional["InteractionData"]) -> str:
+    """Returns the command involacion parsed from the raw interaction data"""
+
+    def impl(data: dict) -> str:
+        out = []
+        name: Optional[str] = data.get("name")
+        options: Optional[list[dict]] = data.get("options")
+        value: Optional[str] = data.get("value")
+        if value:
+            out.append(value)
+        elif name:
+            out.append(name)
+        if options:
+            for option in options:
+                out.append(impl(option))
+
+        return " ".join(out)
+
+    if not interaction_data:
+        return ""
+
+    # The interaction data is a TypedDict, which behaves like a dict at runtime, but
+    # due to discord.py's internal type checking, mypy doesn't like to view it as a dict.
+    return "/" + impl(cast(dict, interaction_data))
