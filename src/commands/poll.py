@@ -44,9 +44,8 @@ async def poll(
         ["yea", "nay"],
         ["nay", "yea"],
     ):
-        embed.add_field(name=":thumbs_up:", value=":)").add_field(
-            name=":thumbs_down:", value=":("
-        )
+        embed.add_field(name=":thumbs_up:", value=":)")
+        embed.add_field(name=":thumbs_down:", value=":(")
         reactions = [":thumbs_up:", ":thumbs_down:"]
     else:
         reactions = []
