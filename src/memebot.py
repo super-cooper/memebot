@@ -43,15 +43,16 @@ async def on_command_error(
         # For intentionally thrown internal errors
         log.exception(f"`{invocation}` raised an internal exception: ", exc_info=error)
         err_msg = f"Internal error occurred with `{invocation}`"
-    elif isinstance(error, discord.app_commands.CommandInvokeError):
+    elif isinstance(error, exception.MemebotUserError):
+        # If the error is user-facing, we want to send it directly to the user
+        err_msg = str(error)
+    else:
         # For uncaught exceptions
         # (discord.py wraps these in a CommandInvokeError and re-raises)
         log.exception(
             f"`{invocation}` raised an unhandled exception: ", exc_info=error.original
         )
         err_msg = f"Unhandled error occurred with `{invocation}`"
-    else:
-        err_msg = str(error)
 
     await interaction.response.send_message(
         err_msg,
