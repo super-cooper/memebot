@@ -7,7 +7,6 @@ import db
 import log
 from integrations import twitter
 from lib import exception, util
-from typing import Optional, cast
 
 
 async def on_ready() -> None:
@@ -49,8 +48,12 @@ async def on_command_error(
     else:
         # For uncaught exceptions
         # (discord.py wraps these in a CommandInvokeError and re-raises)
+        if isinstance(error, discord.app_commands.CommandInvokeError):
+            original = error.original
+        else:
+            original = error
         log.exception(
-            f"`{invocation}` raised an unhandled exception: ", exc_info=error.original
+            f"`{invocation}` raised an unhandled exception: ", exc_info=original
         )
         err_msg = f"Unhandled error occurred with `{invocation}`"
 
