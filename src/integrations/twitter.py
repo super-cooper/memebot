@@ -14,6 +14,7 @@ import tweepy
 
 import config
 from lib import util
+from lib.exception import MemebotInternalError
 
 # Regular expression that describes the pattern of a Tweet URL
 twitter_url_pattern = re.compile(
@@ -25,6 +26,12 @@ twitter_api: tweepy.Client
 
 # Current bot user
 bot_user: discord.ClientUser
+
+
+class MemebotTwitterAPIError(MemebotInternalError):
+    """
+    Error type used to reflect errors encountered while interfacing with the Twitter API
+    """
 
 
 def init(user: discord.ClientUser) -> None:
@@ -107,9 +114,15 @@ def get_quote_tweet_urls(root_tweet: tweepy.Tweet, spoiled: bool) -> str:
     parent_tweet = root_tweet
     for _ in range(3):
         # Find the ID of the Tweet quoted by the parent
-        qt_ref = [t for t in parent_tweet.referenced_tweets if t.type == "quoted"][0]
+        qt_ref = next(
+            (t for t in parent_tweet.referenced_tweets if t.type == "quoted"), None
+        )
+        if not qt_ref:
+            raise MemebotTwitterAPIError("Attempted to unroll non-quote-tweet")
         qt, qt_users, _ = fetch_tweet_with_expansions(qt_ref.id)
-        qt_author = [u for u in qt_users if u.id == qt.author_id][0]
+        qt_author = next((u for u in qt_users if u.id == qt.author_id), None)
+        if not qt_author:
+            raise MemebotTwitterAPIError("Unable to resolve quote-tweet author")
         output_text += util.maybe_make_link_spoiler(
             f"\nhttps://twitter.com/{qt_author.username}/status/{qt.id}",
             spoiled,
