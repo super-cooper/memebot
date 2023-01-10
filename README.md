@@ -11,27 +11,32 @@ See [Configuration](#configuration) for more context.
 ### Command-line parameters
 
 ```
-usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN] [--twitter-api-consumer-key TWITTER_API_CONSUMER_KEY]
+usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN]
+               [--twitter-api-consumer-key TWITTER_API_CONSUMER_KEY]
                [--twitter-api-consumer-secret TWITTER_API_CONSUMER_SECRET]
+               [--twitter-api-bearer-token TWITTER_API_BEARER_TOKEN]
                [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL} | -v]
-               [--log-location {stdout,stderr,syslog,/path/to/file}] [--no-twitter] [--nodb]
-               [--database-uri DATABASE_URI]
+               [--log-location {stdout,stderr,syslog,/path/to/file}]
+               [--no-twitter] [--nodb] [--database-uri DATABASE_URI]
 
 optional arguments:
   -h, --help            show this help message and exit
   --discord-api-token DISCORD_API_TOKEN
                         The Discord API client token
   --twitter-api-consumer-key TWITTER_API_CONSUMER_KEY
-                        The Twitter API consumer key
+                        (DEPRECATED) The Twitter API consumer key
   --twitter-api-consumer-secret TWITTER_API_CONSUMER_SECRET
-                        The Twitter API consumer secret
+                        (DEPRECATED) The Twitter API consumer secret
+  --twitter-api-bearer-token TWITTER_API_BEARER_TOKEN
+                        The Twitter API OAuth 2.0 bearer token
   --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         Set logging level
   -v, --verbose         Use verbose logging. Equivalent to --log-level DEBUG
   --log-location {stdout,stderr,syslog,/path/to/file}
-                        Set the location for Memebot's log
+                        Set the location for MemeBot's log
   --no-twitter          Disable Twitter integration
-  --nodb                Disable the database connection, and all features which require it.
+  --nodb                Disable the database connection, and all features
+                        which require it.
   --database-uri DATABASE_URI
                         URI of the MongoDB database server
 ```
