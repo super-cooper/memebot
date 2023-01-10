@@ -8,8 +8,7 @@ from config import validators
 # Discord API token
 discord_api_token: str
 # Twitter API tokens
-twitter_api_consumer_key: str
-twitter_api_consumer_secret: str
+twitter_api_bearer_token: str
 
 # The logging level for MemeBot
 log_level: str
@@ -37,14 +36,26 @@ def populate_config_from_command_line() -> None:
     )
     parser.add_argument(
         "--twitter-api-consumer-key",
-        help="The Twitter API consumer key",
+        help="(DEPRECATED) The Twitter API consumer key",
         default=os.getenv("MEMEBOT_TWITTER_CONSUMER_KEY"),
-        type=str,
+        type=lambda _: print(
+            "USING DEPRECATED TWITTER OAUTH 1.0 CREDENTIALS! "
+            "PLEASE USE BEARER TOKENS INSTEAD!"
+        ),
     )
     parser.add_argument(
         "--twitter-api-consumer-secret",
-        help="The Twitter API consumer secret",
+        help="(DEPRECATED) The Twitter API consumer secret",
         default=os.getenv("MEMEBOT_TWITTER_CONSUMER_SECRET"),
+        type=lambda _: print(
+            "USING DEPRECATED TWITTER OAUTH 1.0 CREDENTIALS! "
+            "PLEASE USE BEARER TOKENS INSTEAD!"
+        ),
+    )
+    parser.add_argument(
+        "--twitter-api-bearer-token",
+        help="The Twitter API OAuth 2.0 bearer token",
+        default=os.getenv("MEMEBOT_TWITTER_BEARER_TOKEN"),
         type=str,
     )
 
@@ -121,11 +132,9 @@ def populate_config_from_command_line() -> None:
     args = parser.parse_args()
 
     global discord_api_token
-    global twitter_api_consumer_key
-    global twitter_api_consumer_secret
+    global twitter_api_bearer_token
     discord_api_token = args.discord_api_token
-    twitter_api_consumer_key = args.twitter_api_consumer_key
-    twitter_api_consumer_secret = args.twitter_api_consumer_secret
+    twitter_api_bearer_token = args.twitter_api_bearer_token
 
     global log_level
     global log_location
