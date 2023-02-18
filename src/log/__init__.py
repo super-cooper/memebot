@@ -1,7 +1,7 @@
 import atexit
 import contextlib
 import logging
-from typing import cast
+from typing import cast, Any
 
 import config
 from . import formatter, logger
@@ -49,9 +49,9 @@ import discord
 def interaction(
     inter: discord.Interaction,
     msg: str,
-    level=logging.INFO,
-    *args,
-    **kwargs,
+    level: int = logging.INFO,
+    *args: Any,
+    **kwargs: Any,
 ) -> None:
     """
     Logging wrapper to prefix a log message with the interaction ID. This is helpful
