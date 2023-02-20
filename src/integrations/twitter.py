@@ -160,11 +160,14 @@ async def process_message_for_interaction(message: discord.Message) -> None:
             )
         # For tweets containing only a single video, we embed the video in Discord.
         elif n_images == 1 and tweet_media[0].type in ("video", "animated_gif"):
-            # The media_url of a media dict is actually a thumbnail
-            # To get the video, we have to pull it out of its video_info
-            # We will choose the variant with the highest bitrate
             video_url = max(
-                tweet_media[0].data["variants"],
+                # Only select variants with video URLs
+                # Twitter includes links to x-mpeg playlists as well
+                filter(
+                    lambda v: v["content_type"].startswith("video"),
+                    tweet_media[0].variants,
+                ),
+                # Choose the variant with the highest bitrate
                 key=lambda v: int(v.get("bitrate", -1)),
             )["url"]
             asyncio.create_task(
