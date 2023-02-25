@@ -1,7 +1,7 @@
 import atexit
 import contextlib
 import logging
-from typing import cast, Any
+from typing import cast, Any, TYPE_CHECKING
 
 import config
 from . import formatter, logger
@@ -43,7 +43,8 @@ log = memebot_logger.log
 exception = memebot_logger.exception
 
 # discord is imported as late as possible to ensure its logger is set properly
-import discord
+if TYPE_CHECKING:
+    import discord
 
 
 def interaction(
