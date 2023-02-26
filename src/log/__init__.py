@@ -48,7 +48,7 @@ if TYPE_CHECKING:
 
 
 def interaction(
-    inter: discord.Interaction,
+    inter: "discord.Interaction",
     msg: str,
     level: int = logging.INFO,
     *args: Any,
