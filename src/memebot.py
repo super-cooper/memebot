@@ -1,3 +1,5 @@
+import logging
+
 import discord
 import discord.ext.commands
 
@@ -28,6 +30,16 @@ async def on_ready() -> None:
             log.error("Could not connect to database.")
 
 
+async def on_interaction(interaction: discord.Interaction) -> None:
+    """
+    Provides logging on interaction ingress
+    """
+    log.interaction(
+        interaction,
+        f"{util.parse_invocation(interaction.data)} from {interaction.user}",
+    )
+
+
 async def on_command_error(
     interaction: discord.Interaction, error: discord.app_commands.AppCommandError
 ) -> None:
@@ -40,11 +52,17 @@ async def on_command_error(
 
     if isinstance(error, exception.MemebotInternalError):
         # For intentionally thrown internal errors
-        log.exception(f"`{invocation}` raised an internal exception: ", exc_info=error)
+        log.interaction(
+            interaction,
+            f"Raised an internal exception: ",
+            level=logging.WARNING,
+            exc_info=error,
+        )
         err_msg = f"Internal error occurred with `{invocation}`"
     elif isinstance(error, exception.MemebotUserError):
         # If the error is user-facing, we want to send it directly to the user
         err_msg = str(error)
+        log.interaction(interaction, err_msg)
     else:
         # For uncaught exceptions
         # (discord.py wraps these in a CommandInvokeError and re-raises)
@@ -52,8 +70,11 @@ async def on_command_error(
             original = error.original
         else:
             original = error
-        log.exception(
-            f"`{invocation}` raised an unhandled exception: ", exc_info=original
+        log.interaction(
+            interaction,
+            f"Raised an unhandled exception: ",
+            exc_info=original,
+            level=logging.ERROR,
         )
         err_msg = f"Unhandled error occurred with `{invocation}`"
 
@@ -74,6 +95,7 @@ memebot.tree.add_command(commands.poll)
 memebot.tree.add_command(commands.role)
 
 memebot.add_listener(on_ready)
+memebot.add_listener(on_interaction)
 memebot.tree.error(on_command_error)
 if config.twitter_enabled:
     memebot.add_listener(twitter.process_message_for_interaction, "on_message")

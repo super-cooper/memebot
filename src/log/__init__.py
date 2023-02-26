@@ -1,6 +1,7 @@
 import atexit
 import contextlib
 import logging
+from typing import cast, Any, TYPE_CHECKING
 
 import config
 from . import formatter, logger
@@ -9,7 +10,7 @@ config.log_location.setFormatter(formatter.MemeBotLogFormatter())
 logging.setLoggerClass(logger.MemeBotLogger)
 
 # We use a project-wide logger because of how we shim metadata into log statements
-memebot_logger = logging.getLogger("memebot")
+memebot_logger = cast(logger.MemeBotLogger, logging.getLogger("memebot"))
 
 # Redirect all stdout to a logger, as some packages in the stdlib still use print
 # for debug messages
@@ -40,3 +41,22 @@ error = memebot_logger.error
 critical = memebot_logger.critical
 log = memebot_logger.log
 exception = memebot_logger.exception
+
+# discord is imported as late as possible to ensure its logger is set properly
+if TYPE_CHECKING:
+    import discord
+
+
+def interaction(
+    inter: discord.Interaction,
+    msg: str,
+    level: int = logging.INFO,
+    *args: Any,
+    **kwargs: Any,
+) -> None:
+    """
+    Logging wrapper to prefix a log message with the interaction ID. This is helpful
+    for tracking the information flow for an interaction.
+    """
+    # Highlight the interaction id
+    log(level, f"\033[1mInteraction {inter.id}\033[22m {msg}", *args, **kwargs)
