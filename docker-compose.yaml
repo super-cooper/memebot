@@ -10,6 +10,8 @@ services:
       context: .
       target: ${MEMEBOT_BUILD_TARGET:-test}
     restart: always
+    volumes:
+      - ./src:/opt/memebot/src
     depends_on:
       - db
     environment:
