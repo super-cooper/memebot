@@ -13,9 +13,6 @@ RUN \
     # install dependencies
     python3 -m pip install --no-cache-dir -r requirements.txt
 
-# bring in memebot source code
-COPY src src
-
 # run memebot
 ENTRYPOINT ["python3", "src/main.py"]
 
