@@ -74,15 +74,16 @@ class PollResult:
 
     def to_embed(self) -> discord.Embed:
         embed = discord.Embed(
-            title=f":bar_chart: **{self.question}**",
-            # description=f"_{self.question}_",
+            title=f":bar_chart: **New Poll!**",
+            description=f"_{self.question}_",
             color=constants.COLOR,
             timestamp=datetime.utcnow(),
         )
         for i, (choice, voters) in enumerate(self.votes.items()):
             voter_names = map(lambda x: x.display_name, voters)
             embed.add_field(
-                name=f'{chr(ord("🇦") + i)} {choice}', value="\n".join(voter_names)
+                name=f'{chr(ord("🇦") + i)} {choice} ({len(voters)})',
+                value="\n".join(voter_names),
             )
 
         return embed
