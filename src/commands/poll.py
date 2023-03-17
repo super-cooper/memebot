@@ -1,5 +1,6 @@
+from collections import OrderedDict
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 import discord
 import discord.ext.commands
@@ -25,12 +26,6 @@ async def poll(
     """
     if not interaction.command:
         raise exception.MemebotInternalError("Cannot get command from context")
-    embed = discord.Embed(
-        title=":bar_chart: **New Poll!**",
-        description=f"_{question}_",
-        color=constants.COLOR,
-        timestamp=datetime.utcnow(),
-    )
     optional_choices = [choice1, choice2, choice3, choice4, choice5]
     choices = list(filter(None, optional_choices))
 
@@ -44,19 +39,72 @@ async def poll(
         ["yea", "nay"],
         ["nay", "yea"],
     ):
-        embed.add_field(name=":thumbs_up:", value=":)")
-        embed.add_field(name=":thumbs_down:", value=":(")
-        reactions = [":thumbs_up:", ":thumbs_down:"]
-    else:
-        reactions = []
-        for i, choice in enumerate(choices):
-            letter_emoji = chr(
-                ord("🇦") + i
-            )  # emoji does not support regional indicators yet
-            reactions.append(letter_emoji)
-            embed.add_field(name=letter_emoji, value=choice)
+        choices = [emoji.emojize(":thumbs_up:"), emoji.emojize(":thumbs_down:")]
 
-    await interaction.response.send_message(embed=embed)
-    message = await interaction.original_response()
-    for reaction in reactions:
-        await message.add_reaction(emoji.emojize(reaction, language="alias"))
+    votes = PollResult(question, choices)
+
+    vote_view = PollView(timeout=60 * 60 * 24)  # Timeout 1 day
+    for i, choice in enumerate(votes.votes):
+        vote_view.add_item(
+            VoteButton(
+                votes,
+                label=choice,
+                emoji=discord.PartialEmoji(name=chr(ord("🇦") + i)),
+            )
+        )
+
+    await interaction.response.send_message(embed=votes.to_embed(), view=vote_view)
+
+
+class PollResult:
+    question: str
+    votes: OrderedDict[str, list[Union[discord.User, discord.Member]]]
+
+    def __init__(self, question: str, options: list[str]):
+        self.question = question
+        self.votes = OrderedDict()
+        for option in options:
+            self.votes[option] = []
+
+    def vote(self, choice: str, user: Union[discord.User, discord.Member]) -> None:
+        if user in self.votes[choice]:
+            self.votes[choice].remove(user)
+        else:
+            self.votes[choice].append(user)
+
+    def to_embed(self) -> discord.Embed:
+        embed = discord.Embed(
+            title=f":bar_chart: **{self.question}**",
+            # description=f"_{self.question}_",
+            color=constants.COLOR,
+            timestamp=datetime.utcnow(),
+        )
+        for i, (choice, voters) in enumerate(self.votes.items()):
+            voter_names = map(lambda x: x.display_name, voters)
+            embed.add_field(
+                name=f'{chr(ord("🇦") + i)} {choice}', value="\n".join(voter_names)
+            )
+
+        return embed
+
+
+class PollView(discord.ui.View):
+    async def on_timeout(self) -> None:
+        for button in self.children:
+            if not isinstance(button, discord.ui.Button):
+                continue
+            button.disabled = True
+
+
+class VoteButton(discord.ui.Button):
+    votes: PollResult
+
+    def __init__(self, votes: PollResult, **kwargs):
+        super().__init__(**kwargs)
+        self.votes = votes
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        if not self.label:
+            return
+        self.votes.vote(self.label, interaction.user)
+        await interaction.response.edit_message(embed=self.votes.to_embed())
