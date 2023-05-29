@@ -46,13 +46,13 @@ async def poll(
         choices = [emoji.emojize(":thumbs_up:"), emoji.emojize(":thumbs_down:")]
         yes_no = True
 
-    votes = PollResult(question, choices)
+    votes = PollResult(question, yes_no, choices)
 
     vote_view = PollView(timeout=60 * 60 * 24)  # Timeout 1 day
     for i, choice in enumerate(votes.votes):
         vote_view.add_item(
             VoteButton(
-                votes=votes,
+                results=votes,
                 value=choice,
                 label=None if yes_no else choice,
                 emoji=choice if yes_no else buttons[i],
@@ -64,11 +64,13 @@ async def poll(
 
 class PollResult:
     question: str
+    yes_no: bool
     votes: OrderedDict[str, list[Union[discord.User, discord.Member]]]
 
-    def __init__(self, question: str, options: list[str]):
+    def __init__(self, question: str, yes_no: bool, options: list[str]):
         self.question = question
         self.votes = OrderedDict()
+        self.yes_no = yes_no
         for option in options:
             self.votes[option] = []
 
@@ -87,8 +89,12 @@ class PollResult:
         )
         for i, (choice, voters) in enumerate(self.votes.items()):
             voter_names = (x.display_name for x in voters)
+            choice_title = f"{choice} ({len(voters)})"
+            if not self.yes_no:
+                choice_title = f'{chr(ord("🇦") + i)} ' + choice_title
+
             embed.add_field(
-                name=f'{chr(ord("🇦") + i)} {choice} ({len(voters)})',
+                name=choice_title,
                 value="\n".join(voter_names),
             )
 
@@ -106,16 +112,16 @@ class PollView(discord.ui.View):
 
 
 class VoteButton(discord.ui.Button):
-    votes: PollResult
+    results: PollResult
     value: str
 
-    def __init__(self, votes: PollResult, value: str, **kwargs):
+    def __init__(self, results: PollResult, value: str, **kwargs):
         super().__init__(**kwargs)
-        self.votes = votes
+        self.results = results
         self.value = value
 
     async def callback(self, interaction: discord.Interaction) -> None:
         if not self.value:
             raise exception.MemebotInternalError("No value for poll button")
-        self.votes.vote(self.value, interaction.user)
-        await interaction.response.edit_message(embed=self.votes.to_embed())
+        self.results.vote(self.value, interaction.user)
+        await interaction.response.edit_message(embed=self.results.to_embed())
