@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 import discord
 import discord.ext.commands
@@ -115,7 +115,7 @@ class VoteButton(discord.ui.Button):
     results: PollResult
     value: str
 
-    def __init__(self, results: PollResult, value: str, **kwargs):
+    def __init__(self, results: PollResult, value: str, **kwargs: Any):
         super().__init__(**kwargs)
         self.results = results
         self.value = value
