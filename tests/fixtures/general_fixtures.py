@@ -25,7 +25,9 @@ def setup_and_teardown(mock_twitter_client: mock.Mock) -> None:
     os.environ = DEFAULT_ENVIRONMENT
 
     with mock.patch("argparse.ArgumentParser", mock.MagicMock()):
-        config.populate_config_from_command_line()
+        with mock.patch("tweepy.Client", lambda *_, **__: mock_twitter_client):
+            config.populate_config_from_command_line()
+            twitter.init(mock.MagicMock())
 
     # Run test
     yield
