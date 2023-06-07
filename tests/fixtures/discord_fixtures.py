@@ -10,6 +10,7 @@ import pytest
 def mock_discord_client(MockClient: type[mock.Mock]) -> mock.Mock:
     return MockClient()
 
+
 @pytest.fixture
 @mock.patch("discord.Interaction", spec=True)
 def mock_interaction(
@@ -89,7 +90,9 @@ def mock_role_with_attrs(
 
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
-def mock_role_everyone(MockRoleEveryone: Type[mock.Mock], mock_interaction: mock.Mock) -> mock.Mock:
+def mock_role_everyone(
+    MockRoleEveryone: Type[mock.Mock], mock_interaction: mock.Mock
+) -> mock.Mock:
     everyone = mock_role_with_attrs(MockRoleEveryone, "everyone")
     everyone.members = discord.utils.SequenceProxy([mock_interaction.client.user])
     return everyone
@@ -97,7 +100,9 @@ def mock_role_everyone(MockRoleEveryone: Type[mock.Mock], mock_interaction: mock
 
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
-def mock_role_bot(MockRoleBot: Type[mock.Mock], mock_interaction: mock.Mock) -> mock.Mock:
+def mock_role_bot(
+    MockRoleBot: Type[mock.Mock], mock_interaction: mock.Mock
+) -> mock.Mock:
     bot_role = mock_role_with_attrs(MockRoleBot, "bot")
     bot_role.members = discord.utils.SequenceProxy([mock_interaction.client.user])
     return bot_role
