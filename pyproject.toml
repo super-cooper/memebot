@@ -12,7 +12,8 @@ warn_unreachable = true
 pretty = true
 exclude = [
     "data",
-    "venv"
+    "venv",
+    "tests",
 ]
 
 [[tool.mypy.overrides]]
