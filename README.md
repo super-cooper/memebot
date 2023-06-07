@@ -90,31 +90,31 @@ To run mypy locally, ensure it is installed to the same python environment as al
 Memebot dependencies, and then run it using the proper interpreter. 
 
 ```shell
-$ venv/bin/mypy src
+$ venv/bin/mypy memebot
 
 # OR
 
 $ source venv/bin/activate
-$ mypy src
+$ mypy memebot
 ```
 
 To run mypy in Docker, ensure you are using an image built from the `test` target. 
 
 ```shell
-$ docker run --rm -it --entrypoint mypy memebot:test src
+$ docker run --rm -it --entrypoint mypy memebot:test memebot
 
 # OR
 
-$ docker-compose run --rm --entrypoint mypy bot src
+$ docker-compose run --rm --entrypoint mypy bot memebot
 ```
 
 You can speed up subsequent runs of mypy by mounting the `.mypy-cache` directory as a volume.
 This way, mypy can reuse the cache it generates inside the container on the next run. 
 
 ```shell
-$ docker run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy -it memebot:test src
+$ docker run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy -it memebot:test memebot
 
 # OR
 
-$ docker-compose run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy bot src
+$ docker-compose run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy bot memebot
 ```
