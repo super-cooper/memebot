@@ -81,6 +81,28 @@ Leaving variables empty just means that default values will be used.
 
 ## Tests
 
+### pytest
+
+Memebot has a suite of unit tests based on [`pytest`](https://pytest.org). The test code
+is located in the [tests](./tests) directory. Running the tests is straightforward:
+
+```shell
+$ python3 -m pytest [/path/to/test/package/or/module]
+```
+
+Running the above from the root of the repository with no path(s) specified will run 
+all the tests.
+
+The tests can also be run from the _test_ Docker image:
+
+```shell
+$ docker run --rm -it --entrypoint python3 memebot:test -m pytest [/path/to/test/package/or/module]
+
+# OR
+
+$ docker-compose run --rm --entrypoint python3 bot -m pytest [/path/to/test/package/or/module]
+```
+
 ### mypy
 
 Memebot uses static type checking from [mypy](http://mypy-lang.org) to improve code correctness. The config
