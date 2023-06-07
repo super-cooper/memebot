@@ -1,4 +1,4 @@
-import config
+from memebot import config
 from .internals import DatabaseInternals
 
 db_internals = DatabaseInternals()

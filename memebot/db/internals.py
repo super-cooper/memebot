@@ -2,7 +2,7 @@ from typing import Optional
 
 import pymongo as mongo
 
-import config
+from memebot import config
 
 
 class DatabaseInternals:

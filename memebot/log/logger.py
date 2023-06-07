@@ -6,7 +6,7 @@ import os
 import sys
 from typing import Union, Mapping, Optional
 
-import config
+from memebot import config
 
 memebot_context = os.getcwd()
 

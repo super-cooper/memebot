@@ -1,9 +1,9 @@
-# In order to ensure consistent logging,
-# log must always be the first thing imported by the main module
-import log
+from memebot import config
 
-import config
-import memebot
+config.populate_config_from_command_line()
+
+from memebot.client import memebot
+from memebot import log
 
 
 def main() -> None:
