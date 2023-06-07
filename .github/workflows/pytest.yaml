@@ -24,6 +24,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r tests/requirements.txt
       - name: Test with pytest
-        env:
         run: |
           pytest --tb=long -v
