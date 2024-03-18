@@ -27,7 +27,7 @@ services:
     restart: always
     volumes:
       - ./data/db:/data/db
-      - ./src/config/mongod.yaml:/etc/mongo/mongod.yaml:ro
+      - ./memebot/config/mongod.yaml:/etc/mongo/mongod.yaml:ro
     networks:
       default:
     dns:
