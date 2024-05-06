@@ -1,10 +1,7 @@
-from typing import Tuple, List, Optional, cast, TYPE_CHECKING
+from typing import Tuple, List, Optional, cast
 
 import discord
 import discord.ext.commands
-
-if TYPE_CHECKING:
-    pass
 
 
 def is_spoil(message: str, idx: int) -> bool:
