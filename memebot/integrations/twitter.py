@@ -6,6 +6,7 @@ and the only state it maintains is whether the API has been initialized.
 All functions that make any network communication, except for init,
 should be asynchronous and stateless.
 """
+
 import re
 from typing import Tuple
 

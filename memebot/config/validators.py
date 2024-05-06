@@ -2,6 +2,7 @@
 Functions that will validate string input from the command line and convert them into appropriate data for use
 by the config module.
 """
+
 import collections
 import logging
 import logging.handlers
