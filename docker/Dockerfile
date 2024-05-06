@@ -30,4 +30,5 @@ COPY --from=build /opt/venv /opt/venv
 
 # Run test build.
 FROM run-base as test
+COPY tests tests
 COPY --from=build-test /opt/venv /opt/venv
