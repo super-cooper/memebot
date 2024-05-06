@@ -178,7 +178,13 @@ async def test_poll_no_answers(mock_interaction: mock.Mock) -> None:
 @pytest.mark.parametrize(
     ["a1", "a2", "a3", "a4", "a5"],
     # Create a matrix of all possible answer inputs that contain only 1 real answer
-    [["Mock answer" if i == j else None for i in range(5)] for j in range(5)],
+    [
+        ["Mock answer", None, None, None, None],
+        [None, "Mock answer", None, None, None],
+        [None, None, "Mock answer", None, None],
+        [None, None, None, "Mock answer", None],
+        [None, None, None, None, "Mock answer"],
+    ],
 )
 @pytest.mark.asyncio
 async def test_poll_one_answer(
