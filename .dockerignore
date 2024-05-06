@@ -5,5 +5,4 @@
 .mypy_cache/
 data/
 docker/
-install.bash
 venv/

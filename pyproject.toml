@@ -1,3 +1,6 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.mypy]
 python_version = "3.9"
 warn_return_any = true
@@ -12,10 +15,15 @@ warn_unreachable = true
 pretty = true
 exclude = [
     "data",
-    "venv"
+    "venv",
+    "tests",
 ]
 
-# tweepy does not provide type annotations, but it is desired for 4.x
 [[tool.mypy.overrides]]
-module = "tweepy"
+module = [
+    # tweepy does not provide type annotations, but it is desired for 4.x
+    "tweepy",
+    # This module in discord.py does not have full stubs for some reason
+    "discord.ext.commands",
+]
 ignore_missing_imports = true
