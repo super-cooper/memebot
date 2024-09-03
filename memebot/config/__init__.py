@@ -3,7 +3,7 @@ import logging
 import os
 import urllib.parse
 
-from config import validators
+from memebot.config import validators
 
 # Discord API token
 discord_api_token: str
@@ -148,6 +148,3 @@ def populate_config_from_command_line() -> None:
     global database_uri
     database_enabled = args.database_enabled
     database_uri = args.database_uri
-
-
-populate_config_from_command_line()

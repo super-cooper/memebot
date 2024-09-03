@@ -1,20 +1,22 @@
+import functools
 import logging
 
 import discord
 import discord.ext.commands
 
-import commands
-import config
-import db
-import log
-from integrations import twitter
-from lib import exception, util
+from memebot import commands
+from memebot import config
+from memebot import db
+from memebot import log
+from memebot.integrations import twitter
+from memebot.lib import exception, util
 
 
 async def on_ready() -> None:
     """
     Determines what the bot does as soon as it is logged into discord
     """
+    memebot = get_memebot()
     if not memebot.user:
         raise exception.MemebotInternalError("Memebot is not logged in to Discord")
     log.info(f"Logged in as {memebot.user}")
@@ -36,7 +38,7 @@ async def on_interaction(interaction: discord.Interaction) -> None:
     """
     log.interaction(
         interaction,
-        f"{util.parse_invocation(interaction.data)} from {interaction.user}",
+        f"{util.parse_invocation(interaction)} from {interaction.user}",
     )
 
 
@@ -48,7 +50,7 @@ async def on_command_error(
         log.exception(error)
         return
 
-    invocation = util.parse_invocation(interaction.data)
+    invocation = util.parse_invocation(interaction)
 
     if isinstance(error, exception.MemebotInternalError):
         # For intentionally thrown internal errors
@@ -84,20 +86,22 @@ async def on_command_error(
     )
 
 
-memebot = discord.ext.commands.Bot(
-    command_prefix="!",
-    intents=discord.Intents().all(),
-    activity=discord.Game(name="• /hello"),
-)
+@functools.cache
+def get_memebot() -> discord.ext.commands.Bot:
+    new_memebot = discord.ext.commands.Bot(
+        command_prefix="/",
+        intents=discord.Intents().all(),
+        activity=discord.Game(name="• /hello"),
+    )
 
-memebot.tree.add_command(commands.hello)
-memebot.tree.add_command(commands.poll)
-memebot.tree.add_command(commands.role)
+    new_memebot.tree.add_command(commands.hello)
+    new_memebot.tree.add_command(commands.poll)
+    new_memebot.tree.add_command(commands.role)
 
-memebot.add_listener(on_ready)
-memebot.add_listener(on_interaction)
-memebot.tree.error(on_command_error)
-if config.twitter_enabled:
-    memebot.add_listener(twitter.process_message_for_interaction, "on_message")
+    new_memebot.add_listener(on_ready)
+    new_memebot.add_listener(on_interaction)
+    new_memebot.tree.error(on_command_error)
+    if config.twitter_enabled:
+        new_memebot.add_listener(twitter.process_message_for_interaction, "on_message")
 
-run = memebot.run
+    return new_memebot

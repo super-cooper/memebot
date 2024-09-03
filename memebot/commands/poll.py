@@ -6,7 +6,7 @@ import discord
 import discord.ext.commands
 import emoji
 
-from lib import constants, exception
+from memebot.lib import constants, exception
 
 
 @discord.app_commands.command(
@@ -35,7 +35,8 @@ async def poll(
     yes_no = False
     if len(choices) == 1:
         raise exception.MemebotUserError(
-            f"_Only 1 choice provided. {interaction.command.qualified_name} requires either 0 or 2+ choices!_"
+            f"_Only 1 choice provided. {interaction.command.qualified_name} "
+            f"requires either 0 or 2+ choices!_"
         )
     elif len(choices) == 0 or [c.lower() for c in choices] in (
         ["yes", "no"],

@@ -81,6 +81,28 @@ Leaving variables empty just means that default values will be used.
 
 ## Tests
 
+### pytest
+
+Memebot has a suite of unit tests based on [`pytest`](https://pytest.org). The test code
+is located in the [tests](./tests) directory. Running the tests is straightforward:
+
+```shell
+$ python3 -m pytest [/path/to/test/package/or/module]
+```
+
+Running the above from the root of the repository with no path(s) specified will run 
+all the tests.
+
+The tests can also be run from the _test_ Docker image:
+
+```shell
+$ docker run --rm -it --entrypoint python3 memebot:test -m pytest [/path/to/test/package/or/module]
+
+# OR
+
+$ docker-compose run --rm --entrypoint python3 bot -m pytest [/path/to/test/package/or/module]
+```
+
 ### mypy
 
 Memebot uses static type checking from [mypy](http://mypy-lang.org) to improve code correctness. The config
@@ -90,31 +112,31 @@ To run mypy locally, ensure it is installed to the same python environment as al
 Memebot dependencies, and then run it using the proper interpreter. 
 
 ```shell
-$ venv/bin/mypy src
+$ venv/bin/mypy memebot
 
 # OR
 
 $ source venv/bin/activate
-$ mypy src
+$ mypy memebot
 ```
 
 To run mypy in Docker, ensure you are using an image built from the `test` target. 
 
 ```shell
-$ docker run --rm -it --entrypoint mypy memebot:test src
+$ docker run --rm -it --entrypoint mypy memebot:test memebot
 
 # OR
 
-$ docker-compose run --rm --entrypoint mypy bot src
+$ docker-compose run --rm --entrypoint mypy bot memebot
 ```
 
 You can speed up subsequent runs of mypy by mounting the `.mypy-cache` directory as a volume.
 This way, mypy can reuse the cache it generates inside the container on the next run. 
 
 ```shell
-$ docker run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy -it memebot:test src
+$ docker run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy -it memebot:test memebot
 
 # OR
 
-$ docker-compose run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy bot src
+$ docker-compose run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy bot memebot
 ```
