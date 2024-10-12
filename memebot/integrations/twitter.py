@@ -1,10 +1,12 @@
 """
-This is a module for managing our integration with Twitter. It owns all metadata related to Twitter, and the only state
-it maintains is whether or not the API has been initialized.
+This is a module for managing our integration with Twitter.
+It owns all metadata related to Twitter,
+and the only state it maintains is whether the API has been initialized.
 
-All functions that make any network communication, except for init, should be asynchronous and stateless.
+All functions that make any network communication, except for init,
+should be asynchronous and stateless.
 """
-import asyncio
+
 import re
 from typing import Tuple
 
@@ -12,9 +14,9 @@ import discord
 import emoji
 import tweepy
 
-import config
-from lib import util
-from lib.exception import MemebotInternalError
+from memebot import config
+from memebot.lib import util
+from memebot.lib.exception import MemebotInternalError
 
 # Regular expression that describes the pattern of a Tweet URL
 twitter_url_pattern = re.compile(
@@ -155,9 +157,7 @@ async def process_message_for_interaction(message: discord.Message) -> None:
 
         # React with a numeric emoji to Tweets containing multiple images
         if (n_images := len(tweet_media)) > 1:
-            asyncio.create_task(
-                message.add_reaction(emoji.emojize(f":keycap_{n_images}:"))
-            )
+            await message.add_reaction(emoji.emojize(f":keycap_{n_images}:"))
         # For tweets containing only a single video, we embed the video in Discord.
         elif n_images == 1 and tweet_media[0].type in ("video", "animated_gif"):
             video_url = max(
@@ -170,14 +170,12 @@ async def process_message_for_interaction(message: discord.Message) -> None:
                 # Choose the variant with the highest bitrate
                 key=lambda v: int(v.get("bitrate", -1)),
             )["url"]
-            asyncio.create_task(
-                message.channel.send(
-                    f"embedded video:\n"
-                    f"{util.maybe_make_link_spoiler(video_url, spoiled)}"
-                )
+            await message.channel.send(
+                f"embedded video:\n"
+                f"{util.maybe_make_link_spoiler(video_url, spoiled)}"
             )
 
         # Post quote tweet links.
         if is_quote_tweet(tweet_info) and message.author != bot_user:
             quote_tweet_urls = get_quote_tweet_urls(tweet_info, spoiled)
-            asyncio.create_task(message.channel.send(quote_tweet_urls))
+            await message.channel.send(quote_tweet_urls)
