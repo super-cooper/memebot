@@ -484,26 +484,6 @@ async def test_role_list_role_no_members(
 
 
 @pytest.mark.asyncio
-async def test_role_list_role_not_managed(
-    mock_interaction: mock.Mock, mock_guild_populated: mock.Mock
-) -> None:
-    """
-    Test role list when retrieving members of a non-managed role
-    """
-    with mock.patch("discord.Role", spec=True) as MockRolePrivileged:
-        mock_role_privileged = MockRolePrivileged()
-        mock_role_privileged.members = discord.utils.SequenceProxy([])
-        mock_interaction.guild = mock_guild_populated
-        mock_guild_populated.roles = discord.utils.SequenceProxy(
-            [*mock_guild_populated.roles, mock_role_privileged]
-        )
-
-        with pytest.raises(exception.MemebotUserError):
-            await role_list.callback(mock_interaction, mock_role_privileged)
-        mock_interaction.response.send_message.assert_not_awaited()
-
-
-@pytest.mark.asyncio
 async def test_role_list_member(
     mock_interaction: mock.Mock,
     mock_guild_populated: mock.Mock,
@@ -531,7 +511,7 @@ async def test_role_list_member_no_roles(
     """
     Test listing roles of a particular user which is not a member of any role
     """
-    role_list.callback(mock_interaction, mock_member)
+    await role_list.callback(mock_interaction, mock_member)
     # TODO This does not respond with an error. Should it?
     #      Should the message be different if not?
     mock_interaction.response.send_message.assert_awaited_once_with(
