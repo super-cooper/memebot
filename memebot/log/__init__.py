@@ -3,7 +3,7 @@ import contextlib
 import logging
 from typing import cast, Any, TYPE_CHECKING
 
-import config
+from memebot import config
 from . import formatter, logger
 
 config.log_location.setFormatter(formatter.MemeBotLogFormatter())

@@ -23,8 +23,8 @@ RUN python3 -m pip install --no-cache-dir -r tests/requirements.txt
 FROM python:3.9.6-slim as run-base
 WORKDIR /opt/memebot/
 ENV PATH="/opt/venv/bin:$PATH"
-COPY src src
-ENTRYPOINT ["python3", "src/main.py"]
+COPY memebot memebot
+ENTRYPOINT ["python3", "memebot/main.py"]
 
 # Run release build.
 FROM run-base as release
@@ -32,4 +32,5 @@ COPY --from=build /opt/venv /opt/venv
 
 # Run test build.
 FROM run-base as test
+COPY tests tests
 COPY --from=build-test /opt/venv /opt/venv
