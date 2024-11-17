@@ -1,42 +1,67 @@
 import atexit
 import contextlib
 import logging
-from typing import cast, Any, TYPE_CHECKING
+from typing import cast, Any
+
+import discord
 
 from memebot import config
 from . import formatter, logger
 
-config.log_location.setFormatter(formatter.MemeBotLogFormatter())
-logging.setLoggerClass(logger.MemeBotLogger)
-
-# We use a project-wide logger because of how we shim metadata into log statements
-memebot_logger = cast(logger.MemeBotLogger, logging.getLogger("memebot"))
-
-# Redirect all stdout to a logger, as some packages in the stdlib still use print
-# for debug messages
-stdout_logger = logging.getLogger("stdout")
-contextlib.redirect_stdout(stdout_logger).__enter__()  # type: ignore[type-var]
-
-# Ensure the handler is properly flushed when MemeBot is killed
-atexit.register(logging.shutdown)
+memebot_logger: logger.MemeBotLogger
+stdout_logger: logging.Logger
 
 
-# Forward memebot_logger's logging methods as module-level functions
-debug = memebot_logger.debug
-info = memebot_logger.info
-warning = memebot_logger.warning
-error = memebot_logger.error
-critical = memebot_logger.critical
-log = memebot_logger.log
-exception = memebot_logger.exception
+def log(level: int, msg: str, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.log(level, msg, *args, **kwargs)
 
-# discord is imported as late as possible to ensure its logger is set properly
-if TYPE_CHECKING:
-    import discord
+
+def debug(msg: str, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.debug(msg, *args, **kwargs)
+
+
+def info(msg: str, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.info(msg, *args, **kwargs)
+
+
+def warning(msg: str, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.warning(msg, *args, **kwargs)
+
+
+def error(msg: str, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.error(msg, *args, **kwargs)
+
+
+def critical(msg: str, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.critical(msg, *args, **kwargs)
+
+
+def exception(msg: str, exc_info: Any = True, *args: Any, **kwargs: Any) -> None:
+    memebot_logger.exception(msg, *args, exc_info=exc_info, **kwargs)
+
+
+def configure_logging() -> None:
+    config.populate_config_from_command_line()
+
+    config.log_location.setFormatter(formatter.MemeBotLogFormatter())
+    logging.setLoggerClass(logger.MemeBotLogger)
+
+    # We use a project-wide logger because of how we shim metadata into log statements
+    global memebot_logger
+    memebot_logger = cast(logger.MemeBotLogger, logging.getLogger("memebot"))
+
+    # Redirect all stdout to a logger, as some packages in the stdlib still use print
+    # for debug messages
+    global stdout_logger
+    stdout_logger = logging.getLogger("stdout")
+    contextlib.redirect_stdout(stdout_logger).__enter__()  # type: ignore[type-var]
+
+    # Ensure the handler is properly flushed when MemeBot is killed
+    atexit.register(logging.shutdown)
 
 
 def interaction(
-    inter: "discord.Interaction",
+    inter: discord.Interaction,
     msg: str,
     level: int = logging.INFO,
     *args: Any,
