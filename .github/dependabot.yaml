@@ -6,10 +6,42 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
       interval: weekly
       day: saturday
       time: "08:00"
-      timezone: "America/Chicago"
+      timezone: America/New_York
+    labels:
+      - dependencies
+
+  - package-ecosystem: docker
+    directory: /docker
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "08:00"
+      timezone: America/New_York
+    labels:
+      - dependencies
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "08:00"
+      timezone: America/New_York
+    labels:
+      - dependencies
+
+  - package-ecosystem: pip
+    directory: /tests
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "08:00"
+      timezone: America/New_York
+    labels:
+      - dependencies

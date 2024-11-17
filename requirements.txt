@@ -1,6 +1,6 @@
-discord.py==2.1.0
-emoji==2.0.0
-pymongo
-pymongo-stubs
-tweepy==4.12.1
-types-emoji==2.0.0
+discord.py~=2.1.0
+emoji~=2.0.0
+pymongo~=3.13.0
+pymongo-stubs~=0.2.0
+tweepy~=4.12.0
+types-emoji~=2.0.0
