@@ -21,8 +21,6 @@ exclude = [
 
 [[tool.mypy.overrides]]
 module = [
-    # tweepy does not provide type annotations, but it is desired for 4.x
-    "tweepy",
     # This module in discord.py does not have full stubs for some reason
     "discord.ext.commands",
 ]

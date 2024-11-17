@@ -12,29 +12,19 @@ See [Configuration](#configuration) for more context.
 
 ```
 usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN]
-               [--twitter-api-consumer-key TWITTER_API_CONSUMER_KEY]
-               [--twitter-api-consumer-secret TWITTER_API_CONSUMER_SECRET]
-               [--twitter-api-bearer-token TWITTER_API_BEARER_TOKEN]
                [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL} | -v]
                [--log-location {stdout,stderr,syslog,/path/to/file}]
-               [--no-twitter] [--nodb] [--database-uri DATABASE_URI]
+               [--nodb] [--database-uri DATABASE_URI]
 
 optional arguments:
   -h, --help            show this help message and exit
   --discord-api-token DISCORD_API_TOKEN
                         The Discord API client token
-  --twitter-api-consumer-key TWITTER_API_CONSUMER_KEY
-                        (DEPRECATED) The Twitter API consumer key
-  --twitter-api-consumer-secret TWITTER_API_CONSUMER_SECRET
-                        (DEPRECATED) The Twitter API consumer secret
-  --twitter-api-bearer-token TWITTER_API_BEARER_TOKEN
-                        The Twitter API OAuth 2.0 bearer token
   --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         Set logging level
   -v, --verbose         Use verbose logging. Equivalent to --log-level DEBUG
   --log-location {stdout,stderr,syslog,/path/to/file}
                         Set the location for MemeBot's log
-  --no-twitter          Disable Twitter integration
   --nodb                Disable the database connection, and all features
                         which require it.
   --database-uri DATABASE_URI

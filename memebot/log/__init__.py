@@ -21,18 +21,6 @@ contextlib.redirect_stdout(stdout_logger).__enter__()  # type: ignore[type-var]
 atexit.register(logging.shutdown)
 
 
-def set_third_party_logging() -> None:
-    """
-    Enable logging on third-party packages that can't be overwritten with MemeBotLogger
-    """
-    # Tweepy does not use a unified logger, so the best we can do is
-    # enable its debug mode.
-    import asyncio
-
-    if config.log_level == logging.getLevelName(logging.DEBUG):
-        asyncio.get_event_loop().set_debug(True)
-
-
 # Forward memebot_logger's logging methods as module-level functions
 debug = memebot_logger.debug
 info = memebot_logger.info

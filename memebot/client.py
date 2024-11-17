@@ -8,7 +8,6 @@ from memebot import commands
 from memebot import config
 from memebot import db
 from memebot import log
-from memebot.integrations import twitter
 from memebot.lib import exception, util
 
 
@@ -22,8 +21,6 @@ async def on_ready() -> None:
     log.info(f"Logged in as {memebot.user}")
     synced = await memebot.tree.sync()
     log.info(f"Synced {len(synced)} command(s)")
-    if config.twitter_enabled:
-        twitter.init(memebot.user)
     if config.database_enabled:
         db_online = db.test()
         if db_online:
@@ -101,7 +98,5 @@ def get_memebot() -> discord.ext.commands.Bot:
     new_memebot.add_listener(on_ready)
     new_memebot.add_listener(on_interaction)
     new_memebot.tree.error(on_command_error)
-    if config.twitter_enabled:
-        new_memebot.add_listener(twitter.process_message_for_interaction, "on_message")
 
     return new_memebot
