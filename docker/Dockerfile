@@ -1,4 +1,4 @@
-FROM python:3.9.6-slim as build
+FROM python:3.13.0-slim as build
 WORKDIR /opt/memebot/
 
 # Install requirements.
@@ -20,7 +20,7 @@ COPY tests tests
 RUN python3 -m pip install --no-cache-dir -r tests/requirements.txt
 
 # Prepare run image.
-FROM python:3.9.6-slim as run-base
+FROM python:3.13.0-slim as run-base
 WORKDIR /opt/memebot/
 ENV PATH="/opt/venv/bin:$PATH"
 COPY memebot memebot
