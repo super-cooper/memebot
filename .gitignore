@@ -108,7 +108,6 @@ venv.bak/
 # project specific
 client_token
 data/
-twitter_api_tokens.json
 .vscode/
 .env
 

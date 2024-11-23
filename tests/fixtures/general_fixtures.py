@@ -4,16 +4,14 @@ from unittest import mock
 import pytest
 
 from memebot import config
-from memebot.integrations import twitter
 
 DEFAULT_ENVIRONMENT = os.environ | {
     "MEMEBOT_DISCORD_CLIENT_TOKEN": "MOCK_TOKEN",
-    "MEMEBOT_TWITTER_ENABLED": "False",
 }
 
 
 @pytest.fixture(autouse=True)
-def setup_and_teardown(mock_twitter_client: mock.Mock) -> None:
+def setup_and_teardown() -> None:
     """
     This is a universal setup and teardown function which is automatically run
     surrounding each test. The function contains both the setup and teardown behavior.
@@ -25,9 +23,7 @@ def setup_and_teardown(mock_twitter_client: mock.Mock) -> None:
     os.environ = DEFAULT_ENVIRONMENT
 
     with mock.patch("argparse.ArgumentParser", mock.MagicMock()):
-        with mock.patch("tweepy.Client", lambda *_, **__: mock_twitter_client):
-            config.populate_config_from_command_line()
-            twitter.init(mock.MagicMock())
+        config.populate_config_from_command_line()
 
     # Run test
     yield
