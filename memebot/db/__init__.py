@@ -3,9 +3,6 @@ from .internals import DatabaseInternals
 
 db_internals = DatabaseInternals()
 
-if config.database_enabled:
-    db_internals.connect()
-
 
 def test() -> bool:
     """

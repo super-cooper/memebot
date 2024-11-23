@@ -44,7 +44,9 @@ async def on_command_error(
 ) -> None:
     command = interaction.command
     if not isinstance(command, discord.app_commands.Command):
-        log.exception(error)
+        log.critical(
+            "Non-command error handled by command error handler!", exc_info=error
+        )
         return
 
     invocation = util.parse_invocation(interaction)

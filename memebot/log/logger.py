@@ -36,8 +36,8 @@ class MemeBotLogger(logging.Logger, io.IOBase):
     accross all modules
     """
 
-    def __init__(self, name: str, level: Union[int, str] = config.log_level):
-        super(MemeBotLogger, self).__init__(name, level)
+    def __init__(self, name: str, level: Optional[Union[int, str]] = None):
+        super(MemeBotLogger, self).__init__(name, level or config.log_level)
         self.propagate = False
         self.is_interactive = sys.stdin.isatty() or "pydev" in repr(
             __builtins__.get("__import__")  # type: ignore[attr-defined]
@@ -96,7 +96,7 @@ class MemeBotLogger(logging.Logger, io.IOBase):
         """
         # This means we are in interactive mode, in which case peeking at the stack
         # can get very wonky
-        if self.is_interactive:
+        if self.is_interactive and sys.__stdout__:
             sys.__stdout__.writelines([msg])
         elif msg and not msg.isspace():
             # Capture the stack here, on a line without the string "print(" in it
