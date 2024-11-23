@@ -24,7 +24,8 @@ FROM python:3.13.0-slim AS run-base
 WORKDIR /opt/memebot/
 ENV PATH="/opt/venv/bin:$PATH"
 COPY memebot memebot
-ENTRYPOINT ["python3", "memebot/main.py"]
+COPY main.py main.py
+ENTRYPOINT ["python3", "main.py"]
 
 # Run release build.
 FROM run-base AS release
