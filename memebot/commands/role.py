@@ -2,6 +2,7 @@ from typing import Optional, Any, Union
 
 import discord
 
+from memebot import log
 from memebot.lib import exception
 
 
@@ -115,6 +116,9 @@ async def create(interaction: discord.Interaction, role_name: str) -> None:
         new_role = await guild.create_role(
             name=target_name, mentionable=True, reason=get_reason(author.name)
         )
+        log.interaction(
+            interaction, f"Created new role @{target_name} for {author.name}"
+        )
     except discord.Forbidden:
         raise RolePermissionError("create", target_name)
     except discord.HTTPException:
@@ -141,6 +145,9 @@ async def delete(
 
     try:
         await target_role.delete(reason=get_reason(interaction.user.name))
+        log.interaction(
+            interaction, f"Deleted role @{target_role.name} for {interaction.user.name}"
+        )
     except discord.Forbidden:
         raise RolePermissionError("delete", target_role.name)
     except discord.HTTPException:
@@ -169,6 +176,7 @@ async def join(
         )
     try:
         await author.add_roles(target_role, reason=get_reason(author.name))
+        log.interaction(interaction, f"Added {author.name} to role @{target_role.name}")
     except discord.Forbidden:
         raise RolePermissionError("join", target_role.name)
     except discord.HTTPException:
@@ -200,6 +208,9 @@ async def leave(
 
     try:
         await author.remove_roles(target_role, reason=get_reason(author.name))
+        log.interaction(
+            interaction, f"Removed {author.name} from role @{target_role.name}"
+        )
     except discord.Forbidden:
         raise RolePermissionError("leave", target_role.name)
     except discord.HTTPException:
@@ -238,6 +249,10 @@ async def role_list(
         member_names.sort()
         member_names.insert(0, f"Members of `@{target.name}`:")
 
+        log.interaction(
+            interaction,
+            f"Listed members of @{target.name} for {interaction.user.name}",
+        )
         await interaction.response.send_message("\n- ".join(member_names))
     else:
         bot_user = interaction.client.user
@@ -261,4 +276,5 @@ async def role_list(
             0,
             f"Roles {usr_msg}managed through `/role` command:",
         )
+        log.interaction(interaction, f"Listed roles for {interaction.user.name}")
         await interaction.response.send_message("\n- ".join(roles))
