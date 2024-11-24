@@ -4,8 +4,20 @@ name: mypy
 on:
   push:
     branches: ["master"]
+    paths:
+      - "requirements.txt"
+      - "tests/requirements.txt"
+      - "**.py"
+      - "pyproject.toml"
+      - "docker/*"
   pull_request:
     branches: ["master"]
+    paths:
+      - "requirements.txt"
+      - "tests/requirements.txt"
+      - "**.py"
+      - "pyproject.toml"
+      - "docker/*"
 
 jobs:
   mypy:
