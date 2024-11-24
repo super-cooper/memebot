@@ -1,4 +1,6 @@
+import logging
 import os
+import sys
 from unittest import mock
 
 import pytest
@@ -26,6 +28,8 @@ def setup_and_teardown() -> None:
     with mock.patch("argparse.ArgumentParser", mock.MagicMock()):
         config.populate_config_from_command_line()
 
+    config.log_level = logging.DEBUG
+    config.log_location = logging.StreamHandler(sys.stdout)
     log.configure_logging()
 
     # Run test
