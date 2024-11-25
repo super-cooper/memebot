@@ -8,9 +8,10 @@ on:
     types: ["completed"]
   pull_request:
     paths:
-      - docker/*
-      - requirements.txt
-      - .dockerignore
+      - "docker/*"
+      - "requirements.txt"
+      - "pyproject.toml"
+      - ".dockerignore"
 
 env:
   # Use docker.io for Docker Hub if empty
