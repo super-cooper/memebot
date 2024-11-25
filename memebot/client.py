@@ -94,7 +94,6 @@ def get_memebot() -> discord.ext.commands.Bot:
     )
 
     new_memebot.tree.add_command(commands.hello)
-    new_memebot.tree.add_command(commands.poll)
     new_memebot.tree.add_command(commands.role)
 
     new_memebot.add_listener(on_ready)
