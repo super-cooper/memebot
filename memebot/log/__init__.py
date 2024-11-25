@@ -41,8 +41,6 @@ def exception(msg: str, exc_info: Any = True, *args: Any, **kwargs: Any) -> None
 
 
 def configure_logging() -> None:
-    config.populate_config_from_command_line()
-
     config.log_location.setFormatter(formatter.MemeBotLogFormatter())
     logging.setLoggerClass(logger.MemeBotLogger)
 
