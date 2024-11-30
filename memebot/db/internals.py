@@ -1,6 +1,7 @@
 from typing import Optional
 
 import pymongo as mongo
+import pymongo.database
 
 from memebot import config
 
