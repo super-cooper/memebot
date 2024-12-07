@@ -25,6 +25,9 @@ updates:
       timezone: America/New_York
     labels:
       - dependencies
+    ignore:
+      - dependency-name: '\*'
+        update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: pip
     directory: /
@@ -35,3 +38,6 @@ updates:
       timezone: America/New_York
     labels:
       - dependencies
+    ignore:
+      - dependency-name: '\*'
+        update-types: ["version-update:semver-patch"]

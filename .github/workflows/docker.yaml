@@ -12,6 +12,8 @@ on:
       - "requirements.txt"
       - "pyproject.toml"
       - ".dockerignore"
+  schedule:
+    - cron: '05 22 * * 6'
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -24,7 +26,7 @@ env:
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} || {{ github.event_name == 'pull_request' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} || {{ github.event_name == 'pull_request' }} || "${{ github.event_name }}" == "schedule"
     runs-on: ubuntu-latest
     permissions:
       contents: read
