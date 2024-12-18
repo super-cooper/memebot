@@ -378,7 +378,9 @@ async def test_role_list_all_roles(
     mock_interaction.guild = mock_guild_populated
     await role_list.callback(mock_interaction, None)
     expected_output = f"Roles managed through `/role` command:\n- bar\n- baz\n- foo"
-    mock_interaction.response.send_message.assert_awaited_once_with(expected_output)
+    mock_interaction.response.send_message.assert_awaited_once_with(
+        content=expected_output, ephemeral=True
+    )
 
 
 @pytest.mark.asyncio
@@ -395,7 +397,9 @@ async def test_role_list_no_roles(
     mock_interaction.guild = mock_guild
     await role_list.callback(mock_interaction, None)
     expected_output = f"Roles managed through `/role` command:"
-    mock_interaction.response.send_message.assert_awaited_once_with(expected_output)
+    mock_interaction.response.send_message.assert_awaited_once_with(
+        content=expected_output, ephemeral=True
+    )
 
 
 @pytest.mark.asyncio
@@ -414,7 +418,9 @@ async def test_role_list_user_own_roles(
     expected_output = (
         f"Roles for user {target.name} managed through `/role` command:\n- bar"
     )
-    mock_interaction.response.send_message.assert_awaited_once_with(expected_output)
+    mock_interaction.response.send_message.assert_awaited_once_with(
+        content=expected_output, ephemeral=True
+    )
 
 
 @pytest.mark.asyncio
@@ -434,7 +440,9 @@ async def test_role_list_other_user_roles(
         expected_output = (
             f"Roles for user {target.name} managed through `/role` command:\n- bar"
         )
-        mock_interaction.response.send_message.assert_awaited_once_with(expected_output)
+        mock_interaction.response.send_message.assert_awaited_once_with(
+            content=expected_output, ephemeral=True
+        )
 
 
 @pytest.mark.asyncio
@@ -448,7 +456,9 @@ async def test_role_list_user_no_roles(
     mock_interaction.guild = mock_guild_populated
     await role_list.callback(mock_interaction, target)
     expected_output = f"Roles for user {target.name} managed through `/role` command:"
-    mock_interaction.response.send_message.assert_awaited_once_with(expected_output)
+    mock_interaction.response.send_message.assert_awaited_once_with(
+        content=expected_output, ephemeral=True
+    )
 
 
 @pytest.mark.asyncio
@@ -465,7 +475,9 @@ async def test_role_list_role(
     mock_interaction.guild = mock_guild_populated
     await role_list.callback(mock_interaction, mock_role_bar)
     expected = f"Members of `@{mock_role_bar.name}`:\n- {user.nick} ({user.name})"
-    mock_interaction.response.send_message.assert_awaited_once_with(expected)
+    mock_interaction.response.send_message.assert_awaited_once_with(
+        content=expected, ephemeral=True
+    )
 
 
 @pytest.mark.asyncio
@@ -497,8 +509,11 @@ async def test_role_list_member(
     mock_interaction.guild = mock_guild_populated
     await role_list.callback(mock_interaction, mock_member)
     mock_interaction.response.send_message.assert_awaited_once_with(
-        f"Roles for user {mock_member.name} managed through `/role` command:"
-        f"\n- {mock_role_bar.name}"
+        content=(
+            f"Roles for user {mock_member.name} managed through `/role` command:"
+            f"\n- {mock_role_bar.name}"
+        ),
+        ephemeral=True,
     )
 
 
@@ -515,5 +530,6 @@ async def test_role_list_member_no_roles(
     # TODO This does not respond with an error. Should it?
     #      Should the message be different if not?
     mock_interaction.response.send_message.assert_awaited_once_with(
-        f"Roles for user {mock_member.name} managed through `/role` command:"
+        content=f"Roles for user {mock_member.name} managed through `/role` command:",
+        ephemeral=True,
     )
