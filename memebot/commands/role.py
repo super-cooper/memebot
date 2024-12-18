@@ -253,7 +253,9 @@ async def role_list(
             interaction,
             f"Listed members of @{target.name} for {interaction.user.name}",
         )
-        await interaction.response.send_message("\n- ".join(member_names))
+        await interaction.response.send_message(
+            content="\n- ".join(member_names), ephemeral=True
+        )
     else:
         bot_user = interaction.client.user
         if not bot_user:
@@ -277,4 +279,6 @@ async def role_list(
             f"Roles {usr_msg}managed through `/role` command:",
         )
         log.interaction(interaction, f"Listed roles for {interaction.user.name}")
-        await interaction.response.send_message("\n- ".join(roles))
+        await interaction.response.send_message(
+            content="\n- ".join(roles), ephemeral=True
+        )
