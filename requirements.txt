@@ -1,4 +1,4 @@
-audioop-lts~=0.2.0
+audioop-lts~=0.2.1
 discord.py~=2.4.0
 emoji~=2.14.0
 pymongo~=4.10.1
