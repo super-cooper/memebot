@@ -7,6 +7,7 @@ from memebot.lib import exception
 
 URL_REGEX = r"https?://\S+"
 
+
 @discord.app_commands.command()
 async def paywall(interaction: discord.Interaction, link: str) -> None:
     """
@@ -47,6 +48,7 @@ def extract_link(message: discord.Message) -> str:
 
     raise exception.MemebotUserError("Cannot extract link from replied-to message")
 
+
 def remove_params(url: str) -> str:
     """Remove the pesky query parameters from the given URL"""
-    return url.partition('?')[0]
+    return url.partition("?")[0]
