@@ -23,7 +23,7 @@ async def paywall(interaction: discord.Interaction, link: str) -> None:
     )
 
 
-@discord.app_commands.context_menu(name="paywall")
+@discord.app_commands.context_menu(name="Remove paywall")
 async def paywall_context_menu(
     interaction: discord.Interaction, message: discord.Message
 ) -> None:
