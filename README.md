@@ -41,9 +41,11 @@ To see which environment variables can be used to configure Memebot, see [templa
 
 Current commands that can be used in Discord:
 
-    /hello - Say "hello" to Memebot!
-    /help  - Learn how to use Memebot
-    /role  - Self-contained role management
+    /hello   - Say "hello" to Memebot!
+    /help    - Learn how to use Memebot
+    /paywall - Remove paywall from a link (can also be performed as a context
+    menu action)
+    /role    - Self-contained role management
 
 ## Docker
 Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./docker/Dockerfile) in this 
