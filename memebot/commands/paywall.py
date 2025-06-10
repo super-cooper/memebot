@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, cast
 import re
 
 import discord
@@ -38,6 +38,6 @@ def extract_link(message: discord.Message) -> str:
     # This should return a list of strings:
     # https://docs.python.org/3/library/re.html#re.findall
     for match in re.findall(r"https?://\S+", message.content):
-        return match
+        return cast(str, match)
 
     raise exception.MemebotUserError("Cannot extract link from replied-to message")
