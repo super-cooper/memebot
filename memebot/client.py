@@ -95,6 +95,8 @@ def get_memebot() -> discord.ext.commands.Bot:
 
     new_memebot.tree.add_command(commands.hello)
     new_memebot.tree.add_command(commands.role)
+    new_memebot.tree.add_command(commands.paywall)
+    new_memebot.tree.add_command(commands.paywall_context_menu)
 
     new_memebot.add_listener(on_ready)
     new_memebot.add_listener(on_interaction)
