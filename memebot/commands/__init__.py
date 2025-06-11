@@ -5,7 +5,7 @@ from .paywall import paywall, paywall_context_menu
 from .role import role
 
 
-def register_commands(bot: discord.ext.commands.Bot):
+def register_commands(bot: discord.ext.commands.Bot) -> None:
     bot.tree.add_command(hello)
     bot.tree.add_command(role)
     bot.tree.add_command(paywall)
