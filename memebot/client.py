@@ -93,10 +93,7 @@ def get_memebot() -> discord.ext.commands.Bot:
         activity=discord.Game(name="• /hello"),
     )
 
-    new_memebot.tree.add_command(commands.hello)
-    new_memebot.tree.add_command(commands.role)
-    new_memebot.tree.add_command(commands.paywall)
-    new_memebot.tree.add_command(commands.paywall_context_menu)
+    commands.register_commands(new_memebot)
 
     new_memebot.add_listener(on_ready)
     new_memebot.add_listener(on_interaction)
