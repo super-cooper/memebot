@@ -2,5 +2,5 @@ audioop-lts~=0.2.1
 discord.py~=2.5.0
 emoji~=2.14.0
 pymongo~=4.12
-requests~=2.32.3
+requests~=2.32.4
 types-emoji~=2.1.0
