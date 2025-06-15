@@ -105,6 +105,9 @@ venv.bak/
 # GitHub
 .secrets
 
+# Vim
+*.swp
+
 # project specific
 client_token
 data/
