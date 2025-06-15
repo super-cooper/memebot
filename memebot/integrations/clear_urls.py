@@ -120,11 +120,10 @@ class ClearURLsProvider:
 
                 # If the redirection URI does not have a scheme,
                 # we borrow the scheme from its parent URL
+                scheme = ""
                 if not util.URL_REGEX.match(new_url):
                     original_scheme = urllib.parse.urlparse(url).scheme
                     scheme = f"{original_scheme}://"
-                else:
-                    scheme = ""
 
                 return f"{scheme}{new_url}"
 
@@ -135,10 +134,7 @@ class ClearURLsProvider:
         Strips the URL completely of any tracking data per the rules defined by
         this provider
         """
-        stripped = self.strip_params(url)
-        redirected = self.redirect(stripped)
-
-        return redirected
+        return self.redirect(self.strip_params(url))
 
     def __repr__(self) -> str:
         return self.provider
@@ -172,11 +168,12 @@ def _download_new_rules(rules_url: str) -> str:
     global rules_checksum
     rules_last_download = datetime.now(UTC)
     new_checksum = _compute_rules_checksum(data)
-    if new_checksum != rules_checksum:
-        rules_checksum = new_checksum
-        return data
 
-    return ""
+    if new_checksum == rules_checksum:
+        return ""
+
+    rules_checksum = new_checksum
+    return data
 
 
 class _ProviderSchema(pydantic.BaseModel):
@@ -243,7 +240,6 @@ def _convert_rules_to_providers(rules: str) -> list[ClearURLsProvider]:
         if new_provider:
             resolved_providers.append(new_provider)
 
-    log.info("Done.")
     return resolved_providers
 
 
@@ -259,10 +255,10 @@ def _refresh_providers() -> None:
             raise e
         log.warning(f"Failed to download new ClearURLs rules: {e}")
 
-    if new_rules:
-        new_providers = _convert_rules_to_providers(new_rules)
-        if new_providers:
-            providers = new_providers
+    if new_rules and (new_providers := _convert_rules_to_providers(new_rules)):
+        providers = new_providers
+
+    log.info("Done refreshing providers.")
 
 
 def strip_trackers(dirty_url: str) -> str:
