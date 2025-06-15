@@ -34,7 +34,7 @@ def setup_and_teardown() -> None:
     log.configure_logging()
 
     # Ensure rules are not refreshed automatically
-    config.clearurls_rules_refresh_hours = timedelta(days=365*1000)
+    config.clearurls_rules_refresh_hours = timedelta(days=365 * 1000)
 
     # Run test
     yield
