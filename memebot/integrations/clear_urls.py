@@ -200,7 +200,7 @@ def _json_to_provider(
     """
 
     try:
-        validated_data = _ProviderSchema(**provider_data)
+        validated_data = _ProviderSchema(**provider_data)  # type: ignore[arg-type]
     except pydantic.ValidationError as e:
         log.exception(f"ClearURLs provider {provider} failed validation", exc_info=e)
         return None
