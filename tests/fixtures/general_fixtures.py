@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from datetime import timedelta
 from unittest import mock
 
 import pytest
@@ -31,6 +32,9 @@ def setup_and_teardown() -> None:
     config.log_level = logging.DEBUG
     config.log_location = logging.StreamHandler(sys.stdout)
     log.configure_logging()
+
+    # Ensure rules are not refreshed automatically
+    config.clearurls_rules_refresh_hours = timedelta(days=365 * 1000)
 
     # Run test
     yield

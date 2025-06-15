@@ -13,10 +13,12 @@ See [Configuration](#configuration) for more context.
 ```
 usage: main.py [-h] [--discord-api-token DISCORD_API_TOKEN]
                [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL} | -v]
-               [--log-location {stdout,stderr,syslog,/path/to/file}]
-               [--nodb] [--database-uri DATABASE_URI]
+               [--log-location {stdout,stderr,syslog,/path/to/file}] [--nodb]
+               [--database-uri DATABASE_URI]
+               [--clearurls-rules-url CLEARURLS_RULES_URL]
+               [--clearurls-rules-refresh-hours CLEARURLS_RULES_REFRESH_HOURS]
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --discord-api-token DISCORD_API_TOKEN
                         The Discord API client token
@@ -29,6 +31,11 @@ optional arguments:
                         which require it.
   --database-uri DATABASE_URI
                         URI of the MongoDB database server
+  --clearurls-rules-url CLEARURLS_RULES_URL
+                        URL from which to download ClearURLs rules
+  --clearurls-rules-refresh-hours CLEARURLS_RULES_REFRESH_HOURS
+                        Number of hours to wait between (lazy) refreshes of
+                        ClearURLs rules
 ```
 
 ### Environment Variables
@@ -41,14 +48,16 @@ To see which environment variables can be used to configure Memebot, see [templa
 
 Current commands that can be used in Discord:
 
-    /hello   - Say "hello" to Memebot!
-    /help    - Learn how to use Memebot
-    /paywall - Remove paywall from a link (can also be performed as a context
-    menu action)
-    /role    - Self-contained role management
+    /hello    - Say "hello" to Memebot!
+    /help     - Learn how to use Memebot
+    /paywall  - Remove paywall from a link *
+    /role     - Self-contained role management
+    /trackers - Remove tracking metadata from a link *
+
+\*Can also be performed as a context menu action
 
 ## Docker
-Memebot has a straightforward Docker image that can be build based on the [Dockerfile](./docker/Dockerfile) in this 
+Memebot has a straightforward Docker image that can be built based on the [Dockerfile](./docker/Dockerfile) in this 
 repository. This image can be used for both deployment and testing purposes.
 
 The Memebot image is designed to be used as an "executable," since it is only designed to

@@ -7,6 +7,7 @@ import collections
 import logging
 import logging.handlers
 import sys
+from datetime import timedelta
 
 
 # Logging validators
@@ -24,3 +25,8 @@ def validate_log_location(location: str) -> logging.Handler:
 # Type validators
 def validate_bool(val: str) -> bool:
     return val.lower() in ("true", "yes", "y", "1")
+
+
+def validate_hour_int(val: str) -> timedelta:
+    as_int = int(val)
+    return timedelta(hours=as_int)
