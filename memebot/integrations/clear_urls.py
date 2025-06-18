@@ -4,10 +4,9 @@ import json
 import re
 import urllib.parse
 import urllib.request
+from dataclasses import dataclass
 from datetime import datetime, UTC
-from typing import cast
-
-import pydantic
+from typing import cast, Any
 
 from memebot import config
 from memebot import log
@@ -176,14 +175,37 @@ def _download_new_rules(rules_url: str) -> str:
     return data
 
 
-class _ProviderSchema(pydantic.BaseModel):
-    class Config:
-        extra = "ignore"
+@dataclass
+class _ProviderSchema:
 
-    urlPattern: str
+    @staticmethod
+    def _validate_list_str(data: Any, error_message: str) -> None:
+        if (
+            data is not None
+            and type(data) is not list
+            and not all(type(pattern) is str for pattern in data)
+        ):
+            raise TypeError(error_message)
+
+    def __post_init__(self) -> None:
+        """
+        Performs type validation on a newly constructed object.
+        Raises ``TypeError`` for any invalid data
+        """
+        if type(self.url_pattern) is not str:
+            raise TypeError(f"{self.url_pattern=}")
+        _ProviderSchema._validate_list_str(self.rules, f"{self.rules=}")
+        _ProviderSchema._validate_list_str(self.raw_rules, f"{self.raw_rules=}")
+        _ProviderSchema._validate_list_str(
+            self.referral_marketing, f"{self.referral_marketing=}"
+        )
+        _ProviderSchema._validate_list_str(self.redirections, f"{self.redirections=}")
+        _ProviderSchema._validate_list_str(self.exceptions, f"{self.exceptions=}")
+
+    url_pattern: str
     rules: list[str] | None = None
-    rawRules: list[str] | None = None
-    referralMarketing: list[str] | None = None
+    raw_rules: list[str] | None = None
+    referral_marketing: list[str] | None = None
     redirections: list[str] | None = None
     exceptions: list[str] | None = None
 
@@ -197,17 +219,25 @@ def _json_to_provider(
     """
 
     try:
-        validated_data = _ProviderSchema(**provider_data)  # type: ignore[arg-type]
-    except pydantic.ValidationError as e:
+        # These types are ignored because they are validated manually at runtime
+        validated_data = _ProviderSchema(
+            url_pattern=provider_data.get("urlPattern"),  # type: ignore[arg-type]
+            rules=provider_data.get("rules"),  # type: ignore[arg-type]
+            raw_rules=provider_data.get("rawRules"),  # type: ignore[arg-type]
+            referral_marketing=provider_data.get("referralMarketing"),  # type: ignore[arg-type]
+            redirections=provider_data.get("redirections"),  # type: ignore[arg-type]
+            exceptions=provider_data.get("exceptions"),  # type: ignore[arg-type]
+        )
+    except TypeError as e:
         log.exception(f"ClearURLs provider {provider} failed validation", exc_info=e)
         return None
 
     return ClearURLsProvider(
         provider,
-        validated_data.urlPattern,
+        validated_data.url_pattern,
         validated_data.rules,
-        validated_data.rawRules,
-        validated_data.referralMarketing,
+        validated_data.raw_rules,
+        validated_data.referral_marketing,
         validated_data.redirections,
         validated_data.exceptions,
     )
