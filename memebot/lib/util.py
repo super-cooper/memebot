@@ -1,7 +1,31 @@
-from typing import Tuple, List, Optional, cast
+import re
+from typing import Tuple, List, Optional, cast, get_origin, get_args, Union, Any
 
 import discord
 import discord.ext.commands
+
+from memebot.lib import exception
+
+URL_REGEX = re.compile(r"https?://\S+")
+
+
+def is_url(val: str) -> bool:
+    return bool(URL_REGEX.fullmatch(val.strip()))
+
+
+def extract_link(message: discord.Message) -> str:
+    """Extracts a link from the given message's embeds or content"""
+    # Try embeds first because it's easier and more reliable.
+    for embed in message.embeds:
+        if embed.url:
+            return embed.url
+
+    # This should return a list of strings:
+    # https://docs.python.org/3/library/re.html#re.findall
+    for match in URL_REGEX.findall(message.content):
+        return cast(str, match)
+
+    raise exception.MemebotUserError("Cannot extract link from replied-to message")
 
 
 def is_spoil(message: str, idx: int) -> bool:
@@ -73,3 +97,33 @@ def parse_invocation(interaction: discord.Interaction) -> str:
     else:
         prefix = ""
     return f"{prefix}{impl(cast(dict, interaction.data))}"
+
+
+def validate_type(data: Any, expected_type: type) -> bool:
+    """
+    Validates that given data matches an expected type. This is useful for
+    validation against raw input for which type annotations cannot guarantee
+    static correctness.
+    """
+    origin = get_origin(expected_type)
+    args = get_args(expected_type)
+
+    if origin is Union:
+        return any(validate_type(data, arg) for arg in args)
+
+    if origin is list:
+        if not isinstance(data, list):
+            return False
+        [item_type] = args
+        return all(validate_type(item, item_type) for item in data)
+
+    if origin is dict:
+        key_type, val_type = args
+        if not isinstance(data, dict):
+            return False
+        return all(
+            validate_type(k, key_type) and validate_type(v, val_type)
+            for k, v in data.items()
+        )
+
+    return isinstance(data, expected_type)

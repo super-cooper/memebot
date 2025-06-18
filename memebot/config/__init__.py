@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import urllib.parse
+from datetime import timedelta
 
 from memebot.config import validators
 
@@ -17,6 +18,11 @@ log_location: logging.Handler
 database_enabled: bool
 # MongoDB URI
 database_uri: urllib.parse.ParseResult
+
+# ClearURLs rules URL
+clearurls_rules_url: str
+# ClearURLs rules refresh duration
+clearurls_rules_refresh_hours: timedelta
 
 
 def populate_config_from_command_line() -> None:
@@ -87,6 +93,23 @@ def populate_config_from_command_line() -> None:
         type=urllib.parse.urlparse,
     )
 
+    # Third-party integrations
+    # ClearURLs
+    parser.add_argument(
+        "--clearurls-rules-url",
+        help="URL from which to download ClearURLs rules",
+        default=os.getenv(
+            "CLEARURLS_RULES_URL", "https://rules2.clearurls.xyz/data.minify.json"
+        ),
+        type=str,
+    )
+    parser.add_argument(
+        "--clearurls-rules-refresh-hours",
+        help="Number of hours to wait between (lazy) refreshes of ClearURLs rules",
+        default=os.getenv("CLEARURLS_RULES_REFRESH_HOURS", "24"),
+        type=validators.validate_hour_int,
+    )
+
     args = parser.parse_args()
 
     global discord_api_token
@@ -101,3 +124,8 @@ def populate_config_from_command_line() -> None:
     global database_uri
     database_enabled = args.database_enabled
     database_uri = args.database_uri
+
+    global clearurls_rules_url
+    global clearurls_rules_refresh_hours
+    clearurls_rules_url = args.clearurls_rules_url
+    clearurls_rules_refresh_hours = args.clearurls_rules_refresh_hours

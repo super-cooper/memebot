@@ -1,6 +1,5 @@
 from unittest import mock
 
-import discord.ext.commands
 import pytest
 
 from memebot import commands
