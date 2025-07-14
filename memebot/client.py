@@ -42,47 +42,47 @@ async def on_interaction(interaction: discord.Interaction) -> None:
 async def on_command_error(
     interaction: discord.Interaction, error: discord.app_commands.AppCommandError
 ) -> None:
-    command = interaction.command
-    if not isinstance(command, discord.app_commands.Command):
-        log.critical(
-            "Non-command error handled by command error handler!", exc_info=error
-        )
-        return
+    match interaction.command:
+        case None:
+            log.critical(
+                "Non-command error handled by command error handler!", exc_info=error
+            )
+            return
+        case discord.app_commands.Command():
+            invocation = util.parse_invocation(interaction)
+        case _:
+            invocation = interaction.command.name
 
-    invocation = util.parse_invocation(interaction)
+    match error:
+        case exception.MemebotInternalError():
+            # For intentionally thrown internal errors
+            log.interaction(
+                interaction,
+                f"Raised an internal exception: ",
+                level=logging.WARNING,
+                exc_info=error,
+            )
+            err_msg = f"Internal error occurred with `{invocation}`"
+        case exception.MemebotUserError():
+            # If the error is user-facing, we want to send it directly to the user
+            err_msg = str(error)
+            log.interaction(interaction, err_msg)
+        case _:
+            # For uncaught exceptions
+            # (discord.py wraps these in a CommandInvokeError and re-raises)
+            if isinstance(error, discord.app_commands.CommandInvokeError):
+                exc_info = error.original
+            else:
+                exc_info = error
+            log.interaction(
+                interaction,
+                f"Raised an unhandled exception: ",
+                exc_info=exc_info,
+                level=logging.ERROR,
+            )
+            err_msg = f"Unhandled error occurred with `{invocation}`"
 
-    if isinstance(error, exception.MemebotInternalError):
-        # For intentionally thrown internal errors
-        log.interaction(
-            interaction,
-            f"Raised an internal exception: ",
-            level=logging.WARNING,
-            exc_info=error,
-        )
-        err_msg = f"Internal error occurred with `{invocation}`"
-    elif isinstance(error, exception.MemebotUserError):
-        # If the error is user-facing, we want to send it directly to the user
-        err_msg = str(error)
-        log.interaction(interaction, err_msg)
-    else:
-        # For uncaught exceptions
-        # (discord.py wraps these in a CommandInvokeError and re-raises)
-        if isinstance(error, discord.app_commands.CommandInvokeError):
-            original = error.original
-        else:
-            original = error
-        log.interaction(
-            interaction,
-            f"Raised an unhandled exception: ",
-            exc_info=original,
-            level=logging.ERROR,
-        )
-        err_msg = f"Unhandled error occurred with `{invocation}`"
-
-    await interaction.response.send_message(
-        err_msg,
-        ephemeral=True,
-    )
+    await interaction.response.send_message(err_msg, ephemeral=True)
 
 
 @functools.cache
