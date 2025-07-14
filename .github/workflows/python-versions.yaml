@@ -1,0 +1,37 @@
+---
+name: Verify Python Versions
+
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - "docker/*"
+      - "pyproject.toml"
+      - ".github/workflows/*.yaml"
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "docker/*"
+      - "pyproject.toml"
+      - ".github/workflows/*.yaml"
+
+jobs:
+  verify-python-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Verify Python versions
+        run: |
+          python verify_python_versions.py \
+            docker/Dockerfile \
+            pyproject.toml \
+            ".github/workflows/mypy.yaml,\
+            .github/workflows/black.yaml,\
+            .github/workflows/pytest.yaml"
