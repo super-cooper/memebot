@@ -9,34 +9,40 @@ from memebot import config
 from . import formatter, logger
 
 memebot_logger: logger.MemeBotLogger
-stdout_logger: logging.Logger
 
 
 def log(level: int, msg: str, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.log(level, msg, *args, **kwargs)
 
 
 def debug(msg: str, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.debug(msg, *args, **kwargs)
 
 
 def info(msg: str, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.info(msg, *args, **kwargs)
 
 
 def warning(msg: str, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.warning(msg, *args, **kwargs)
 
 
 def error(msg: str, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.error(msg, *args, **kwargs)
 
 
 def critical(msg: str, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.critical(msg, *args, **kwargs)
 
 
 def exception(msg: str, exc_info: Any = True, *args: Any, **kwargs: Any) -> None:
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.exception(msg, *args, exc_info=exc_info, **kwargs)
 
 
@@ -50,7 +56,6 @@ def configure_logging() -> None:
 
     # Redirect all stdout to a logger, as some packages in the stdlib still use print
     # for debug messages
-    global stdout_logger
     stdout_logger = logging.getLogger("stdout")
     contextlib.redirect_stdout(stdout_logger).__enter__()  # type: ignore[type-var]
 
@@ -69,5 +74,6 @@ def interaction(
     Logging wrapper to prefix a log message with the interaction ID. This is helpful
     for tracking the information flow for an interaction.
     """
+    kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     # Highlight the interaction id
     log(level, f"\033[1mInteraction {inter.id}\033[22m {msg}", *args, **kwargs)
