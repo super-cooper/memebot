@@ -1,5 +1,5 @@
 discord.py~=2.5.0
 emoji~=2.14.0
-pymongo~=4.13
+pymongo~=4.14
 requests~=2.32.3
 types-emoji~=2.1.0
