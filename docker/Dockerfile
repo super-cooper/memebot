@@ -1,4 +1,4 @@
-FROM python:3.13.6-slim AS build
+FROM python:3.13.7-slim AS build
 WORKDIR /opt/memebot/
 
 # Install requirements.
@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 RUN \
     apt-get update -y && \
     # gcc is required to build package aiohttp (https://docs.aiohttp.org/en/stable/) required by discord.py
-    apt-get install --no-install-recommends -y gcc=4:12.2.0-3 && \
+    apt-get install --no-install-recommends -y gcc=4:14.2.0-1 && \
     # Remove apt lists
     rm -rf /var/lib/apt/lists/*
 
@@ -20,7 +20,7 @@ COPY tests tests
 RUN python3 -m pip install --no-cache-dir -r tests/requirements.txt
 
 # Prepare run image.
-FROM python:3.13.6-slim AS run-base
+FROM python:3.13.7-slim AS run-base
 WORKDIR /opt/memebot/
 ENV PATH="/opt/venv/bin:$PATH"
 COPY memebot memebot
