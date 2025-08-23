@@ -1,4 +1,4 @@
-discord.py~=2.5.0
+discord.py~=2.6.0
 emoji~=2.14.0
 pymongo~=4.14
 requests~=2.32.3
