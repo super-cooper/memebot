@@ -20,6 +20,7 @@ Returns:
     Exit code 0 if all versions are consistent
     Exit code 1 if any inconsistencies are found or errors occur
 """
+
 import re
 import sys
 from dataclasses import dataclass
