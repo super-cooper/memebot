@@ -15,7 +15,7 @@ async def paywall(interaction: discord.Interaction, link: str) -> None:
     link = remove_params(link)
 
     await interaction.response.send_message(
-        f"Link without paywall: https://web.archive.org/web/{link}"
+        f"Link without paywall: https://archive.is/newest/{link}"
     )
 
 
@@ -25,7 +25,7 @@ async def paywall_context_menu(
 ) -> None:
     link = remove_params(util.extract_link(message))
     await interaction.response.send_message(
-        f"Link without paywall: https://web.archive.org/web/{link}"
+        f"Link without paywall: https://archive.is/newest/{link}"
     )
 
 
