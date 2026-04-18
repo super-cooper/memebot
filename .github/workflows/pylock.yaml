@@ -30,8 +30,8 @@ jobs:
 
       - name: Regenerate pylock.toml
         run: |
-          uv venv && \
-          uv pip install --upgrade pip && \
+          uv venv
+          uv pip install --upgrade pip
           uv run pip lock . --group dev
 
       - name: Commit updated pylock.toml if changed
