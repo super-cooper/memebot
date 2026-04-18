@@ -149,7 +149,6 @@ name = "memebot"
 
 [packages.directory]
 path = "."
-editable = true
 
 [[packages]]
 name = "multidict"
