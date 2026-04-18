@@ -1,5 +1,5 @@
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Union, cast, get_args, get_origin
 
 import discord
@@ -32,7 +32,7 @@ def extract_link(message: discord.Message) -> str:
 def parse_invocation(interaction: discord.Interaction) -> str:
     """Returns the command invocation parsed from the raw interaction data"""
 
-    def impl(data: discord.types.interactions.InteractionData) -> str:
+    def impl(data: Mapping[str, object]) -> str:
         out = []
         name = data.get("name")
         options = data.get("options", [])
@@ -41,7 +41,7 @@ def parse_invocation(interaction: discord.Interaction) -> str:
             out.append(value)
         elif name:
             out.append(name)
-        if type(options) is Sequence[discord.types.interactions.InteractionData]:
+        if type(options) is Sequence[Mapping[str, object]]:
             for option in options:
                 out.append(impl(option))
 
