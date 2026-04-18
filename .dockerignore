@@ -6,3 +6,7 @@
 data/
 docker/
 venv/
+.venv/
+.pytest_cache/
+**/__pycache__/
+.secrets/

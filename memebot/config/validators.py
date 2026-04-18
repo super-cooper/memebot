@@ -18,7 +18,7 @@ def validate_log_location(location: str) -> logging.Handler:
             "stdout": logging.StreamHandler(sys.stdout),
             "stderr": logging.StreamHandler(sys.stderr),
             "syslog": logging.handlers.SysLogHandler(),
-        }
+        },
     )[location]
 
 

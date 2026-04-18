@@ -12,7 +12,7 @@ on:
     paths:
       - "docker/Dockerfile"
   schedule:
-    - cron: '42 22 * * 6'
+    - cron: '42 05 * * 6'
 
 permissions:
   contents: read

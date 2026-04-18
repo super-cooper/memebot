@@ -56,16 +56,34 @@ Current commands that can be used in Discord:
 
 \*Can also be performed as a context menu action
 
-## Docker
+## Development
+
+### Virtual Environment
+
+Memebot can be tested and run through a virtual environment. This is the recommended
+approach for ensuring your [LSP](https://en.wikipedia.org/wiki/Language_Server_Protocol)
+has access to the projects dependencies.
+
+You can use any tools to create the virtual environment, but the ones officially supported
+by the project are [`pip`](https://pypi.org/project/pip/) and [`uv`](https://docs.astral.sh/uv/).
+
+```shell
+# pip
+$ python -m venv .venv
+$ source .venv/bin/activate
+$ python -m pip install -r pylock.toml
+
+# uv
+$ uv sync
+```
+
+### Docker
 Memebot has a straightforward Docker image that can be built based on the [Dockerfile](./docker/Dockerfile) in this 
 repository. This image can be used for both deployment and testing purposes.
 
-The Memebot image is designed to be used as an "executable," since it is only designed to
-run Memebot and nothing else. 
-
-For example:
+To run Memebot:
 ```shell
-$ docker run --env-file docker/.env --rm -it memebot --discord-api-token ...
+$ docker compose up
 ```
 
 The Memebot image has two build targets: `release` and `test`. 
@@ -87,7 +105,11 @@ Memebot has a suite of unit tests based on [`pytest`](https://pytest.org). The t
 is located in the [tests](./tests) directory. Running the tests is straightforward:
 
 ```shell
-$ python3 -m pytest [/path/to/test/package/or/module]
+$ uv run pytest [/path/to/test/package/or/module]
+
+# OR with venv activated
+
+$ python -m pytest [/path/to/test/package/or/module]
 ```
 
 Running the above from the root of the repository with no path(s) specified will run 
@@ -96,11 +118,11 @@ all the tests.
 The tests can also be run from the _test_ Docker image:
 
 ```shell
-$ docker run --rm -it --entrypoint python3 memebot:test -m pytest [/path/to/test/package/or/module]
+$ docker run --rm -it memebot:test uv run pytest [/path/to/test/package/or/module]
 
 # OR
 
-$ docker-compose run --rm --entrypoint python3 bot -m pytest [/path/to/test/package/or/module]
+$ docker-compose run -it bot uv run pytest [/path/to/test/package/or/module]
 ```
 
 ### mypy
@@ -112,31 +134,30 @@ To run mypy locally, ensure it is installed to the same python environment as al
 Memebot dependencies, and then run it using the proper interpreter. 
 
 ```shell
-$ venv/bin/mypy memebot
+$ uv run mypy memebot
 
-# OR
+# OR with venv activated
 
-$ source venv/bin/activate
 $ mypy memebot
 ```
 
 To run mypy in Docker, ensure you are using an image built from the `test` target. 
 
 ```shell
-$ docker run --rm -it --entrypoint mypy memebot:test memebot
+$ docker run --rm -it memebot:test uv run mypy memebot
 
 # OR
 
-$ docker-compose run --rm --entrypoint mypy bot memebot
+$ docker-compose run -it bot uv run mypy memebot
 ```
 
 You can speed up subsequent runs of mypy by mounting the `.mypy-cache` directory as a volume.
 This way, mypy can reuse the cache it generates inside the container on the next run. 
 
 ```shell
-$ docker run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy -it memebot:test memebot
+$ docker run -it --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" -it memebot:test uv run mypy memebot
 
 # OR
 
-$ docker-compose run --rm --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" --entrypoint mypy bot memebot
+$ docker-compose run --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" bot uv run mypy memebot
 ```

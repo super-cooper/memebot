@@ -5,16 +5,12 @@ on:
   push:
     branches: ["master"]
     paths:
-      - "requirements.txt"
-      - "tests/requirements.txt"
       - "**.py"
       - "pyproject.toml"
       - "docker/*"
   pull_request:
     branches: ["master"]
     paths:
-      - "requirements.txt"
-      - "tests/requirements.txt"
       - "**.py"
       - "pyproject.toml"
       - "docker/*"
@@ -26,13 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: 3.14
-      - name: Install mypy
-        run: pip install mypy
-      - name: Install requirements
-        run: pip install -r requirements.txt -r tests/requirements.txt
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run: uv sync --all-groups && source .venv/bin/activate
       - name: Run mypy
         uses: sasanquaneuf/mypy-github-action@releases/v1
         with:

@@ -4,17 +4,16 @@
 A script to verify Python version consistency across different project configuration files.
 
 This script ensures that Python versions specified in different project files
-(Dockerfile, pyproject.toml, and GitHub workflow files) are consistent with each other.
+(Dockerfile, pyproject.toml) are consistent with each other.
 It extracts the Python version from the Dockerfile as the source of truth and compares
 it with versions specified in other configuration files.
 
 The script checks:
 - Python version in Dockerfile (source of truth)
 - Python version in pyproject.toml (mypy configuration)
-- Python versions in GitHub workflow files (comma separated list of paths)
 
 Usage:
-    python verify_python_versions.py <dockerfile_path> <pyproject_path> <workflow_paths_csv>
+    python verify_python_versions.py <dockerfile_path> <pyproject_path>
 
 Returns:
     Exit code 0 if all versions are consistent
@@ -41,7 +40,9 @@ def extract_version_from_dockerfile(dockerfile_path: Path) -> tuple[str, str]:
     dockerfile_content = dockerfile_path.read_text()
 
     # Find all Python image references in the Dockerfile
-    python_images = re.findall(r"^FROM python:(\d+)\.?(\d+)?.*", dockerfile_content)
+    python_images = re.findall(
+        r"^FROM [^\s]+:python(\d+)\.?(\d+)?.*", dockerfile_content
+    )
 
     if not python_images:
         print(f"Error: No Python images found in {dockerfile_path}")
@@ -98,36 +99,23 @@ def check_for_version_in_file(
     )
 
 
-def main(dockerfile_path: str, pyproject_path: str, workflow_paths_csv: str) -> None:
+def main(dockerfile_path: str, pyproject_path: str) -> None:
     source_version = extract_version_from_dockerfile(Path(dockerfile_path.strip()))
     print(f"Source of truth Python version: {source_version}")
 
-    results = [
-        check_for_version_in_file(
-            Path(pyproject_path.strip()),
-            lambda content: re.findall(
-                r'python_version\s*=\s*"(\d+)\.?(\d+)?.*"', content
-            ),
-            source_version,
-        ),
-        *(
-            check_for_version_in_file(
-                Path(workflow_path.strip()),
-                lambda content: re.findall(
-                    r"python-version:\s*(\d+)\.?(\d+)?.*", content
-                ),
-                source_version,
-            )
-            for workflow_path in workflow_paths_csv.split(",")
-        ),
-    ]
+    result = check_for_version_in_file(
+        Path(pyproject_path.strip()),
+        lambda content: re.findall(r'python_version\s*=\s*"(\d+)\.?(\d+)?.*"', content),
+        source_version,
+    )
 
-    print("\n".join(result.message for result in results if result.message is not None))
+    if result.message:
+        print(result.message)
 
-    if not all(result.success for result in results):
+    if not result.success:
         sys.exit(1)
-    else:
-        print("All Python version references are consistent!")
+
+    print("All Python version references are consistent!")
 
 
 if __name__ == "__main__":
