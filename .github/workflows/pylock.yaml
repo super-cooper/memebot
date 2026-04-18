@@ -4,8 +4,9 @@ name: Update pylock.toml on Dependabot PRs
 
 on:
   pull_request_target:
-    branches:
-      - master
+    branches: ["master"]
+    paths:
+      - "pyproject.toml"
 
 jobs:
   update-lockfile:
