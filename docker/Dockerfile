@@ -1,4 +1,4 @@
-FROM astral/uv:python3.14-trixie-slim AS base
+FROM astral/uv:trixie-slim AS base
 WORKDIR /opt/memebot/
 CMD ["uv", "run", "main.py"]
 
