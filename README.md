@@ -183,3 +183,9 @@ uv run tombi check
 # format
 uv run tombi format
 ```
+
+#### YAML
+
+```shell
+uv run yamllint .
+```
