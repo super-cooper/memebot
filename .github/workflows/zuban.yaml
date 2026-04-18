@@ -1,0 +1,25 @@
+---
+name: zuban
+
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - "**.py"
+      - "pyproject.toml"
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "**.py"
+      - "pyproject.toml"
+
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+      - name: Run zuban
+        run: uv run zuban check

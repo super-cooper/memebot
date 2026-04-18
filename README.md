@@ -82,6 +82,7 @@ Memebot has a straightforward Docker image that can be built based on the [Docke
 repository. This image can be used for both deployment and testing purposes.
 
 To run Memebot:
+
 ```shell
 $ docker compose up
 ```
@@ -127,40 +128,16 @@ $ docker-compose run -it bot uv run pytest [/path/to/test/package/or/module]
 
 ### Static Type Checker
 
-Memebot uses static type checking from [mypy](http://mypy-lang.org) to improve code correctness. The config
-for mypy is in [pyproject.toml](pyproject.toml). Most warnings and errors are enabled. 
+Memebot uses static type checking from [`zuban`](https://zubanls.com) to improve code correctness. The config
+for zuban is in [pyproject.toml](pyproject.toml). Most warnings and errors are enabled. 
 
-To run mypy locally, ensure it is installed to the same python environment as all of your
-Memebot dependencies, and then run it using the proper interpreter. 
-
-```shell
-$ uv run mypy memebot
-
-# OR with venv activated
-
-$ mypy memebot
-```
-
-To run mypy in Docker, ensure you are using an image built from the `test` target. 
+To run `zuban`:
 
 ```shell
-$ docker run --rm -it memebot:test uv run mypy memebot
-
-# OR
-
-$ docker-compose run -it bot uv run mypy memebot
+$ uv run zuban check
 ```
 
-You can speed up subsequent runs of mypy by mounting the `.mypy-cache` directory as a volume.
-This way, mypy can reuse the cache it generates inside the container on the next run. 
-
-```shell
-$ docker run -it --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" -it memebot:test uv run mypy memebot
-
-# OR
-
-$ docker-compose run --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" bot uv run mypy memebot
-```
+`zuban` can also function as an [LSP server]( locally) for your editor.
 
 ### Code Quality
 
