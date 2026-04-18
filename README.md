@@ -174,3 +174,12 @@ uv run ruff check --fix
 # format
 uv run ruff format
 ```
+
+#### TOML
+
+```shell
+# lint
+uv run tombi check
+# format
+uv run tombi format
+```

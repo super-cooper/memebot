@@ -1,0 +1,29 @@
+---
+name: "tombi"
+
+on:
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "**.toml"
+  push:
+    branches: ["master"]
+    paths:
+      - "**.toml"
+
+jobs:
+  tombi:
+    name: tombi
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v6
+      - uses: tombi-toml/setup-tombi@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          lockfile: uv.lock
+      - name: Lint with tombi
+        run: tombi check
+      - name: Format with tombi
+        run: tombi format --check --diff

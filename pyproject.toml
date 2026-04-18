@@ -15,10 +15,36 @@ dev = [
   "pytest-asyncio==1.3.0",
   "pytest-mock==3.15.1",
   "ruff==0.15.11",
+  "tombi==0.9.18",
 ]
 
-[tool.setuptools]
-packages = ["memebot"]
+[tool.mypy]
+python_version = "3.14"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+follow_imports_for_stubs = true
+namespace_packages = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+pretty = true
+exclude = [
+  "data",
+  "venv",
+  "tests",
+]
+
+[[tool.mypy.overrides]]
+module = [
+  # This module in discord.py does not have full stubs for some reason
+  "discord.ext.commands",
+]
+ignore_missing_imports = true
+
+[tool.pytest]
+testpaths = ["tests"]
 
 [tool.ruff.lint]
 select = [
@@ -62,33 +88,8 @@ ignore = [
   "E501",
 ]
 
-[tool.mypy]
-python_version = "3.14"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-follow_imports_for_stubs = true
-namespace_packages = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-pretty = true
-exclude = [
-  "data",
-  "venv",
-  "tests",
-]
-
-[[tool.mypy.overrides]]
-module = [
-  # This module in discord.py does not have full stubs for some reason
-  "discord.ext.commands",
-]
-ignore_missing_imports = true
-
-[tool.pytest]
-testpaths = ["tests"]
+[tool.setuptools]
+packages = ["memebot"]
 
 [tool.uv]
 package = false
