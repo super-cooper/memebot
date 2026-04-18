@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out the PR branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Check out the actual PR branch, not the base branch.
           # pull_request_target checks out the base by default.
