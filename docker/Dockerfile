@@ -2,7 +2,7 @@ FROM python:3.14.3-slim AS build
 WORKDIR /opt/memebot/
 
 # Install requirements.
-COPY requirements.txt requirements.txt
+COPY pyproject.toml pyproject.toml
 RUN \
     apt-get update -y && \
     # gcc is required to build package aiohttp (https://docs.aiohttp.org/en/stable/) required by discord.py
@@ -13,11 +13,11 @@ RUN \
 # Set up venv.
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-RUN python3 -m pip install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --no-cache-dir .
 
 FROM build AS build-test
 COPY tests tests
-RUN python3 -m pip install --no-cache-dir -r tests/requirements.txt
+RUN python3 -m pip install --no-cache-dir .[dev]
 
 # Prepare run image.
 FROM python:3.14.3-slim AS run-base
