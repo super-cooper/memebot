@@ -28,6 +28,9 @@ jobs:
       - name: Set up Python
         uses: astral-sh/setup-uv@v7
 
+      - name: Update pip
+        run: uv pip install --upgrade pip
+
       - name: Regenerate pylock.toml
         run: uv run pip lock . --group dev
 
