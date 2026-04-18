@@ -57,17 +57,6 @@ url = "https://files.pythonhosted.org/packages/b8/3b/e8964210b5e216e5041593b7d33
 sha256 = "51c916108c56aa6e426ce611946f901badac950ee2ddaf302b7ed35d9958970d"
 
 [[packages]]
-name = "black"
-version = "26.3.1"
-
-[[packages.wheels]]
-name = "black-26.3.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
-url = "https://files.pythonhosted.org/packages/03/87/e766c7f2e90c07fb7586cc787c9ae6462b1eedab390191f2b7fc7f6170a9/black-26.3.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
-
-[packages.wheels.hashes]
-sha256 = "b07fc0dab849d24a80a29cfab8d8a19187d1c4685d8a5e6385a5ce323c1f015f"
-
-[[packages]]
 name = "certifi"
 version = "2026.2.25"
 
@@ -88,17 +77,6 @@ url = "https://files.pythonhosted.org/packages/47/5c/032c2d5a07fe4d4855fea851209
 
 [packages.wheels.hashes]
 sha256 = "bd6c2a1c7573c64738d716488d2cdd3c00e340e4835707d8fdb8dc1a66ef164e"
-
-[[packages]]
-name = "click"
-version = "8.3.2"
-
-[[packages.wheels]]
-name = "click-8.3.2-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/e4/20/71885d8b97d4f3dde17b1fdb92dbd4908b00541c5a3379787137285f602e/click-8.3.2-py3-none-any.whl"
-
-[packages.wheels.hashes]
-sha256 = "1924d2c27c5653561cd2cae4548d1406039cb79b858b747cfea24924bbc1616d"
 
 [[packages]]
 name = "discord-py"
@@ -240,17 +218,6 @@ url = "https://files.pythonhosted.org/packages/ef/3c/2c197d226f9ea224a9ab8d19793
 sha256 = "fb6ae2fd4e7c921a165808a552060e722767cfa526f99ca5156ed2ce45a5c723"
 
 [[packages]]
-name = "platformdirs"
-version = "4.9.6"
-
-[[packages.wheels]]
-name = "platformdirs-4.9.6-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/75/a6/a0a304dc33b49145b21f4808d763822111e67d1c3a32b524a1baf947b6e1/platformdirs-4.9.6-py3-none-any.whl"
-
-[packages.wheels.hashes]
-sha256 = "e61adb1d5e5cb3441b4b7710bea7e4c12250ca49439228cc1021c00dcfac0917"
-
-[[packages]]
 name = "pluggy"
 version = "1.6.0"
 
@@ -328,17 +295,6 @@ url = "https://files.pythonhosted.org/packages/5a/cc/06253936f4a7fa2e0f48dfe6d85
 sha256 = "0a25e2eb88fe5168d535041d09a4529a188176ae608a6d249ee65abc0949630d"
 
 [[packages]]
-name = "pytokens"
-version = "0.4.1"
-
-[[packages.wheels]]
-name = "pytokens-0.4.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
-url = "https://files.pythonhosted.org/packages/0f/95/70d7041273890f9f97a24234c00b746e8da86df462620194cef1d411ddeb/pytokens-0.4.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
-
-[packages.wheels.hashes]
-sha256 = "dc74c035f9bfca0255c1af77ddd2d6ae8419012805453e4b0e7513e17904545d"
-
-[[packages]]
 name = "requests"
 version = "2.33.1"
 
@@ -348,6 +304,17 @@ url = "https://files.pythonhosted.org/packages/d7/8e/7540e8a2036f79a125c1d2ebadf
 
 [packages.wheels.hashes]
 sha256 = "4e6d1ef462f3626a1f0a0a9c42dd93c63bad33f9f1c1937509b8c5c8718ab56a"
+
+[[packages]]
+name = "ruff"
+version = "0.15.11"
+
+[[packages.wheels]]
+name = "ruff-0.15.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+url = "https://files.pythonhosted.org/packages/30/c3/bb5168fc4d233cc06e95f482770d0f3c87945a0cd9f614b90ea8dc2f2833/ruff-0.15.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+
+[packages.wheels.hashes]
+sha256 = "1bef2cb556d509259f1fe440bb9cd33c756222cf0a7afe90d15edf0866702431"
 
 [[packages]]
 name = "types-emoji"

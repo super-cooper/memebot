@@ -99,8 +99,6 @@ Leaving variables empty just means that default values will be used.
 
 ## Tests
 
-### pytest
-
 Memebot has a suite of unit tests based on [`pytest`](https://pytest.org). The test code
 is located in the [tests](./tests) directory. Running the tests is straightforward:
 
@@ -125,7 +123,9 @@ $ docker run --rm -it memebot:test uv run pytest [/path/to/test/package/or/modul
 $ docker-compose run -it bot uv run pytest [/path/to/test/package/or/module]
 ```
 
-### mypy
+## Linting/Formatting
+
+### Static Type Checker
 
 Memebot uses static type checking from [mypy](http://mypy-lang.org) to improve code correctness. The config
 for mypy is in [pyproject.toml](pyproject.toml). Most warnings and errors are enabled. 
@@ -160,4 +160,17 @@ $ docker run -it --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" -it meme
 # OR
 
 $ docker-compose run --volume "$(pwd)/.mypy_cache:/opt/memebot/.mypy_cache" bot uv run mypy memebot
+```
+
+### Code Quality
+
+Memebot uses several linters/formatters to ensure consistent code quality.
+
+#### Python
+
+```shell
+# lint
+uv run ruff check --fix
+# format
+uv run ruff format
 ```
