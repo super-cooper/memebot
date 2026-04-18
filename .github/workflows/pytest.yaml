@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Set up Python
-        uses: actions/setup-uv@v7
+        uses: astral/setup-uv@v7
       - name: Test with pytest
         run: |
           uv run pytest --tb=long -v
