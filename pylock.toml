@@ -101,17 +101,6 @@ url = "https://files.pythonhosted.org/packages/ba/5a/18ad964b0086c6e62e2e7500f7e
 sha256 = "01d9bbc4a2d76bf0db7c1f729812ded6d912bd318d3b1cf81d30c0f845dbf3af"
 
 [[packages]]
-name = "emoji"
-version = "2.15.0"
-
-[[packages.wheels]]
-name = "emoji-2.15.0-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/e1/5e/4b5aaaabddfacfe36ba7768817bd1f71a7a810a43705e531f3ae4c690767/emoji-2.15.0-py3-none-any.whl"
-
-[packages.wheels.hashes]
-sha256 = "205296793d66a89d88af4688fa57fd6496732eb48917a87175a023c8138995eb"
-
-[[packages]]
 name = "frozenlist"
 version = "1.8.0"
 
@@ -315,17 +304,6 @@ url = "https://files.pythonhosted.org/packages/30/c3/bb5168fc4d233cc06e95f482770
 
 [packages.wheels.hashes]
 sha256 = "1bef2cb556d509259f1fe440bb9cd33c756222cf0a7afe90d15edf0866702431"
-
-[[packages]]
-name = "types-emoji"
-version = "2.1.0.3"
-
-[[packages.wheels]]
-name = "types_emoji-2.1.0.3-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/f3/b0/fa907f45a260a1f84f5aa3f39f0d63865115991244fa7725fa1e23a34259/types_emoji-2.1.0.3-py3-none-any.whl"
-
-[packages.wheels.hashes]
-sha256 = "32fe5cf02c4834bb59579380f600a89d1471571fb56e36465cbd0c7d95f669ca"
 
 [[packages]]
 name = "typing-extensions"
