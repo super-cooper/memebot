@@ -178,7 +178,7 @@ def _download_new_rules(rules_url: str) -> str:
 @dataclass
 class _ProviderSchema:
     @staticmethod
-    def _validate_list_str(data: Sequence | None, error_message: str) -> None:
+    def _validate_list_str(data: Sequence[str] | None, error_message: str) -> None:
         if (
             data is not None
             and type(data) is not list

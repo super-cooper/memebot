@@ -4,7 +4,7 @@ from memebot.integrations import clear_urls
 from memebot.lib import exception, util
 
 
-@discord.app_commands.command()
+@discord.app_commands.command()  # type: ignore
 async def trackers(interaction: discord.Interaction, link: str) -> None:
     """
     Generate the given link without tracking metadata

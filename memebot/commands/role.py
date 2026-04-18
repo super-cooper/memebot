@@ -80,7 +80,7 @@ role = discord.app_commands.Group(
 )
 
 
-@role.command()
+@role.command()  # type: ignore
 async def create(interaction: discord.Interaction, role_name: str) -> None:
     """
     Create a new Memebot-managed role.
@@ -117,7 +117,7 @@ async def create(interaction: discord.Interaction, role_name: str) -> None:
     await interaction.response.send_message(f"Created new role {new_role.mention}!")
 
 
-@role.command()
+@role.command()  # type: ignore
 async def delete(
     interaction: discord.Interaction,
     target_role: discord.Role,
@@ -146,7 +146,7 @@ async def delete(
     await interaction.response.send_message(f"Deleted role `@{target_role.name}`")
 
 
-@role.command()
+@role.command()  # type: ignore
 async def join(
     interaction: discord.Interaction,
     target_role: discord.Role,
@@ -177,7 +177,7 @@ async def join(
     )
 
 
-@role.command()
+@role.command()  # type: ignore
 async def leave(
     interaction: discord.Interaction,
     target_role: discord.Role,
@@ -211,7 +211,7 @@ async def leave(
     )
 
 
-@role.command(name="list")
+@role.command(name="list")  # type: ignore
 async def role_list(
     interaction: discord.Interaction,
     target: discord.Role | discord.Member | None,

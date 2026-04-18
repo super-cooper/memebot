@@ -1,3 +1,5 @@
+from typing import Any
+
 import pymongo as mongo
 import pymongo.database
 
@@ -10,7 +12,7 @@ class DatabaseInternals:
     """
 
     def __init__(self) -> None:
-        self.client: mongo.MongoClient | None = None
+        self.client: mongo.MongoClient[dict[str, Any]] | None = None
 
     def connect(self) -> None:
         """
@@ -19,7 +21,7 @@ class DatabaseInternals:
         if self.client is None:
             self.client = mongo.MongoClient(config.database_uri.geturl())
 
-    def get_db(self, db_name: str) -> mongo.database.Database | None:
+    def get_db(self, db_name: str) -> mongo.database.Database[dict[str, Any]] | None:
         if self.client:
             return self.client[db_name]
         return None
