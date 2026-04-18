@@ -1,5 +1,3 @@
-from typing import Optional, Any, Union
-
 import discord
 
 from memebot import log
@@ -7,22 +5,18 @@ from memebot.lib import exception
 
 
 class RoleActionError(exception.MemebotUserError):
-    def __init__(
-        self, action: str, target_name: str, msg: str = "", *args: Any
-    ) -> None:
+    def __init__(self, action: str, target_name: str, msg: str = "") -> None:
         """
         Creates a failure message that explains which action failed and why
         :param action: The action which failed.
         :param target_name: The role upon which the action was to be performed.
         :param msg: The explanation, usually extracted from an exception.
         """
-        super(RoleActionError, self).__init__(
-            f"Failed to {action} role `@{target_name}`! {msg}", *args
-        )
+        super().__init__(f"Failed to {action} role `@{target_name}`! {msg}")
 
 
 class RolePermissionError(exception.MemebotInternalError):
-    def __init__(self, action: str, target_name: str, *args: Any) -> None:
+    def __init__(self, action: str, target_name: str) -> None:
         """
         Creates a failure message that expresses failure due to lack of permissions.
         TODO: factor this out to be common to all commands
@@ -30,22 +24,20 @@ class RolePermissionError(exception.MemebotInternalError):
         :param target_name: The role upon which the action was to be performed.
         :return: A CommandOutput with the created message.
         """
-        super(RolePermissionError, self).__init__(
+        super().__init__(
             f"Memebot doesn't have permission to {action} role `@{target_name}`. "
             "Are you sure you configured Memebot's permissions correctly?",
-            *args,
         )
 
 
 class RoleFailure(exception.MemebotInternalError):
-    def __init__(self, action: str, target_name: str, *args: Any) -> None:
+    def __init__(self, action: str, target_name: str) -> None:
         """
         Unexpected, but handled internal failure
         """
-        super(RoleFailure, self).__init__(
+        super().__init__(
             f"Failed to {action} role `@{target_name}. "
             f"It seems that Discord's API is having problems.",
-            *args,
         )
 
 
@@ -55,9 +47,7 @@ class RoleLocationError(exception.MemebotUserError):
     """
 
     def __init__(self) -> None:
-        super(RoleLocationError, self).__init__(
-            "Unable to access roles outside of a server text channel."
-        )
+        super().__init__("Unable to access roles outside of a server text channel.")
 
 
 def get_reason(author_name: str) -> str:
@@ -119,10 +109,10 @@ async def create(interaction: discord.Interaction, role_name: str) -> None:
         log.interaction(
             interaction, f"Created new role @{target_name} for {author.name}"
         )
-    except discord.Forbidden:
-        raise RolePermissionError("create", target_name)
-    except discord.HTTPException:
-        raise RoleFailure("create", target_name)
+    except discord.Forbidden as e:
+        raise RolePermissionError("create", target_name) from e
+    except discord.HTTPException as e:
+        raise RoleFailure("create", target_name) from e
 
     await interaction.response.send_message(f"Created new role {new_role.mention}!")
 
@@ -148,10 +138,10 @@ async def delete(
         log.interaction(
             interaction, f"Deleted role @{target_role.name} for {interaction.user.name}"
         )
-    except discord.Forbidden:
-        raise RolePermissionError("delete", target_role.name)
-    except discord.HTTPException:
-        raise RoleFailure("delete", target_role.name)
+    except discord.Forbidden as e:
+        raise RolePermissionError("delete", target_role.name) from e
+    except discord.HTTPException as e:
+        raise RoleFailure("delete", target_role.name) from e
 
     await interaction.response.send_message(f"Deleted role `@{target_role.name}`")
 
@@ -177,10 +167,10 @@ async def join(
     try:
         await author.add_roles(target_role, reason=get_reason(author.name))
         log.interaction(interaction, f"Added {author.name} to role @{target_role.name}")
-    except discord.Forbidden:
-        raise RolePermissionError("join", target_role.name)
-    except discord.HTTPException:
-        raise RoleFailure("join", target_role.name)
+    except discord.Forbidden as e:
+        raise RolePermissionError("join", target_role.name) from e
+    except discord.HTTPException as e:
+        raise RoleFailure("join", target_role.name) from e
 
     await interaction.response.send_message(
         f"{author.name} successfully joined `@{target_role.name}`"
@@ -211,10 +201,10 @@ async def leave(
         log.interaction(
             interaction, f"Removed {author.name} from role @{target_role.name}"
         )
-    except discord.Forbidden:
-        raise RolePermissionError("leave", target_role.name)
-    except discord.HTTPException:
-        raise RoleFailure("leave", target_role.name)
+    except discord.Forbidden as e:
+        raise RolePermissionError("leave", target_role.name) from e
+    except discord.HTTPException as e:
+        raise RoleFailure("leave", target_role.name) from e
 
     await interaction.response.send_message(
         f"{author.name} successfully left `@{target_role.name}`"
@@ -224,7 +214,7 @@ async def leave(
 @role.command(name="list")
 async def role_list(
     interaction: discord.Interaction,
-    target: Optional[Union[discord.Role, discord.Member]],
+    target: discord.Role | discord.Member | None,
 ) -> None:
     """
     List all roles managed by Memebot, all managed roles of which a user is a member,

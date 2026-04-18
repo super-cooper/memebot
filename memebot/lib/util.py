@@ -1,5 +1,5 @@
 import re
-from typing import Tuple, List, Optional, cast, get_origin, get_args, Union, Any
+from typing import Union, cast, get_args, get_origin
 
 import discord
 import discord.ext.commands
@@ -36,7 +36,7 @@ def is_spoil(message: str, idx: int) -> bool:
     # list of tuples of spoil ranges, [start, stop)
     # e.g.: blah blah ||bababababababababab||
     #                   ^start             ^end
-    spoil_ranges: List[Tuple[int, int]] = []
+    spoil_ranges: list[tuple[int, int]] = []
     in_spoil = False
     spoil_start = -1
     i = 0
@@ -45,24 +45,20 @@ def is_spoil(message: str, idx: int) -> bool:
         if c == "\\" and not in_spoil:
             # ignore backslashes only for the start of the spoiler
             i += 1
-        elif c == "|":
-            if i + 1 < len(message) and message[i + 1] == "|":
-                if in_spoil:
-                    # reached the end of a spoiled section
-                    spoil_ranges.append((spoil_start, i))
-                else:
-                    # start of spoil section
-                    spoil_start = i + 2
+        elif c == "|" and i + 1 < len(message) and message[i + 1] == "|":
+            if in_spoil:
+                # reached the end of a spoiled section
+                spoil_ranges.append((spoil_start, i))
+            else:
+                # start of spoil section
+                spoil_start = i + 2
 
-                i += 1
-                in_spoil = not in_spoil
+            i += 1
+            in_spoil = not in_spoil
 
         i += 1
 
-    for start, end in spoil_ranges:
-        if start <= idx < end:
-            return True
-    return False
+    return any(start <= idx < end for start, end in spoil_ranges)
 
 
 def maybe_make_link_spoiler(message: str, spoil: bool) -> str:
@@ -73,13 +69,13 @@ def maybe_make_link_spoiler(message: str, spoil: bool) -> str:
 
 
 def parse_invocation(interaction: discord.Interaction) -> str:
-    """Returns the command involacion parsed from the raw interaction data"""
+    """Returns the command invocation parsed from the raw interaction data"""
 
     def impl(data: dict) -> str:
         out = []
-        name: Optional[str] = data.get("name")
+        name: str | None = data.get("name")
         options: list[dict] = data.get("options", [])
-        value: Optional[str] = data.get("value")
+        value: str | None = data.get("value")
         if value:
             out.append(value)
         elif name:
@@ -99,7 +95,7 @@ def parse_invocation(interaction: discord.Interaction) -> str:
     return f"{prefix}{impl(cast(dict, interaction.data))}"
 
 
-def validate_type(data: Any, expected_type: type) -> bool:
+def validate_type(data: object, expected_type: type) -> bool:
     """
     Validates that given data matches an expected type. This is useful for
     validation against raw input for which type annotations cannot guarantee

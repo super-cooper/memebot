@@ -7,8 +7,10 @@ from memebot.lib import exception
 
 
 class StringContaining(str):
-    def __eq__(self, other):
-        return self in other
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, str):
+            return self in other
+        return False
 
 
 @pytest.mark.asyncio
@@ -57,9 +59,12 @@ async def test_trackers_context_menu_with_link_in_content(
     mock_interaction.response.defer = mock.AsyncMock()
     mock_interaction.followup.send = mock.AsyncMock()
 
-    with mock.patch("memebot.lib.util.extract_link") as mock_extract_link, mock.patch(
-        "memebot.integrations.clear_urls.strip_trackers"
-    ) as mock_strip_trackers:
+    with (
+        mock.patch("memebot.lib.util.extract_link") as mock_extract_link,
+        mock.patch(
+            "memebot.integrations.clear_urls.strip_trackers"
+        ) as mock_strip_trackers,
+    ):
         mock_extract_link.return_value = link
         mock_strip_trackers.return_value = "https://example.com/page"
 
@@ -84,9 +89,12 @@ async def test_trackers_context_menu_with_link_in_embed(
     mock_interaction.response.defer = mock.AsyncMock()
     mock_interaction.followup.send = mock.AsyncMock()
 
-    with mock.patch("memebot.lib.util.extract_link") as mock_extract_link, mock.patch(
-        "memebot.integrations.clear_urls.strip_trackers"
-    ) as mock_strip_trackers:
+    with (
+        mock.patch("memebot.lib.util.extract_link") as mock_extract_link,
+        mock.patch(
+            "memebot.integrations.clear_urls.strip_trackers"
+        ) as mock_strip_trackers,
+    ):
         mock_extract_link.return_value = link
         mock_strip_trackers.return_value = "https://example.com/page"
 

@@ -15,16 +15,16 @@ class MemeBotLogger(logging.Logger, io.IOBase):
     across all modules
     """
 
-    def __init__(self, name: str, level: int | str | None = None):
-        super(MemeBotLogger, self).__init__(name, level or config.log_level)
+    def __init__(self, name: str, level: int | str | None = None) -> None:
+        super().__init__(name, level or config.log_level)
         self.propagate = False
         self.is_interactive = sys.stdin.isatty() or "pydev" in repr(
             __builtins__.get("__import__")  # type: ignore[attr-defined]
         )
         self.addFilter(MemebotLogFilter())
-        super(MemeBotLogger, self).addHandler(config.log_location)
+        super().addHandler(config.log_location)
 
-    def addHandler(self, _: logging.Handler) -> None:
+    def addHandler(self, _: logging.Handler) -> None:  # noqa: N802
         # We want to avoid external packages overwriting our custom handler
         return
 

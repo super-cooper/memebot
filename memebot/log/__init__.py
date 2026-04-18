@@ -1,47 +1,48 @@
 import atexit
 import contextlib
 import logging
-from typing import cast, Any
+from typing import Any, cast
 
 import discord
 
 from memebot import config
+
 from . import formatter, logger
 
 memebot_logger: logger.MemeBotLogger
 
 
-def log(level: int, msg: str, *args: Any, **kwargs: Any) -> None:
+def log(level: int, msg: str, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.log(level, msg, *args, **kwargs)
 
 
-def debug(msg: str, *args: Any, **kwargs: Any) -> None:
+def debug(msg: str, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.debug(msg, *args, **kwargs)
 
 
-def info(msg: str, *args: Any, **kwargs: Any) -> None:
+def info(msg: str, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.info(msg, *args, **kwargs)
 
 
-def warning(msg: str, *args: Any, **kwargs: Any) -> None:
+def warning(msg: str, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.warning(msg, *args, **kwargs)
 
 
-def error(msg: str, *args: Any, **kwargs: Any) -> None:
+def error(msg: str, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.error(msg, *args, **kwargs)
 
 
-def critical(msg: str, *args: Any, **kwargs: Any) -> None:
+def critical(msg: str, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.critical(msg, *args, **kwargs)
 
 
-def exception(msg: str, exc_info: Any = True, *args: Any, **kwargs: Any) -> None:
+def exception(msg: str, exc_info: Any = True, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
     kwargs["stacklevel"] = kwargs.get("stacklevel", 1) + 1
     memebot_logger.exception(msg, *args, exc_info=exc_info, **kwargs)
 
@@ -67,8 +68,8 @@ def interaction(
     inter: discord.Interaction,
     msg: str,
     level: int = logging.INFO,
-    *args: Any,
-    **kwargs: Any,
+    *args: Any,  # noqa: ANN401
+    **kwargs: Any,  # noqa: ANN401
 ) -> None:
     """
     Logging wrapper to prefix a log message with the interaction ID. This is helpful

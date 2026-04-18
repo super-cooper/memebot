@@ -6,8 +6,7 @@ from unittest import mock
 
 import pytest
 
-from memebot import config
-from memebot import log
+from memebot import config, log
 
 DEFAULT_ENVIRONMENT = os.environ | {
     "MEMEBOT_DISCORD_CLIENT_TOKEN": "MOCK_TOKEN",
@@ -24,12 +23,13 @@ def setup_and_teardown() -> None:
     # Set up
     # This creates a simple base environment. Tests that require specific configuration
     # can overwrite the variables they need
-    os.environ = DEFAULT_ENVIRONMENT
+    for var in DEFAULT_ENVIRONMENT:
+        os.environ[var] = DEFAULT_ENVIRONMENT[var]
 
     with mock.patch("argparse.ArgumentParser", mock.MagicMock()):
         config.populate_config_from_command_line()
 
-    config.log_level = logging.DEBUG
+    config.log_level = "DEBUG"
     config.log_location = logging.StreamHandler(sys.stdout)
     log.configure_logging()
 
@@ -37,6 +37,6 @@ def setup_and_teardown() -> None:
     config.clearurls_rules_refresh_hours = timedelta(days=365 * 1000)
 
     # Run test
-    yield
+    return
 
     # Tear down

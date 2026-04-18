@@ -1,6 +1,4 @@
-from memebot import config
-from memebot import db
-from memebot import log
+from memebot import config, db, log
 from memebot.client import get_memebot
 
 

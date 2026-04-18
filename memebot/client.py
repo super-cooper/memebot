@@ -4,10 +4,7 @@ import logging
 import discord
 import discord.ext.commands
 
-from memebot import commands
-from memebot import config
-from memebot import db
-from memebot import log
+from memebot import commands, config, db, log
 from memebot.lib import exception, util
 
 
@@ -58,7 +55,7 @@ async def on_command_error(
             # For intentionally thrown internal errors
             log.interaction(
                 interaction,
-                f"Raised an internal exception: ",
+                "Raised an internal exception: ",
                 level=logging.WARNING,
                 exc_info=error,
             )
@@ -76,7 +73,7 @@ async def on_command_error(
                 exc_info = error
             log.interaction(
                 interaction,
-                f"Raised an unhandled exception: ",
+                "Raised an unhandled exception: ",
                 exc_info=exc_info,
                 level=logging.ERROR,
             )

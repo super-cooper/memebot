@@ -20,11 +20,15 @@ Returns:
     Exit code 1 if any inconsistencies are found or errors occur
 """
 
+import logging
 import re
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, cast
+from typing import cast
+
+log = logging.getLogger(__name__)
 
 
 def extract_version_from_dockerfile(dockerfile_path: Path) -> tuple[str, str]:
@@ -34,7 +38,7 @@ def extract_version_from_dockerfile(dockerfile_path: Path) -> tuple[str, str]:
     and returns the common version.
     """
     if not dockerfile_path.exists():
-        print(f"Error: {dockerfile_path} not found")
+        log.error(f"{dockerfile_path} not found")
         sys.exit(1)
 
     dockerfile_content = dockerfile_path.read_text()
@@ -45,18 +49,16 @@ def extract_version_from_dockerfile(dockerfile_path: Path) -> tuple[str, str]:
     )
 
     if not python_images:
-        print(f"Error: No Python images found in {dockerfile_path}")
+        log.error(f"No Python images found in {dockerfile_path}")
         sys.exit(1)
 
     base_version = cast(tuple[str, str | None], python_images[0])
     if base_version[1] is None:
-        print("Dockerfile python does not specify minor version.")
+        log.error("Dockerfile python does not specify minor version.")
         sys.exit(1)
 
     if not all(version == base_version for version in python_images):
-        print(
-            f"Error: Inconsistent Python images in {dockerfile_path}: {python_images}"
-        )
+        log.error(f"Inconsistent Python images in {dockerfile_path}: {python_images}")
         sys.exit(1)
 
     return cast(tuple[str, str], base_version)
@@ -101,7 +103,7 @@ def check_for_version_in_file(
 
 def main(dockerfile_path: str, pyproject_path: str) -> None:
     source_version = extract_version_from_dockerfile(Path(dockerfile_path.strip()))
-    print(f"Source of truth Python version: {source_version}")
+    log.info(f"Source of truth Python version: {source_version}")
 
     result = check_for_version_in_file(
         Path(pyproject_path.strip()),
@@ -109,13 +111,14 @@ def main(dockerfile_path: str, pyproject_path: str) -> None:
         source_version,
     )
 
-    if result.message:
-        print(result.message)
-
     if not result.success:
+        if result.message:
+            log.error(result.message)
         sys.exit(1)
+    elif result.message:
+        log.info(result.message)
 
-    print("All Python version references are consistent!")
+    log.info("All Python version references are consistent!")
 
 
 if __name__ == "__main__":

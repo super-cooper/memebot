@@ -17,7 +17,7 @@ class MemeBotLogFormatter(logging.Formatter):
         if self.default_msec_format:
             self.default_msec_format = self.default_msec_format.replace(",", ".")
 
-    def formatMessage(self, record: logging.LogRecord) -> str:
+    def formatMessage(self, record: logging.LogRecord) -> str:  # noqa: N802
         """
         This override causes multi-line messages to have formatting on every line
         """
@@ -40,14 +40,14 @@ class MemeBotLogFormatter(logging.Formatter):
         with the exception formatting.
         """
         if not record.exc_info:
-            return super(MemeBotLogFormatter, self).format(record)
+            return super().format(record)
 
         # Pop out the record's exception info so that it doesn't get appended
         # to the message
         original_exc_info = record.exc_info
         record.exc_info = None
         # Format the message without the exception
-        base_output = super(MemeBotLogFormatter, self).format(record)
+        base_output = super().format(record)
         original_message = record.message
         # Store the traceback in the record's message
         record.message = self.formatException(original_exc_info)

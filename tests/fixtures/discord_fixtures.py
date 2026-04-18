@@ -1,4 +1,3 @@
-from typing import Type, Optional
 from unittest import mock
 
 import discord.utils
@@ -7,61 +6,61 @@ import pytest
 
 @pytest.fixture
 @mock.patch("discord.Client", spec=True)
-def mock_discord_client(MockClient: type[mock.Mock]) -> mock.Mock:
-    return MockClient()
+def mock_discord_client(mock_client: type[mock.Mock]) -> mock.Mock:
+    return mock_client()
 
 
 @pytest.fixture
 @mock.patch("discord.Interaction", spec=True)
 def mock_interaction(
-    MockInteraction: Type[mock.Mock], mock_message: mock.Mock, mock_member: mock.Mock
+    mock_interaction: type[mock.Mock], mock_message: mock.Mock, mock_member: mock.Mock
 ) -> mock.Mock:
     """
     Generates a mock interaction with basic behavior.
     """
-    mock_interaction = MockInteraction()
+    interaction = mock_interaction()
 
-    mock_interaction.response.send_message = mock.AsyncMock()
-    mock_interaction.original_response = mock.AsyncMock(return_value=mock_message)
-    mock_interaction.user = mock_member
+    interaction.response.send_message = mock.AsyncMock()
+    interaction.original_response = mock.AsyncMock(return_value=mock_message)
+    interaction.user = mock_member
 
-    return mock_interaction
+    return interaction
 
 
 @pytest.fixture
 @mock.patch("discord.Message", spec=True)
-def mock_message(MockMessage: Type[mock.Mock]) -> mock.Mock:
+def mock_message(mock_message: type[mock.Mock]) -> mock.Mock:
     """
     Generates a mock message with basic behavior.
     """
-    mock_message = MockMessage()
+    message = mock_message()
 
-    mock_message.add_reaction = mock.AsyncMock()
-    mock_message.channel.send = mock.AsyncMock()
+    message.add_reaction = mock.AsyncMock()
+    message.channel.send = mock.AsyncMock()
 
-    return mock_message
+    return message
 
 
 @pytest.fixture
 @mock.patch("discord.Member", spec=True)
-def mock_member(MockMember: Type[mock.Mock]) -> mock.Mock:
-    mock_member = MockMember()
-    mock_member.roles = []
-    mock_member.add_roles = mock.AsyncMock()
-    return mock_member
+def mock_member(mock_member: type[mock.Mock]) -> mock.Mock:
+    member = mock_member()
+    member.roles = []
+    member.add_roles = mock.AsyncMock()
+    return member
 
 
 @pytest.fixture
 @mock.patch("discord.Guild", spec=True)
-def mock_guild(MockGuild: Type[mock.Mock]) -> mock.Mock:
+def mock_guild(mock_guild: type[mock.Mock]) -> mock.Mock:
     """
     Creates a default mock Guild
     """
-    mock_guild = MockGuild()
+    guild = mock_guild()
 
-    mock_guild.create_role = mock.AsyncMock()
+    guild.create_role = mock.AsyncMock()
 
-    return mock_guild
+    return guild
 
 
 @pytest.fixture
@@ -75,7 +74,7 @@ def mock_guild_empty(mock_guild: mock.Mock) -> mock.Mock:
 
 
 def mock_role_with_attrs(
-    role_type: Type[mock.Mock], name: Optional[str] = None
+    role_type: type[mock.Mock], name: str | None = None
 ) -> mock.Mock:
     """
     Generates a unique mock role with specified attributes
@@ -91,9 +90,9 @@ def mock_role_with_attrs(
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
 def mock_role_everyone(
-    MockRoleEveryone: Type[mock.Mock], mock_interaction: mock.Mock
+    mock_role_everyone: type[mock.Mock], mock_interaction: mock.Mock
 ) -> mock.Mock:
-    everyone = mock_role_with_attrs(MockRoleEveryone, "everyone")
+    everyone = mock_role_with_attrs(mock_role_everyone, "everyone")
     everyone.members = discord.utils.SequenceProxy([mock_interaction.client.user])
     return everyone
 
@@ -101,29 +100,29 @@ def mock_role_everyone(
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
 def mock_role_bot(
-    MockRoleBot: Type[mock.Mock], mock_interaction: mock.Mock
+    mock_role_bot: type[mock.Mock], mock_interaction: mock.Mock
 ) -> mock.Mock:
-    bot_role = mock_role_with_attrs(MockRoleBot, "bot")
+    bot_role = mock_role_with_attrs(mock_role_bot, "bot")
     bot_role.members = discord.utils.SequenceProxy([mock_interaction.client.user])
     return bot_role
 
 
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
-def mock_role_foo(MockRoleFoo: Type[mock.Mock]) -> list[mock.Mock]:
-    return mock_role_with_attrs(MockRoleFoo, "foo")
+def mock_role_foo(mock_role_foo: type[mock.Mock]) -> list[mock.Mock]:
+    return mock_role_with_attrs(mock_role_foo, "foo")
 
 
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
-def mock_role_bar(MockRoleBar: Type[mock.Mock]) -> list[mock.Mock]:
-    return mock_role_with_attrs(MockRoleBar, "bar")
+def mock_role_bar(mock_role_bar: type[mock.Mock]) -> list[mock.Mock]:
+    return mock_role_with_attrs(mock_role_bar, "bar")
 
 
 @pytest.fixture
 @mock.patch("discord.Role", spec=True)
-def mock_role_baz(MockRoleBaz: Type[mock.Mock]) -> list[mock.Mock]:
-    return mock_role_with_attrs(MockRoleBaz, "baz")
+def mock_role_baz(mock_role_baz: type[mock.Mock]) -> list[mock.Mock]:
+    return mock_role_with_attrs(mock_role_baz, "baz")
 
 
 @pytest.fixture

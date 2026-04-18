@@ -7,13 +7,17 @@ from memebot.lib import exception
 
 
 class StringContaining(str):
-    def __eq__(self, other):
-        return self in other
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, str):
+            return self in other
+        return False
 
 
 class StringNotContaining(str):
-    def __eq__(self, other):
-        return self not in other
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, str):
+            return self not in other
+        return False
 
 
 @pytest.mark.asyncio
@@ -41,7 +45,7 @@ async def test_paywall_command_strips_params(mock_interaction: mock.Mock) -> Non
 async def test_paywall_command_rejects_invalid_link(
     mock_interaction: mock.Mock,
 ) -> None:
-    link = f"ftp://foo.com/poop"
+    link = "ftp://foo.com/poop"
 
     with pytest.raises(exception.MemebotUserError):
         await commands.paywall.callback(mock_interaction, link)

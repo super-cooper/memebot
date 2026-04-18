@@ -4,12 +4,12 @@ import json
 import re
 import urllib.parse
 import urllib.request
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime, UTC
-from typing import cast, Any
+from datetime import UTC, datetime
+from typing import cast
 
-from memebot import config
-from memebot import log
+from memebot import config, log
 from memebot.lib import exception, util
 
 _CUSTOM_PROVIDERS = {
@@ -55,7 +55,7 @@ class ClearURLsProvider:
         referral_marketing_patterns: list[str] | None,
         redirection_patterns: list[str] | None,
         exception_patterns: list[str] | None,
-    ):
+    ) -> None:
         """
         Ingests a provider object, builds regex rules
         """
@@ -177,9 +177,8 @@ def _download_new_rules(rules_url: str) -> str:
 
 @dataclass
 class _ProviderSchema:
-
     @staticmethod
-    def _validate_list_str(data: Any, error_message: str) -> None:
+    def _validate_list_str(data: Sequence | None, error_message: str) -> None:
         if (
             data is not None
             and type(data) is not list
@@ -211,7 +210,7 @@ class _ProviderSchema:
 
 
 def _json_to_provider(
-    provider: str, provider_data: dict[str, str | list[str]]
+    provider: str, provider_data: Mapping[str, str | Sequence[str]]
 ) -> ClearURLsProvider | None:
     """
     Maps raw provider JSON data to a ``ClearURLsProvider`` object.

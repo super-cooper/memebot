@@ -67,14 +67,15 @@ async def test_role_create_invalid_name(
     """
     Test failure to create a role with an invalid name
     """
+    mock_interaction.guild = mock_guild_empty
     with pytest.raises(exception.MemebotUserError):
-        mock_interaction.guild = mock_guild_empty
         await role_create.callback(mock_interaction, invalid_role_name)
     mock_guild_empty.create_role.assert_not_awaited()
     mock_interaction.response.send_message.assert_not_awaited()
 
 
 @pytest.mark.asyncio
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 async def test_role_create_in_dm(mock_interaction: mock.Mock) -> None:
     """
     Test creating a role in DMs fails gracefully
@@ -93,8 +94,8 @@ async def test_role_create_conflict(
     Test creating a role fails when there already exists a role with the same name
     """
     mock_guild_populated.roles[1].name = conflict_name.lower()
+    mock_interaction.guild = mock_guild_populated
     with pytest.raises(exception.MemebotUserError):
-        mock_interaction.guild = mock_guild_populated
         await role_create.callback(mock_interaction, conflict_name)
     mock_guild_populated.create_role.assert_not_called()
     mock_interaction.response.send_message.assert_not_awaited()
@@ -107,11 +108,11 @@ async def test_role_create_permission_error(
     """
     Test attempting to create a role when Memebot doesn't have permission to do so
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         role_name = "forbiddenrole"
         mock_interaction.guild = mock_guild_populated
         mock_guild_populated.create_role = mock.AsyncMock(
-            side_effect=discord.Forbidden(MockResponse(), None)
+            side_effect=discord.Forbidden(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -126,11 +127,11 @@ async def test_role_create_http_failure(
     """
     Test role creation HTTP failures are handled gracefully
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         role_name = "failurerole"
         mock_interaction.guild = mock_guild_populated
         mock_guild_populated.create_role = mock.AsyncMock(
-            side_effect=discord.HTTPException(MockResponse(), None)
+            side_effect=discord.HTTPException(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -166,8 +167,8 @@ async def test_role_delete_too_many_members(
     """
     Test attempting to delete a role with any members fails gracefully
     """
-    with mock.patch("discord.User") as MockUser:
-        mock_users = [MockUser() for _ in range(n_members)]
+    with mock.patch("discord.User") as mock_user:
+        mock_users = [mock_user() for _ in range(n_members)]
         target_role = mock_guild_populated.roles[0]
         target_role.members = mock_users
         mock_interaction.guild = mock_guild_populated
@@ -185,11 +186,11 @@ async def test_role_delete_forbidden(
     """
     Test attempting to delete a role when Memebot doesn't have permission to do so
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         target_role = mock_guild_populated.roles[2]
         mock_interaction.guild = mock_guild_populated
         target_role.delete = mock.AsyncMock(
-            side_effect=discord.Forbidden(MockResponse(), None)
+            side_effect=discord.Forbidden(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -204,11 +205,11 @@ async def test_role_delete_http_failure(
     """
     Test that HTTP failure during role deletion is handled gracefully
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         target_role = mock_guild_populated.roles[2]
         mock_interaction.guild = mock_guild_populated
         target_role.delete = mock.AsyncMock(
-            side_effect=discord.HTTPException(MockResponse(), None)
+            side_effect=discord.HTTPException(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -256,11 +257,11 @@ async def test_role_join_forbidden(
     """
     Test that permission errors for role join are handled gracefully
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         target_role = mock_guild_populated.roles[2]
         mock_interaction.guild = mock_guild_populated
         mock_interaction.user.add_roles = mock.AsyncMock(
-            side_effect=discord.Forbidden(MockResponse(), None)
+            side_effect=discord.Forbidden(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -276,11 +277,11 @@ async def test_role_join_failure(
     """
     Test that permission errors for role join are handled gracefully
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         target_role = mock_guild_populated.roles[2]
         mock_interaction.guild = mock_guild_populated
         mock_interaction.user.add_roles = mock.AsyncMock(
-            side_effect=discord.HTTPException(MockResponse(), None)
+            side_effect=discord.HTTPException(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -330,12 +331,12 @@ async def test_role_leave_forbidden(
     """
     Test graceful failure of calling role leave when memebot has bad permissions
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         target_role = mock_guild_populated.roles[2]
         target_role.members = [mock_interaction.user]
         mock_interaction.guild = mock_guild_populated
         mock_interaction.user.remove_roles = mock.AsyncMock(
-            side_effect=discord.Forbidden(MockResponse(), None)
+            side_effect=discord.Forbidden(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -351,12 +352,12 @@ async def test_role_leave_failure(
     """
     Test graceful failure of HTTP failure when calling role leave
     """
-    with mock.patch("requests.Response") as MockResponse:
+    with mock.patch("requests.Response") as mock_response:
         target_role = mock_guild_populated.roles[2]
         target_role.members = [mock_interaction.user]
         mock_interaction.guild = mock_guild_populated
         mock_interaction.user.remove_roles = mock.AsyncMock(
-            side_effect=discord.HTTPException(MockResponse(), None)
+            side_effect=discord.HTTPException(mock_response(), None)
         )
 
         with pytest.raises(exception.MemebotInternalError):
@@ -366,18 +367,17 @@ async def test_role_leave_failure(
 
 
 @pytest.mark.asyncio
+@pytest.mark.usefixtures("mock_role_bot", "mock_role_everyone")
 async def test_role_list_all_roles(
     mock_interaction: mock.Mock,
     mock_guild_populated: mock.Mock,
-    mock_role_bot: mock.Mock,
-    mock_role_everyone: mock.Mock,
 ) -> None:
     """
     Test ability to list all roles
     """
     mock_interaction.guild = mock_guild_populated
     await role_list.callback(mock_interaction, None)
-    expected_output = f"Roles managed through `/role` command:\n- bar\n- baz\n- foo"
+    expected_output = "Roles managed through `/role` command:\n- bar\n- baz\n- foo"
     mock_interaction.response.send_message.assert_awaited_once_with(
         content=expected_output, ephemeral=True
     )
@@ -396,7 +396,7 @@ async def test_role_list_no_roles(
     mock_guild.roles = discord.utils.SequenceProxy([mock_role_everyone, mock_role_bot])
     mock_interaction.guild = mock_guild
     await role_list.callback(mock_interaction, None)
-    expected_output = f"Roles managed through `/role` command:"
+    expected_output = "Roles managed through `/role` command:"
     mock_interaction.response.send_message.assert_awaited_once_with(
         content=expected_output, ephemeral=True
     )
@@ -432,8 +432,8 @@ async def test_role_list_other_user_roles(
     """
     Test role list when retrieving roles of a user other than the one making the call
     """
-    with mock.patch("discord.Member", spec=True) as MockMember:
-        target = MockMember()
+    with mock.patch("discord.Member", spec=True) as mock_member:
+        target = mock_member()
         mock_role_bar.members = discord.utils.SequenceProxy([target])
         mock_interaction.guild = mock_guild_populated
         await role_list.callback(mock_interaction, target)
@@ -489,8 +489,8 @@ async def test_role_list_role_no_members(
     """
     Test role list when retrieving members of a role with no members
     """
+    mock_interaction.guild = mock_guild_populated
     with pytest.raises(exception.MemebotUserError):
-        mock_interaction.guild = mock_guild_populated
         await role_list.callback(mock_interaction, mock_role_bar)
     mock_interaction.response.send_message.assert_not_awaited()
 
@@ -518,9 +518,9 @@ async def test_role_list_member(
 
 
 @pytest.mark.asyncio
+@pytest.mark.usefixtures("mock_guild_populated")
 async def test_role_list_member_no_roles(
     mock_interaction: mock.Mock,
-    mock_guild_populated: mock.Mock,
     mock_member: mock.Mock,
 ) -> None:
     """

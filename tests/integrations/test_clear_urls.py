@@ -8,7 +8,7 @@ from memebot.lib import exception
 
 
 class TestClearURLsProvider:
-    def test_matches(self):
+    def test_matches(self) -> None:
         provider = clear_urls.ClearURLsProvider(
             provider="test_provider",
             url_pattern=r"^https?:\/\/example\.com",
@@ -24,7 +24,7 @@ class TestClearURLsProvider:
         assert provider.matches("https://example.com/excluded") is False
         assert provider.matches("https://other-domain.com") is False
 
-    def test_strip_params(self):
+    def test_strip_params(self) -> None:
         provider = clear_urls.ClearURLsProvider(
             provider="test_provider",
             url_pattern=r"^https?:\/\/example\.com",
@@ -47,7 +47,7 @@ class TestClearURLsProvider:
         assert "id" in params
         assert params["id"] == ["123"]
 
-    def test_redirect(self):
+    def test_redirect(self) -> None:
         provider = clear_urls.ClearURLsProvider(
             provider="test_provider",
             url_pattern=r"^https?:\/\/example\.com",
@@ -66,7 +66,7 @@ class TestClearURLsProvider:
         result = provider.redirect(normal_url)
         assert result == normal_url
 
-    def test_clean(self):
+    def test_clean(self) -> None:
         provider = clear_urls.ClearURLsProvider(
             provider="test_provider",
             url_pattern=r"^https?:\/\/example\.com",
@@ -77,12 +77,10 @@ class TestClearURLsProvider:
             exception_patterns=None,
         )
 
-        with mock.patch.object(
-            provider, "strip_params"
-        ) as mock_strip_params, mock.patch.object(
-            provider, "redirect"
-        ) as mock_redirect:
-
+        with (
+            mock.patch.object(provider, "strip_params") as mock_strip_params,
+            mock.patch.object(provider, "redirect") as mock_redirect,
+        ):
             mock_strip_params.return_value = "https://example.com/stripped"
             mock_redirect.return_value = "https://destination.com"
 
@@ -93,7 +91,7 @@ class TestClearURLsProvider:
             assert result == "https://destination.com"
 
 
-def test_decode_uri():
+def test_decode_uri() -> None:
     encoded_uri = "https%3A%2F%2Fexample.com%2Fpath%3Fparam%3Dvalue"
     decoded_uri = clear_urls._decode_uri(encoded_uri)
     assert decoded_uri == "https://example.com/path?param=value"
@@ -104,12 +102,12 @@ def test_decode_uri():
     assert decoded_uri == "https://example.com/path?param=value"
 
 
-def test_is_encoded_uri():
+def test_is_encoded_uri() -> None:
     assert clear_urls._is_encoded_uri("https%3A%2F%2Fexample.com") is True
     assert clear_urls._is_encoded_uri("https://example.com") is False
 
 
-def test_strip_trackers():
+def test_strip_trackers() -> None:
     test_provider = clear_urls.ClearURLsProvider(
         provider="test_provider",
         url_pattern=r"^https?:\/\/example\.com",
@@ -120,10 +118,10 @@ def test_strip_trackers():
         exception_patterns=None,
     )
 
-    with mock.patch(
-        "memebot.integrations.clear_urls.providers", [test_provider]
-    ), mock.patch("memebot.integrations.clear_urls._refresh_providers"):
-
+    with (
+        mock.patch("memebot.integrations.clear_urls.providers", [test_provider]),
+        mock.patch("memebot.integrations.clear_urls._refresh_providers"),
+    ):
         # URL matches the provider
         url = "https://example.com/page?utm_source=test&id=123"
         stripped = clear_urls.strip_trackers(url)
@@ -140,12 +138,12 @@ def test_strip_trackers():
         assert stripped == url
 
 
-def test_strip_trackers_no_providers():
+def test_strip_trackers_no_providers() -> None:
     # Mock empty provider list and ensure _refresh_providers doesn't add any
-    with mock.patch.object(clear_urls, "providers", []), mock.patch.object(
-        clear_urls, "_refresh_providers"
+    with (
+        mock.patch.object(clear_urls, "providers", []),
+        mock.patch.object(clear_urls, "_refresh_providers"),
     ):
-
         url = "https://example.com/page?utm_source=test"
 
         # Should raise an exception when no providers are available
@@ -153,7 +151,7 @@ def test_strip_trackers_no_providers():
             clear_urls.strip_trackers(url)
 
 
-def test_json_to_provider():
+def test_json_to_provider() -> None:
     provider_data = {
         "urlPattern": r"^https?:\/\/example\.com",
         "rules": ["utm_source", "utm_medium"],
@@ -162,12 +160,14 @@ def test_json_to_provider():
 
     provider = clear_urls._json_to_provider("test_provider", provider_data)
 
+    assert provider is not None
+
     assert provider.provider == "test_provider"
     assert len(provider.rules) == 2
     assert len(provider.redirections) == 1
 
 
-def test_json_to_provider_invalid():
+def test_json_to_provider_invalid() -> None:
     # Missing urlPattern
     invalid_data = {"rules": ["utm_source"]}
 
@@ -177,7 +177,7 @@ def test_json_to_provider_invalid():
         mock_log_exc.assert_called_once()
 
 
-def test_convert_rules_to_providers():
+def test_convert_rules_to_providers() -> None:
     rules_json = r"""
     {
         "providers": {
@@ -202,7 +202,7 @@ def test_convert_rules_to_providers():
     assert any(p.provider == "another_provider" for p in providers)
 
 
-def test_convert_rules_to_providers_invalid_without_existing_providers():
+def test_convert_rules_to_providers_invalid_without_existing_providers() -> None:
     with pytest.raises(exception.MemebotInternalError):
         clear_urls._convert_rules_to_providers("invalid json")
 
