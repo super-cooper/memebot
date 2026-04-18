@@ -112,6 +112,17 @@ url = "https://files.pythonhosted.org/packages/a7/b2/fabede9fafd976b991e9f1b9c8c
 sha256 = "cba69cb73723c3f329622e34bdbf5ce1f80c21c290ff04256cff1cd3c2036ed2"
 
 [[packages]]
+name = "hadolint-bin"
+version = "2.14.0"
+
+[[packages.wheels]]
+name = "hadolint_bin-2.14.0-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.whl"
+url = "https://files.pythonhosted.org/packages/6b/b6/c383d0a95dbf110c20a4c050accce88b747dbe36759dc2ceb76fb2c5fc3f/hadolint_bin-2.14.0-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.whl"
+
+[packages.wheels.hashes]
+sha256 = "cc65ee5fb9c700dc246a54c8fc5434bb3092da40c194e6561fde8ed0e6a77941"
+
+[[packages]]
 name = "idna"
 version = "3.11"
 

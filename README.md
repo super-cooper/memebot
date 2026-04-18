@@ -189,3 +189,9 @@ uv run tombi format
 ```shell
 uv run yamllint .
 ```
+
+#### Dockerfile
+
+```shell
+uv run hadolint docker/Dockerfile
+```
