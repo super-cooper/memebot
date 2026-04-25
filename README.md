@@ -126,6 +126,15 @@ $ docker-compose run -it bot uv run pytest [/path/to/test/package/or/module]
 
 ## Linting/Formatting
 
+### `pre-commit`
+
+This project optionally supports pre-commit to check your commits before they fail CI.
+Hooks can be installed like so, and will check your code automatically every time you attempt to commit:
+
+```shell
+uv run pre-commit install
+```
+
 ### Static Type Checker
 
 Memebot uses static type checking from [`zuban`](https://zubanls.com) to improve code correctness. The config

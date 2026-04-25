@@ -1,0 +1,59 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: type-check
+        name: static type check with zuban
+        pass_filenames: false
+        language: python
+        files: '(.*\.py|pyproject.toml)'
+        entry: uv run zuban check
+
+      - id: python-lint
+        name: lint with ruff
+        pass_filenames: false
+        language: python
+        files: '(.*\.py|pyproject.toml)'
+        entry: uv run ruff check --fix
+
+      - id: python-format
+        name: format with ruff
+        pass_filenames: false
+        language: python
+        files: '.*\.py'
+        entry: uv run ruff format
+
+      - id: toml-lint
+        name: lint with tombi
+        pass_filenames: false
+        language: python
+        files: '.*.toml'
+        entry: uv run tombi check
+
+      - id: toml-format
+        name: format with tombi
+        pass_filenames: false
+        language: python
+        files: '.*.toml'
+        entry: uv run tombi format
+
+      - id: yaml-lint
+        name: lint and format with yamllint
+        pass_filenames: true
+        language: python
+        files: '.*\.ya?ml'
+        entry: uv run yamllint
+
+      - id: docker-lint
+        name: lint and format with hadolint
+        pass_filenames: true
+        language: python
+        files: '.*Dockerfile'
+        entry: uv run hadolint

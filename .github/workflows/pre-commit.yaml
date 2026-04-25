@@ -1,0 +1,23 @@
+---
+name: pre-commit
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v7
+      - name: Run pre-commit check-yaml
+        run: uv run pre-commit run check-yaml
+      - name: Run pre-commit end-of-file-fixer
+        run: uv run pre-commit run end-of-file-fixer
+      - name: Run pre-commit trailing-whitespace
+        run: uv run pre-commit run trailing-whitespace
