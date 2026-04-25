@@ -295,14 +295,14 @@ sha256 = "1bef2cb556d509259f1fe440bb9cd33c756222cf0a7afe90d15edf0866702431"
 
 [[packages]]
 name = "tombi"
-version = "0.9.18"
+version = "0.9.23"
 
 [[packages.wheels]]
-name = "tombi-0.9.18-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-url = "https://files.pythonhosted.org/packages/1f/f1/d5add739e38d829282ae52cc8c774336a5409fbe1e6fe87e345159b086c7/tombi-0.9.18-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+name = "tombi-0.9.23-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+url = "https://files.pythonhosted.org/packages/c3/db/565f53dd5f579f96ea2fd49e81383e3f98d4f9073474ec66b7a783f0a79a/tombi-0.9.23-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
 
 [packages.wheels.hashes]
-sha256 = "44356bf775b07bbe87bc8257fdbba7500927dd8a27130daa8567c2fc9bfcf083"
+sha256 = "f56fe4e996c4c95c878662279e0ede9841e11ddc1881301be0f47dd70f9313e7"
 
 [[packages]]
 name = "urllib3"
