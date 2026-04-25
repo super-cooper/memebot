@@ -58,14 +58,14 @@ sha256 = "51c916108c56aa6e426ce611946f901badac950ee2ddaf302b7ed35d9958970d"
 
 [[packages]]
 name = "certifi"
-version = "2026.2.25"
+version = "2026.4.22"
 
 [[packages.wheels]]
-name = "certifi-2026.2.25-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/9a/3c/c17fb3ca2d9c3acff52e30b309f538586f9f5b9c9cf454f3845fc9af4881/certifi-2026.2.25-py3-none-any.whl"
+name = "certifi-2026.4.22-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/22/30/7cd8fdcdfbc5b869528b079bfb76dcdf6056b1a2097a662e5e8c04f42965/certifi-2026.4.22-py3-none-any.whl"
 
 [packages.wheels.hashes]
-sha256 = "027692e4402ad994f1c42e52a4997a9763c646b73e4096e4d5d6db8af1d6f0fa"
+sha256 = "3cb2210c8f88ba2318d29b0388d1023c8492ff72ecdde4ebdaddbb13a31b1c4a"
 
 [[packages]]
 name = "charset-normalizer"
@@ -124,14 +124,14 @@ sha256 = "cc65ee5fb9c700dc246a54c8fc5434bb3092da40c194e6561fde8ed0e6a77941"
 
 [[packages]]
 name = "idna"
-version = "3.11"
+version = "3.13"
 
 [[packages.wheels]]
-name = "idna-3.11-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/0e/61/66938bbb5fc52dbdf84594873d5b51fb1f7c7794e9c0f5bd885f30bc507b/idna-3.11-py3-none-any.whl"
+name = "idna-3.13-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/5d/13/ad7d7ca3808a898b4612b6fe93cde56b53f3034dcde235acb1f0e1df24c6/idna-3.13-py3-none-any.whl"
 
 [packages.wheels.hashes]
-sha256 = "771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea"
+sha256 = "892ea0cde124a99ce773decba204c5552b69c3c67ffd5f232eb7696135bc8bb3"
 
 [[packages]]
 name = "iniconfig"
@@ -163,25 +163,25 @@ sha256 = "7eee46ccb30ff48a1e35bb818cc90846c6be2b68240e42a78599166722cea709"
 
 [[packages]]
 name = "packaging"
-version = "26.1"
+version = "26.2"
 
 [[packages.wheels]]
-name = "packaging-26.1-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/7a/c2/920ef838e2f0028c8262f16101ec09ebd5969864e5a64c4c05fad0617c56/packaging-26.1-py3-none-any.whl"
+name = "packaging-26.2-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/df/b2/87e62e8c3e2f4b32e5fe99e0b86d576da1312593b39f47d8ceef365e95ed/packaging-26.2-py3-none-any.whl"
 
 [packages.wheels.hashes]
-sha256 = "5d9c0669c6285e491e0ced2eee587eaf67b670d94a19e94e3984a481aba6802f"
+sha256 = "5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e"
 
 [[packages]]
 name = "pathspec"
-version = "1.0.4"
+version = "1.1.0"
 
 [[packages.wheels]]
-name = "pathspec-1.0.4-py3-none-any.whl"
-url = "https://files.pythonhosted.org/packages/ef/3c/2c197d226f9ea224a9ab8d197933f9da0ae0aac5b6e0f884e2b8d9c8e9f7/pathspec-1.0.4-py3-none-any.whl"
+name = "pathspec-1.1.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/fa/c9/8eed0486f074e9f1ca7f8ce5ad663e65f12fdab344028d658fa1b03d35e0/pathspec-1.1.0-py3-none-any.whl"
 
 [packages.wheels.hashes]
-sha256 = "fb6ae2fd4e7c921a165808a552060e722767cfa526f99ca5156ed2ce45a5c723"
+sha256 = "574b128f7456bd899045ccd142dd446af7e6cfd0072d63ad73fbc55fbb4aaa42"
 
 [[packages]]
 name = "pluggy"
@@ -339,11 +339,11 @@ sha256 = "1c57676bdedc94cd3bc37724cf6f8cd2779f02f6aba48de45feca073e714fe52"
 
 [[packages]]
 name = "zuban"
-version = "0.7.0"
+version = "0.7.1"
 
 [[packages.wheels]]
-name = "zuban-0.7.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-url = "https://files.pythonhosted.org/packages/16/fa/4b65cd8ba5fde5de98228119e874b0ad4f9b002619c5b0d35306fe024e85/zuban-0.7.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+name = "zuban-0.7.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+url = "https://files.pythonhosted.org/packages/d8/40/938c8e5b6f84151df18e7208b2f0b0ffea69131c03fc42a089cc2f46ac29/zuban-0.7.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
 
 [packages.wheels.hashes]
-sha256 = "dc664e4036351aa0239876c4049a4b4316a9958c36a115cce1e3a9a3b5b3fca7"
+sha256 = "f4c383a95b8711aeb93c4d01497d16c8f51941c46789a050765699d6431f0ea4"
