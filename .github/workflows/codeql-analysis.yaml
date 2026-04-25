@@ -18,13 +18,11 @@ on:
     paths:
       - "**.py"
       - "pyproject.toml"
-      - "docker/*"
   pull_request:
     branches: ["master"]
     paths:
       - "**.py"
       - "pyproject.toml"
-      - "docker/*"
   schedule:
     - cron: '42 22 * * 6'
 
