@@ -339,11 +339,11 @@ sha256 = "1c57676bdedc94cd3bc37724cf6f8cd2779f02f6aba48de45feca073e714fe52"
 
 [[packages]]
 name = "zuban"
-version = "0.7.0"
+version = "0.7.1"
 
 [[packages.wheels]]
-name = "zuban-0.7.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-url = "https://files.pythonhosted.org/packages/16/fa/4b65cd8ba5fde5de98228119e874b0ad4f9b002619c5b0d35306fe024e85/zuban-0.7.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+name = "zuban-0.7.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+url = "https://files.pythonhosted.org/packages/d8/40/938c8e5b6f84151df18e7208b2f0b0ffea69131c03fc42a089cc2f46ac29/zuban-0.7.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
 
 [packages.wheels.hashes]
-sha256 = "dc664e4036351aa0239876c4049a4b4316a9958c36a115cce1e3a9a3b5b3fca7"
+sha256 = "f4c383a95b8711aeb93c4d01497d16c8f51941c46789a050765699d6431f0ea4"

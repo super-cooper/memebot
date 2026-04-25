@@ -17,7 +17,7 @@ dev = [
   "ruff==0.15.11",
   "tombi==0.9.23",
   "yamllint==1.38.0",
-  "zuban==0.7.0",
+  "zuban==0.7.1",
 ]
 
 [tool.pytest]
