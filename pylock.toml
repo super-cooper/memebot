@@ -284,14 +284,14 @@ sha256 = "4e6d1ef462f3626a1f0a0a9c42dd93c63bad33f9f1c1937509b8c5c8718ab56a"
 
 [[packages]]
 name = "ruff"
-version = "0.15.11"
+version = "0.15.12"
 
 [[packages.wheels]]
-name = "ruff-0.15.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-url = "https://files.pythonhosted.org/packages/30/c3/bb5168fc4d233cc06e95f482770d0f3c87945a0cd9f614b90ea8dc2f2833/ruff-0.15.11-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+name = "ruff-0.15.12-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+url = "https://files.pythonhosted.org/packages/e8/39/c61d193b8a1daaa8977f7dea9e8d8ba866e02ea7b65d32f6861693aa4c12/ruff-0.15.12-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
 
 [packages.wheels.hashes]
-sha256 = "1bef2cb556d509259f1fe440bb9cd33c756222cf0a7afe90d15edf0866702431"
+sha256 = "83b2f4f2f3b1026b5fb449b467d9264bf22067b600f7b6f41fc5958909f449d0"
 
 [[packages]]
 name = "tombi"
