@@ -12,8 +12,7 @@ on:
       - "**.toml"
 
 jobs:
-  tombi:
-    name: tombi
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source repository
@@ -25,5 +24,16 @@ jobs:
           lockfile: uv.lock
       - name: Lint with tombi
         run: tombi check
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v6
+      - uses: tombi-toml/setup-tombi@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          lockfile: uv.lock
       - name: Format with tombi
         run: tombi format --check --diff

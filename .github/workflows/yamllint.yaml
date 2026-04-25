@@ -12,8 +12,7 @@ on:
       - "**.yaml"
       - "**.yml"
 jobs:
-  yamllint:
-    name: 'Yamllint'
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'

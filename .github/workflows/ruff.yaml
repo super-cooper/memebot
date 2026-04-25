@@ -14,8 +14,7 @@ on:
       - "pyproject.toml"
 
 jobs:
-  ruff:
-    name: ruff
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source repository
@@ -24,6 +23,12 @@ jobs:
         uses: astral-sh/ruff-action@v3
         with:
           args: check --diff
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v6
       - name: Format with ruff
         uses: astral-sh/ruff-action@v3
         with:

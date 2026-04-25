@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  hadolint:
+  scan:
     name: Run hadolint scanning
     runs-on: ubuntu-latest
     permissions:

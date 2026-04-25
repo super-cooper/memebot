@@ -12,7 +12,6 @@ on:
     paths:
       - "**.py"
       - "pyproject.toml"
-      - "docker/*"
 
 jobs:
   test:
