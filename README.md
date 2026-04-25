@@ -1,9 +1,9 @@
-# Memebot 
+# Memebot
 
 This is Memebot, a discord bot.
 
 If you are hosting yourself, you will need to pass a Discord API client token to the bot
-as a string, either via a command-line parameter or an environment variable. 
+as a string, either via a command-line parameter or an environment variable.
 See [Configuration](#configuration) for more context.
 
 ## Configuration
@@ -78,7 +78,7 @@ $ uv sync
 ```
 
 ### Docker
-Memebot has a straightforward Docker image that can be built based on the [Dockerfile](./docker/Dockerfile) in this 
+Memebot has a straightforward Docker image that can be built based on the [Dockerfile](./docker/Dockerfile) in this
 repository. This image can be used for both deployment and testing purposes.
 
 To run Memebot:
@@ -87,15 +87,15 @@ To run Memebot:
 $ docker compose up
 ```
 
-The Memebot image has two build targets: `release` and `test`. 
+The Memebot image has two build targets: `release` and `test`.
 
 `release` contains only the dependencies to run Memebot, and only copies the source
 directory. The `test` target has testing dependencies installed, and copies in the entire
 repository. The default target is `test`, as it is the most convenient for development
-and testing. `release` produces a slightly slimmer image which is only used for deployment. 
+and testing. `release` produces a slightly slimmer image which is only used for deployment.
 
-The easiest way to create your `.env` is by copying [template.env](./docker/template.env), 
-and then filling out whichever environment variables are desired. 
+The easiest way to create your `.env` is by copying [template.env](./docker/template.env),
+and then filling out whichever environment variables are desired.
 Leaving variables empty just means that default values will be used.
 
 ## Tests
@@ -111,7 +111,7 @@ $ uv run pytest [/path/to/test/package/or/module]
 $ python -m pytest [/path/to/test/package/or/module]
 ```
 
-Running the above from the root of the repository with no path(s) specified will run 
+Running the above from the root of the repository with no path(s) specified will run
 all the tests.
 
 The tests can also be run from the _test_ Docker image:
@@ -138,7 +138,7 @@ uv run pre-commit install
 ### Static Type Checker
 
 Memebot uses static type checking from [`zuban`](https://zubanls.com) to improve code correctness. The config
-for zuban is in [pyproject.toml](pyproject.toml). Most warnings and errors are enabled. 
+for zuban is in [pyproject.toml](pyproject.toml). Most warnings and errors are enabled.
 
 To run `zuban`:
 
