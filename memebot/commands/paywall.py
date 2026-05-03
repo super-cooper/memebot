@@ -2,6 +2,8 @@ import discord
 
 from memebot.lib import exception, util
 
+PREFIX = "https://removepaywalls.com"
+
 
 @discord.app_commands.command()  # type: ignore
 async def paywall(interaction: discord.Interaction, link: str) -> None:
@@ -15,7 +17,7 @@ async def paywall(interaction: discord.Interaction, link: str) -> None:
     link = remove_params(link)
 
     await interaction.response.send_message(
-        f"Link without paywall: https://archive.is/newest/{link}"
+        f"[Link]({link}) without paywall: {PREFIX}/{link}"
     )
 
 
@@ -25,7 +27,7 @@ async def paywall_context_menu(
 ) -> None:
     link = remove_params(util.extract_link(message))
     await interaction.response.send_message(
-        f"Link without paywall: https://archive.is/newest/{link}"
+        f"[Link]({link}) without paywall: {PREFIX}/{link}"
     )
 
 
