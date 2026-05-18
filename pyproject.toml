@@ -4,6 +4,7 @@ version = "0.0.0"
 requires-python = "~=3.14.0"
 dependencies = [
   "discord.py==2.7.1",
+  "opengsq==3.6.2",
   "pymongo==4.17.0",
   "requests==2.34.2",
 ]
