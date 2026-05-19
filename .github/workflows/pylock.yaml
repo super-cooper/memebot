@@ -31,8 +31,7 @@ jobs:
       - name: Regenerate pylock.toml
         run: |
           uv venv
-          uv pip install --upgrade pip
-          uv run pip lock . --group dev
+          uv export --all-groups --format pylock.toml --output-file=pylock.toml
 
       - name: Commit updated pylock.toml if changed
         run: |
