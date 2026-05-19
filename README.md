@@ -52,6 +52,7 @@ Current commands that can be used in Discord:
     /help     - Learn how to use Memebot
     /paywall  - Remove paywall from a link *
     /role     - Self-contained role management
+    /status   - Check the status of a game server (Minecraft, Source/Steam)
     /trackers - Remove tracking metadata from a link *
 
 \*Can also be performed as a context menu action
