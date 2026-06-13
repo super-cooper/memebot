@@ -15,7 +15,7 @@ dev = [
   "pytest==9.0.3",
   "pytest-asyncio==1.4.0",
   "pytest-mock==3.15.1",
-  "ruff==0.15.16",
+  "ruff==0.15.17",
   "tombi==1.1.1",
   "yamllint==1.38.0",
   "zuban==0.8.0",
