@@ -22,7 +22,7 @@ services:
 
   db:
     container_name: ${MEMEBOT_CONTAINER_NAME_DB:-memebot-test-db}
-    image: mongo:4.4.4-bionic
+    image: mongo:8.3
     restart: always
     volumes:
       - ./data/db:/data/db
