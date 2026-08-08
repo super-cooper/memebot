@@ -10,7 +10,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "hadolint-bin==2.14.0",
+  "hadolint-bin==2.15.1",
   "pre-commit>=4.6.1",
   "pytest==9.1.1",
   "pytest-asyncio==1.4.0",
