@@ -2,7 +2,7 @@ import discord
 
 from memebot.lib import exception, util
 
-PREFIX = "https://removepaywalls.com"
+PREFIX = "https://removepaywall.com"
 
 
 @discord.app_commands.command()  # type: ignore
