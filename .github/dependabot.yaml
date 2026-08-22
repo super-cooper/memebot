@@ -13,6 +13,8 @@ updates:
       day: saturday
       time: "08:00"
       timezone: America/New_York
+    cooldown:
+      default-days: 30
     labels:
       - dependencies
 
@@ -23,6 +25,8 @@ updates:
       day: saturday
       time: "08:00"
       timezone: America/New_York
+    cooldown:
+      default-days: 30
     labels:
       - dependencies
     ignore:
@@ -36,5 +40,10 @@ updates:
       day: saturday
       time: "08:00"
       timezone: America/New_York
+    cooldown:
+      default-days: 30
+      semver-major-days: 30
+      semver-minor-days: 30
+      semver-patch-days: 14
     labels:
       - dependencies
