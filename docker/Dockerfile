@@ -1,13 +1,15 @@
 FROM astral/uv:trixie-slim AS base
 
+ARG USERNAME=memebot
+
 # hadolint global ignore=DL3008  # We always want the latest ca-certificates
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends ca-certificates && \
     rm -rf /var/lib/apt/lists/* && \
-    groupadd --gid 1000 memebot && \
-    useradd --gid 1000 --uid 1000 --create-home memebot
+    groupadd --gid 1000 ${USERNAME} && \
+    useradd --gid 1000 --uid 1000 --create-home ${USERNAME}
 
-USER memebot
+USER ${USERNAME}
 
 WORKDIR /opt/memebot/
 
