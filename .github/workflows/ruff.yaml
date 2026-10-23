@@ -16,6 +16,8 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check out source repository
         uses: actions/checkout@v7
@@ -26,6 +28,8 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check out source repository
         uses: actions/checkout@v7
