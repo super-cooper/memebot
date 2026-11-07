@@ -194,10 +194,10 @@ wheels = [{ url = "https://files.pythonhosted.org/packages/c1/2b/238f02a4927fa2e
 
 [[packages]]
 name = "dnspython"
-version = "2.8.0"
+version = "2.9.0"
 index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/8c/8b/57666417c0f90f08bcafa776861060426765fdb422eb10212086fb811d26/dnspython-2.8.0.tar.gz", upload-time = 2025-09-07T18:58:00Z, size = 368251, hashes = { sha256 = "181d3c6996452cb1189c4046c61599b84a5a86e099562ffde77d26984ff26d0f" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/ba/5a/18ad964b0086c6e62e2e7500f7edc89e3faa45033c71c1893d34eed2b2de/dnspython-2.8.0-py3-none-any.whl", upload-time = 2025-09-07T18:57:58Z, size = 331094, hashes = { sha256 = "01d9bbc4a2d76bf0db7c1f729812ded6d912bd318d3b1cf81d30c0f845dbf3af" } }]
+sdist = { url = "https://files.pythonhosted.org/packages/ef/4a/50822184bd67cc6493f0fb6a880749158fcd31ab3fa07409acfd91f9fc85/dnspython-2.9.0.tar.gz", upload-time = 2026-10-09T00:07:24Z, size = 423560, hashes = { sha256 = "b44dc6b18f07a8b1c56676a19fbfdb5209415b046a9cece286baafa87ff3f7f1" } }
+wheels = [{ url = "https://files.pythonhosted.org/packages/10/02/cdcc9b7c051786a103c3b09e1003a82fa0c66bcb91ffbdabcfbf7b4163b9/dnspython-2.9.0-py3-none-any.whl", upload-time = 2026-10-09T00:07:22Z, size = 354822, hashes = { sha256 = "9a4aedb833c3c1b49214d04d44d3032ab7a9135f7c1d29a549b4ff78fd82fda9" } }]
 
 [[packages]]
 name = "filelock"
@@ -463,10 +463,10 @@ wheels = [{ url = "https://files.pythonhosted.org/packages/03/e2/08a497ef684b885
 
 [[packages]]
 name = "pytest-mock"
-version = "3.16.0"
+version = "3.16.1"
 index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/7a/7f/6ed29931d5c8cd396e7c0a55412e6cc88020373365c8685985dea53d26d7/pytest_mock-3.16.0.tar.gz", upload-time = 2026-09-27T14:57:55Z, size = 35362, hashes = { sha256 = "5a8395528b8f498205f3718f575228d0edaed7425fff638f87d1a6c3e0383636" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/db/5b/b83a9bf1a3b4ec222f9fa083147ff6816245223da0ab92370e7e056f113f/pytest_mock-3.16.0-py3-none-any.whl", upload-time = 2026-09-27T14:57:54Z, size = 10016, hashes = { sha256 = "007cfeb257801d88d9c0b2a7b5a15a15e73b71968dfd72e7bf8c4a2f8393aec8" } }]
+sdist = { url = "https://files.pythonhosted.org/packages/99/f6/e40a0a0abd8d6769531f63654a81529a98f1342a547173d4231a021ecfde/pytest_mock-3.16.1.tar.gz", upload-time = 2026-10-17T15:21:22Z, size = 41135, hashes = { sha256 = "c6bf5fd123e9635471c63c46ee23044076b4a9f5fca2e39b11e468917c1199ec" } }
+wheels = [{ url = "https://files.pythonhosted.org/packages/e2/69/5941ea3bbd1bb48007767f6ef685c1996b016a4470328c26967aa69e4982/pytest_mock-3.16.1-py3-none-any.whl", upload-time = 2026-10-17T15:21:20Z, size = 11110, hashes = { sha256 = "cd162ca2495584a1fd854b4f80cfe520399a7654a462a42a84cd268844a9122b" } }]
 
 [[packages]]
 name = "python-discovery"
