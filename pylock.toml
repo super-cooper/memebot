@@ -194,10 +194,10 @@ wheels = [{ url = "https://files.pythonhosted.org/packages/c1/2b/238f02a4927fa2e
 
 [[packages]]
 name = "dnspython"
-version = "2.9.0"
+version = "2.9.2"
 index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/ef/4a/50822184bd67cc6493f0fb6a880749158fcd31ab3fa07409acfd91f9fc85/dnspython-2.9.0.tar.gz", upload-time = 2026-10-09T00:07:24Z, size = 423560, hashes = { sha256 = "b44dc6b18f07a8b1c56676a19fbfdb5209415b046a9cece286baafa87ff3f7f1" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/10/02/cdcc9b7c051786a103c3b09e1003a82fa0c66bcb91ffbdabcfbf7b4163b9/dnspython-2.9.0-py3-none-any.whl", upload-time = 2026-10-09T00:07:22Z, size = 354822, hashes = { sha256 = "9a4aedb833c3c1b49214d04d44d3032ab7a9135f7c1d29a549b4ff78fd82fda9" } }]
+sdist = { url = "https://files.pythonhosted.org/packages/76/49/900383b471c645a3c397f47b3211d1fcecb3a540c98f683494cdf86b33de/dnspython-2.9.2.tar.gz", upload-time = 2026-11-03T23:56:53Z, size = 455484, hashes = { sha256 = "8d4d39a513e649d634004ce4d39ade2352efcea472a0247535a5c2d18a9d7ba9" } }
+wheels = [{ url = "https://files.pythonhosted.org/packages/1e/0c/5346358b3a20275d256978c35203ddc2c8617f78c1b23795b79ba22ced6d/dnspython-2.9.2-py3-none-any.whl", upload-time = 2026-11-03T23:56:52Z, size = 360455, hashes = { sha256 = "af15f7d385a6ae2fb35a796fde2138004c8c42c7389090e2addc83e3b3340fd8" } }]
 
 [[packages]]
 name = "filelock"
@@ -456,10 +456,10 @@ wheels = [{ url = "https://files.pythonhosted.org/packages/24/25/1de2678b631f5a4
 
 [[packages]]
 name = "pytest-asyncio"
-version = "1.4.0"
+version = "1.4.1"
 index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/43/7c/d36d04db312ecf4298932ef77e6e4a9e8ad017906e24e34f0b0c361a2473/pytest_asyncio-1.4.0.tar.gz", upload-time = 2026-05-26T09:56:04Z, size = 58514, hashes = { sha256 = "c6c0d2259945122819f171a32ecea2c349ead889ee28176caaf492143424be42" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/03/e2/08a497ef684b88559c9cc5f4ad53a37e7b99e727094a86d6ea32536d5d3c/pytest_asyncio-1.4.0-py3-none-any.whl", upload-time = 2026-05-26T09:56:02Z, size = 16930, hashes = { sha256 = "933ca923a23075a87fb7070c0ec272a6848489824d887c85c812670932835aa1" } }]
+sdist = { url = "https://files.pythonhosted.org/packages/f8/9a/887535e477847f5159377ab35303923644840b13c0ca03c0a467f84d4680/pytest_asyncio-1.4.1.tar.gz", upload-time = 2026-10-25T21:05:37Z, size = 145237, hashes = { sha256 = "e8266eb094e5ee9ffdb2068c9836f33e209ea77a970eb846933d416b5602669b" } }
+wheels = [{ url = "https://files.pythonhosted.org/packages/46/d7/cd9e2708afdbf059658adaf08bdb0792ca52489871051d6ce7d498b51277/pytest_asyncio-1.4.1-py3-none-any.whl", upload-time = 2026-10-25T21:05:35Z, size = 17061, hashes = { sha256 = "507afa78ec77c6661164ef1a2368bc7820383fd1a14b2a7f813de8b5a92949cc" } }]
 
 [[packages]]
 name = "pytest-mock"
